@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:imdb_app/SelectedFilm.dart';
 
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
@@ -118,14 +119,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   labelColor: Colors.black,
                   unselectedLabelColor:
                       const Color.fromARGB(255, 201, 198, 198),
-                  tabs: [
-                    const Tab(
+                  tabs: const [
+                    Tab(
                       text: 'In Cinema',
                     ),
-                    const Tab(
+                    Tab(
                       text: 'Box office',
                     ),
-                    const Tab(
+                    Tab(
                       text: 'Coming Soon',
                     )
                   ],
@@ -216,7 +217,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                     alignment: Alignment.center,
                                     children: [
                                       InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SelectedFilm()));
+                                        },
                                         child: Image(
                                           //child: InkWell(onTap: () {}),
                                           image: NetworkImage(images[i]),
@@ -333,7 +340,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
 
 /*
 class CircleTabIndicator extends Decoration {
