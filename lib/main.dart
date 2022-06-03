@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 //Indicator widget package
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
+import 'SplashScreen.dart';
 
 //List package
 
@@ -75,160 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    var images = [
-      'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW92aWVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
-      'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bW92aWVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
-      'https://images.unsplash.com/photo-1505686994434-e3cc5abf1330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8bW92aWVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60'
-    ];
 
-    var FilmTitle = ['Title 1', 'Title 2', 'Title 3'];
-
-    var category = ['Action', 'Horror', 'Drama', 'History', 'Art'];
-
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-            appBar: AppBar(
-              title: Center(
-                  child: Text(
-                'Movies App',
-                style: TextStyle(color: Color.fromARGB(255, 97, 97, 97)),
-              )),
-              bottom: TabBar(
-                isScrollable: true,
-                //labelPadding: EdgeInsets.only(left: 20, right: 20),
-                indicatorColor: Colors.pink,
-                indicatorWeight: 4,
-                //indicator: CircleTabIndicator(color: Colors.black, radius: 2),
-                indicator: MaterialIndicator(
-                  color: Colors.pink,
-                  height: 6,
-                  topLeftRadius: 5,
-                  topRightRadius: 5,
-                  bottomLeftRadius: 5,
-                  bottomRightRadius: 5,
-                  horizontalPadding: 30,
-                  tabPosition: TabPosition.bottom,
-                ),
-                labelColor: Colors.black,
-                unselectedLabelColor: Color.fromARGB(255, 201, 198, 198),
-                tabs: [
-                  Tab(
-                    text: 'In Cinema',
-                  ),
-                  Tab(
-                    text: 'Box office',
-                  ),
-                  Tab(
-                    text: 'Coming Soon',
-                  )
-                ],
-              ),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                icon: Image.asset('menu-2-line.png'),
-                onPressed: () {},
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.search,
-                    color: Color.fromARGB(255, 104, 104, 104),
-                  ),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            body: Container(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Flexible(
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      height: 50,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: 5,
-                          itemBuilder: (context, i) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 20, left: 20),
-                              child: InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 20, right: 20),
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color: const Color.fromARGB(
-                                              255, 201, 198, 198)),
-                                      color: Colors.transparent),
-                                  child: Center(child: Text(category[i])),
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                  ),
-                  SizedBox(height: 40),
-                  Flexible(
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: images.length,
-                        itemBuilder: (context, i) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Expanded(
-                                flex: 60,
-                                child: Card(
-                                    margin: EdgeInsets.all(8.0),
-                                    clipBehavior: Clip.antiAlias,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                    ),
-                                    child: Stack(
-                                        //padding: EdgeInsets.all(80),
-                                        alignment: Alignment.center,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {},
-                                            child: Image(
-                                              //child: InkWell(onTap: () {}),
-                                              image: NetworkImage(images[i]),
-                                              fit: BoxFit.cover,
-                                              height: 240,
-                                              width: 240,
-                                            ),
-                                          )
-                                        ])),
-                              ),
-                              //SizedBox(height: 20),
-                              Expanded(
-                                flex: 10,
-                                child: Text(
-                                  FilmTitle[i],
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            ],
-                          );
-                        }),
-                  ),
-                ],
-              ),
-            )),
-      ),
+    return Scaffold(
+      body: SplashScreen(),
     );
   }
 }
