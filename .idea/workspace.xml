@@ -7,11 +7,8 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="43f4a04c-451b-47d1-b2b0-548ebf3e1a64" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+    <list default="true" id="43f4a04c-451b-47d1-b2b0-548ebf3e1a64" name="Changes" comment="feat(Imdb-app): Add film description">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/LoginPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MyHomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MyHomePage.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +61,14 @@
       <option name="presentableId" value="Default" />
       <updated>1654025612776</updated>
     </task>
+    <task id="LOCAL-00001" summary="feat(Imdb-app): Add film description">
+      <created>1654289442776</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1654289442776</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -83,5 +88,9 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat(Imdb-app): Add film description" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(Imdb-app): Add film description" />
   </component>
 </project>
