@@ -1,14 +1,53 @@
 import 'package:flutter/material.dart';
-
+import 'package:tmdb_api/tmdb_api.dart';
+import 'dart:convert';
 
 class SelectedFilm extends StatefulWidget {
   //const ({Key? key}) : super(key: key);
+  late final String name;
+
+  SelectedFilm(this.name);
+
+  String getName() {
+    return name;
+  }
 
   @override
-  State<SelectedFilm> createState() => _SelectedFilmState();
+  State<SelectedFilm> createState() => _SelectedFilmState(name);
 }
 
 class _SelectedFilmState extends State<SelectedFilm> {
+  String name = "";
+
+  _SelectedFilmState(this.name);
+
+  Map trendingMovies = {};
+  final String apiKey = '88dc8a75006828a15eabe1b1d0b35352';
+  final readAccessToken =
+      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4OGRjOGE3NTAwNjgyOGExNWVhYmUxYjFkMGIzNTM1MiIsInN1YiI6IjYyOWYzMGEyNjVlMGEyMTYxMTc3NGZmOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.t7mlLBji9QgXlZutT03uv5P-NzDz2DZx_0GRoZB4htU';
+
+  loadMovies() async {
+    TMDB tmdbLogs = TMDB(ApiKeys(apiKey, readAccessToken),
+        logConfig: const ConfigLogger(
+          showLogs: true,
+          showErrorLogs: true,
+        ));
+    Map trendingFilm = await tmdbLogs.v3.trending.getTrending();
+    setState(() {
+      for (int i = 0; i < trendingFilm.length; i++) {
+        if (trendingFilm['results'][i]['original_title'] == name) {
+          trendingMovies = trendingFilm['results'][i];
+        }
+      }
+      print(trendingMovies['original_title']);
+    });
+  }
+
+  void initState() {
+    // TODO: implement initState
+    loadMovies();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +64,9 @@ class _SelectedFilmState extends State<SelectedFilm> {
           height: 250,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: NetworkImage(images[0]),
+                  image: NetworkImage(
+                      "https://image.tmdb.org/t/p/w500${trendingMovies['poster_path']}"
+                  ),
                   alignment: const Alignment(-.2, 0),
                   fit: BoxFit.cover),
               borderRadius:
@@ -62,21 +103,21 @@ class _SelectedFilmState extends State<SelectedFilm> {
       Row(
         children: [
           Column(
-            children: const [
+            children: [
               Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Text("Film Title",
-                    style: TextStyle(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(trendingMovies['original_title'],
+                    style: const TextStyle(
                         color: Colors.black,
-                        fontSize: 30,
+                        fontSize: 20,
                         decoration: TextDecoration.none)),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Text("mini description",
-                    style: TextStyle(
+                padding: const EdgeInsets.only(left: 4.0),
+                child: Text(trendingMovies['release_date'],
+                    style: const TextStyle(
                         color: Colors.grey,
-                        fontSize: 15,
+                        fontSize: 10,
                         decoration: TextDecoration.none)),
               ),
             ],
@@ -128,13 +169,13 @@ class _SelectedFilmState extends State<SelectedFilm> {
               ),
             )
           ]))),
-      Column(children: const [
-        Padding(
+      Column(children: [
+        const Padding(
             padding: EdgeInsets.only(left: 10),
             child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Plot',
+                  'Overview',
                   style: TextStyle(
                       fontSize: 25,
                       color: Colors.black,
@@ -142,13 +183,12 @@ class _SelectedFilmState extends State<SelectedFilm> {
                   textAlign: TextAlign.left,
                 ))),
         Padding(
-            padding: EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 10),
             child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet lacus eros. Pellentesque eu urna in augue efficitur elementum vel vel felis. Fusce sit amet turpis eget dolor feugiat dignissim. Ut id odio malesuada turpis interdum gravida varius id lorem. Duis semper rutrum elit sed mattis. Aliquam orci urna, tincidunt ac dapibus non, tempus nec risus. Nunc feugiat ligula id semper volutpat. Aliquam eu aliquam enim, eget egestas quam. Vestibulum nec mi massa. Praesent sapien metus, efficitur eget euismod nec, euismod et libero. Cras elit lectus, faucibus et nibh suscipit, ullamcorper blandit lorem. Pellentesque hendrerit hendrerit placerat. Nam pretium purus at turpis dictum,'
-                  ' vel venenatis dui elementum. Fusce vitae urna nisi. Quisque ornare quis nulla ut elementum. Nam eget dapibus mauris, sed rhoncus nibh.',
-                  style: TextStyle(
+                  trendingMovies['overview'],
+                  style: const TextStyle(
                       fontSize: 10,
                       color: Colors.grey,
                       decoration: TextDecoration.none),

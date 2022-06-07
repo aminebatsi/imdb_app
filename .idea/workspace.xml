@@ -15,6 +15,7 @@
     <list default="true" id="43f4a04c-451b-47d1-b2b0-548ebf3e1a64" name="Changes" comment="feat(Imdb-app): Add film API">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/MyHomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MyHomePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/SelectedFilm.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/SelectedFilm.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +26,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Class" />
         <option value="Dart File" />
       </list>
     </option>
@@ -110,7 +112,14 @@
       <option name="project" value="LOCAL" />
       <updated>1654601746909</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="feat(imdb_app): api testing">
+      <created>1654611466954</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1654611466954</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -140,6 +149,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat(Imdb-app): Add film description" />
     <MESSAGE value="feat(Imdb-app): Add film API" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(Imdb-app): Add film API" />
+    <MESSAGE value="feat(imdb_app): api testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(imdb_app): api testing" />
   </component>
 </project>

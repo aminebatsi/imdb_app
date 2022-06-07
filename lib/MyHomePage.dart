@@ -7,7 +7,6 @@ import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 import 'package:fancy_bar/fancy_bar.dart';
 
 class MyApp extends StatelessWidget {
-
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-
   //const MyHomePage({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -55,12 +53,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List trendingMovies = [];
   final String apiKey = '88dc8a75006828a15eabe1b1d0b35352';
-  final readAccessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4OGRjOGE3NTAwNjgyOGExNWVhYmUxYjFkMGIzNTM1MiIsInN1YiI6IjYyOWYzMGEyNjVlMGEyMTYxMTc3NGZmOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.t7mlLBji9QgXlZutT03uv5P-NzDz2DZx_0GRoZB4htU';
+  final readAccessToken =
+      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4OGRjOGE3NTAwNjgyOGExNWVhYmUxYjFkMGIzNTM1MiIsInN1YiI6IjYyOWYzMGEyNjVlMGEyMTYxMTc3NGZmOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.t7mlLBji9QgXlZutT03uv5P-NzDz2DZx_0GRoZB4htU';
 
-  loadMovies() async{
-    TMDB tmdbLogs = TMDB (
-        ApiKeys(apiKey,readAccessToken),
-        logConfig : const ConfigLogger(
+  loadMovies() async {
+    TMDB tmdbLogs = TMDB(ApiKeys(apiKey, readAccessToken),
+        logConfig: const ConfigLogger(
           showLogs: true,
           showErrorLogs: true,
         ));
@@ -68,10 +66,13 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       trendingMovies = trendingFilm['results'];
     });
-    print(trendingMovies);
+    print(trendingFilm['results']);
+    for (int i = 0; i < trendingFilm.length; i++) {
+      print(trendingFilm['results'][i]['original_title']);
+    }
+
     print("this is the lenght of the list: ${trendingMovies.length}");
   }
-
 
   @override
   void initState() {
@@ -232,13 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     alignment: Alignment.center,
                                     children: [
                                       InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SelectedFilm()));
-                                        },
+                                        onTap: () {},
                                         child: Image(
                                           //child: InkWell(onTap: () {}),
                                           image: NetworkImage(images[i]),
@@ -296,11 +291,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                     alignment: Alignment.center,
                                     children: [
                                       InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SelectedFilm(
+                                                      trendingMovies[index]
+                                                          ['title']),
+                                            ),
+                                          );
+                                        },
                                         child: Image(
                                           //child: InkWell(onTap: () {}),
                                           image: NetworkImage(
-                                              "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}"),
+                                              "https://image.tmdb.org/t/p/w300/${trendingMovies[index]['poster_path']}"),
                                           fit: BoxFit.cover,
                                           height: 240,
                                           width: 150,
