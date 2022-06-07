@@ -34,20 +34,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  List trendingMovies = [];
-  final String apiKey = '88dc8a75006828a15eabe1b1d0b35352';
-  final readAccessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4OGRjOGE3NTAwNjgyOGExNWVhYmUxYjFkMGIzNTM1MiIsInN1YiI6IjYyOWYzMGEyNjVlMGEyMTYxMTc3NGZmOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.t7mlLBji9QgXlZutT03uv5P-NzDz2DZx_0GRoZB4htU';
 
-  loadMovies() async{
-    TMDB tmdbLogs = TMDB (
-        ApiKeys(apiKey,readAccessToken),
-        logConfig : const ConfigLogger(
-          showLogs: true,
-          showErrorLogs: true,
-        ));
-    Map trendingFilm = await tmdbLogs.v3.trending.getTrending();
-    print(trendingFilm);
-  }
   //const MyHomePage({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -66,17 +53,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List trendingMovies = [];
+  final String apiKey = '88dc8a75006828a15eabe1b1d0b35352';
+  final readAccessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4OGRjOGE3NTAwNjgyOGExNWVhYmUxYjFkMGIzNTM1MiIsInN1YiI6IjYyOWYzMGEyNjVlMGEyMTYxMTc3NGZmOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.t7mlLBji9QgXlZutT03uv5P-NzDz2DZx_0GRoZB4htU';
 
-  void _incrementCounter() {
+  loadMovies() async{
+    TMDB tmdbLogs = TMDB (
+        ApiKeys(apiKey,readAccessToken),
+        logConfig : const ConfigLogger(
+          showLogs: true,
+          showErrorLogs: true,
+        ));
+    Map trendingFilm = await tmdbLogs.v3.trending.getTrending();
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      trendingMovies = trendingFilm['results'];
     });
+    print(trendingMovies);
+    print("this is the lenght of the list: ${trendingMovies.length}");
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    loadMovies();
+    super.initState();
   }
 
   @override
@@ -197,16 +198,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       }),
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
                   padding: const EdgeInsets.only(left: 8),
-                  child: Text("Favorites",
+                  child: const Text("Favorites",
                       style: TextStyle(fontSize: 18, fontFamily: 'Comfortaa')),
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Flexible(
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -265,19 +266,19 @@ class _MyHomePageState extends State<MyHomePage> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Text("Latest",
+                  padding: const EdgeInsets.only(left: 8),
+                  child: const Text("Trending",
                       style: TextStyle(fontSize: 18, fontFamily: 'Comfortaa')),
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Flexible(
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: images.length,
-                    itemBuilder: (context, i) {
+                    itemCount: trendingMovies.length,
+                    itemBuilder: (context, index) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
@@ -298,7 +299,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                         onTap: () {},
                                         child: Image(
                                           //child: InkWell(onTap: () {}),
-                                          image: NetworkImage(images[i]),
+                                          image: NetworkImage(
+                                              "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}"),
                                           fit: BoxFit.cover,
                                           height: 240,
                                           width: 150,
@@ -306,15 +308,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                       )
                                     ])),
                           ),
-                          //SizedBox(height: 20),
-                          Expanded(
-                            flex: 10,
-                            child: Text(
-                              FilmTitle[i],
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                          )
                         ],
                       );
                     }),
