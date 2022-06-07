@@ -38,6 +38,7 @@ dependencies:
   scrollable_list_tabview: ^0.1.6
   flashy_tab_bar: ^0.0.3
   fancy_bar: ^2.0.0
+  tmdb_api: ^2.1.2
 
 dev_dependencies:
   flutter_test:

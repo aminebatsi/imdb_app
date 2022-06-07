@@ -9,6 +9,7 @@ class SelectedFilm extends StatefulWidget {
 }
 
 class _SelectedFilmState extends State<SelectedFilm> {
+
   @override
   Widget build(BuildContext context) {
     var react = MediaQuery.of(context).size.width - 50;

@@ -1,4 +1,4 @@
-
+import 'package:tmdb_api/tmdb_api.dart';
 import 'package:flutter/material.dart';
 import 'package:imdb_app/SelectedFilm.dart';
 
@@ -7,6 +7,7 @@ import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 import 'package:fancy_bar/fancy_bar.dart';
 
 class MyApp extends StatelessWidget {
+
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
@@ -33,6 +34,20 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  List trendingMovies = [];
+  final String apiKey = '88dc8a75006828a15eabe1b1d0b35352';
+  final readAccessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4OGRjOGE3NTAwNjgyOGExNWVhYmUxYjFkMGIzNTM1MiIsInN1YiI6IjYyOWYzMGEyNjVlMGEyMTYxMTc3NGZmOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.t7mlLBji9QgXlZutT03uv5P-NzDz2DZx_0GRoZB4htU';
+
+  loadMovies() async{
+    TMDB tmdbLogs = TMDB (
+        ApiKeys(apiKey,readAccessToken),
+        logConfig : const ConfigLogger(
+          showLogs: true,
+          showErrorLogs: true,
+        ));
+    Map trendingFilm = await tmdbLogs.v3.trending.getTrending();
+    print(trendingFilm);
+  }
   //const MyHomePage({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
