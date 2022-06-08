@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'MyHomePage.dart';
 
+import 'GrandCategories.dart';
+
 class LoginPage extends StatefulWidget {
   //const LoginPage({Key? key, required this.title}) : super(key: key);
 
@@ -52,7 +54,10 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Text(
                   'Welcome To Mov.Flix',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Comfortaa',
+                      fontSize: 20),
                 ),
                 SizedBox(height: size.height * 0.08),
                 Image.asset(
@@ -111,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: RaisedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: ((context) => MyHomePage()),
+                          builder: ((context) => GrandCategories()),
                         ));
                       },
                       shape: RoundedRectangleBorder(

@@ -1,39 +1,18 @@
 import 'dart:html';
 
+import 'package:tmdb_api/tmdb_api.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 import 'package:fancy_bar/fancy_bar.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
+import 'SelectedFilm.dart';
 
 class MyHomePage extends StatefulWidget {
-  //const MyHomePage({Key? key}) : super(key: key);
+  final String grandCategorie;
+  const MyHomePage({Key? key, required this.grandCategorie}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -51,289 +30,220 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List trendingMovies = [];
+  final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';
+  final readAccessToken =
+      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';
 
-  void _incrementCounter() {
+  loadMovies() async {
+    TMDB tmdbLogs = TMDB(ApiKeys(apiKey, readAccessToken),
+        logConfig: const ConfigLogger(
+          showLogs: true,
+          showErrorLogs: true,
+        ));
+    Map trendingFilm = await tmdbLogs.v3.trending.getTrending();
+    print(trendingFilm);
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      trendingMovies = trendingFilm['results'];
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    loadMovies();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    var images = [
-      'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW92aWVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
-      'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bW92aWVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
-      'https://images.unsplash.com/photo-1505686994434-e3cc5abf1330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8bW92aWVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60'
-    ];
 
-    var FilmTitle = ['Title 1', 'Title 2', 'Title 3'];
+    int SizeScreen() {
+      if (size.width < 667.0) {
+        return 2;
+      } else {
+        return 4;
+      }
+    }
 
     var category = ['Action', 'Horror', 'Drama', 'History', 'Art'];
 
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            /*title: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Image(
-                  //child: InkWell(onTap: () {}),
-                  image: AssetImage('logowtitlepink.png'),
-                  fit: BoxFit.cover,
-                  height: 60,
-                  width: 100,
-                ),
-              ),
-            ),*/
-            title: Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Center(
-                child: TabBar(
-                  isScrollable: true,
-                  //labelPadding: EdgeInsets.only(left: 20, right: 20),
-                  indicatorColor: const Color(0xFF6C53EF),
-                  indicatorWeight: 4,
-                  //indicator: CircleTabIndicator(color: Colors.black, radius: 2),
-                  indicator: DotIndicator(
-                    distanceFromCenter: 16,
-                    radius: 3,
-                    color: const Color(0xFF6C53EF),
-                    paintingStyle: PaintingStyle.fill,
-                  ),
-                  labelColor: Colors.black,
-                  unselectedLabelColor:
-                      const Color.fromARGB(255, 201, 198, 198),
-                  tabs: [
-                    const Tab(
-                      text: 'In Cinema',
-                    ),
-                    const Tab(
-                      text: 'Box office',
-                    ),
-                    const Tab(
-                      text: 'Coming Soon',
-                    )
-                  ],
-                ),
-              ),
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            /*
-            leading: IconButton(
-              icon: Image.asset('menu-2-line.png'),
-              onPressed: () {},
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.search,
-                  color: Color.fromARGB(255, 104, 104, 104),
-                ),
-                onPressed: () {},
-              ),
-            ],*/
-          ),
-          body: Column(
-            children: [
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.only(left: 10),
-                  height: 50,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 5,
-                      itemBuilder: (context, i) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 20),
-                          child: InkWell(
-                            onTap: () {},
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 201, 198, 198)),
-                                  color: Colors.transparent),
-                              child: Center(child: Text(category[i])),
-                            ),
-                          ),
-                        );
-                      }),
-                ),
-              ),
-              SizedBox(height: 40),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Text("Favorites",
-                      style: TextStyle(fontSize: 18, fontFamily: 'Comfortaa')),
-                ),
-              ),
-              SizedBox(height: 5),
-              Flexible(
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: images.length,
-                    itemBuilder: (context, i) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        //mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            flex: 60,
-                            child: Card(
-                                margin: const EdgeInsets.all(8.0),
-                                clipBehavior: Clip.antiAlias,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                child: Stack(
-                                    //padding: EdgeInsets.all(80),
-                                    alignment: Alignment.center,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Image(
-                                          //child: InkWell(onTap: () {}),
-                                          image: NetworkImage(images[i]),
-                                          fit: BoxFit.cover,
-                                          height: 240,
-                                          width: 150,
-                                        ),
-                                      )
-                                    ])),
-                          ),
-                          //SizedBox(height: 20),
-                          Expanded(
-                            flex: 10,
-                            child: Text(
-                              FilmTitle[i],
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                          )
-                        ],
-                      );
-                    }),
-              ),
-              SizedBox(height: size.height / 40),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Text("Latest",
-                      style: TextStyle(fontSize: 18, fontFamily: 'Comfortaa')),
-                ),
-              ),
-              SizedBox(height: 5),
-              Flexible(
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: images.length,
-                    itemBuilder: (context, i) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            flex: 60,
-                            child: Card(
-                                margin: const EdgeInsets.all(8.0),
-                                clipBehavior: Clip.antiAlias,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                child: Stack(
-                                    //padding: EdgeInsets.all(80),
-                                    alignment: Alignment.center,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Image(
-                                          //child: InkWell(onTap: () {}),
-                                          image: NetworkImage(images[i]),
-                                          fit: BoxFit.cover,
-                                          height: 240,
-                                          width: 150,
-                                        ),
-                                      )
-                                    ])),
-                          ),
-                          //SizedBox(height: 20),
-                          Expanded(
-                            flex: 10,
-                            child: Text(
-                              FilmTitle[i],
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                          )
-                        ],
-                      );
-                    }),
-              ),
-            ],
-          ),
-          bottomNavigationBar: FancyBottomBar(
-            type: FancyType.FancyV1,
-            items: [
-              FancyItem(
-                textColor: const Color(0xFF6C53EF),
-                title: 'Home',
-                icon: const Icon(Icons.home),
-              ),
-              FancyItem(
-                textColor: const Color(0xFF6C53EF),
-                title: 'Trending',
-                icon: const Icon(Icons.trending_up),
-              ),
-              FancyItem(
-                textColor: const Color(0xFF6C53EF),
-                title: 'Search',
-                icon: const Icon(Icons.search),
-              ),
-              FancyItem(
-                textColor: const Color(0xFF6C53EF),
-                title: 'profile',
-                icon: const Icon(Icons.account_circle),
-              ),
-            ],
-            onItemSelected: (index) {
-              print(index);
-            },
-          ),
+    print(size);
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Image.asset('arrow-left-line.png'),
+          onPressed: () {},
         ),
+        actions: <Widget>[
+          SizedBox(
+            width: 10,
+          )
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              widget.grandCategorie,
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ),
+          MyWidget(),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 20, right: 20, left: 20, bottom: 20),
+              child: GridView.builder(
+                  itemCount: trendingMovies.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: SizeScreen(),
+                      childAspectRatio: 0.75,
+                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 20),
+                  itemBuilder: (context, index) => FilmItem(
+                        size: size,
+                        images:
+                            "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}",
+                        FilmTitle: trendingMovies[index]['title'] != null
+                            ? trendingMovies[index]['title']
+                            : trendingMovies[index]['name'],
+                        overview: trendingMovies[index]['overview'] != null
+                            ? trendingMovies[index]['overview']
+                            : 'unavailable',
+                        realeaseDate:
+                            trendingMovies[index]['release_date'] != null
+                                ? trendingMovies[index]['release_date']
+                                : 'undifiened',
+                      )),
+            ),
+          )
+        ],
       ),
     );
   }
 }
 
+class FilmItem extends StatelessWidget {
+  const FilmItem(
+      {Key? key,
+      required this.size,
+      required this.images,
+      required this.FilmTitle,
+      required this.overview,
+      required this.realeaseDate})
+      : super(key: key);
+
+  final Size size;
+  final String images;
+  final String FilmTitle;
+  final String overview;
+  final String realeaseDate;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+              child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SelectedFilm(
+                    images: images,
+                    FilmTitle: FilmTitle,
+                    overview: overview,
+                    realeaseDate: realeaseDate,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(images), fit: BoxFit.cover),
+                    borderRadius: BorderRadius.all(Radius.circular(10)))),
+          )),
+          SizedBox(
+            height: 38,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                FilmTitle,
+                style: TextStyle(fontFamily: 'Comfortaa'),
+              ),
+            ),
+          ),
+        ]);
+  }
+}
+
+class MyWidget extends StatefulWidget {
+  const MyWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  List<String> category = ['Action', 'Horror', 'Drama', 'History', 'Art'];
+  int selectedCategory = 0;
+  Color KtextColor = Color(0xFF535353);
+  Color KtextLightColor = Color(0xFFACACAC);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: SizedBox(
+        height: 25,
+        child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: category.length,
+            itemBuilder: ((context, index) => GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedCategory = index;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          category[index],
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: selectedCategory == index
+                                  ? KtextColor
+                                  : KtextLightColor),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 5),
+                          height: 2,
+                          width: 30,
+                          color: selectedCategory == index
+                              ? Colors.black
+                              : Colors.transparent,
+                        )
+                      ],
+                    ),
+                  ),
+                ))),
+      ),
+    );
+  }
+}
 
 /*
 class CircleTabIndicator extends Decoration {

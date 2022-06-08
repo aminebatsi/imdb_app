@@ -25,9 +25,11 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
+    //size of screen eght weght
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
+        //background image
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('splashscreen.jpg'), fit: BoxFit.fill)),
@@ -35,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
           scrollDirection: Axis.vertical,
           children: [
             SizedBox(height: size.height / 2.5),
+            //logo
             Container(
               height: size.height / 5,
               width: size.height / 5,
@@ -43,6 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(
               height: size.height / 3.2,
             ),
+            //button lets get started
             Padding(
               padding: EdgeInsets.symmetric(horizontal: size.width / 10),
               child: Container(
