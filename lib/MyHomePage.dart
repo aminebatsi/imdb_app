@@ -159,13 +159,13 @@ class FilmItem extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage(images), fit: BoxFit.contain),
-                    borderRadius: const BorderRadius.all(Radius.circular(60)))),
+                        image: NetworkImage(images), fit: BoxFit.fill),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)))),
           )),
           SizedBox(
             height: 38,
             child: Padding(
-              padding: const EdgeInsets.only(top: 8,left: 25,right: 10),
+              padding: const EdgeInsets.only(top: 8, left: 25, right: 10),
               child: Text(
                 FilmTitle,
                 style: const TextStyle(fontFamily: 'Comfortaa'),
