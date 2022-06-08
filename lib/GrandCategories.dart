@@ -18,13 +18,13 @@ class _GrandCategoriesState extends State<GrandCategories> {
         elevation: 0,
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.search,
               color: Color(0xFF535353),
             ),
             onPressed: () {},
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           )
         ],
@@ -46,21 +46,21 @@ class _GrandCategoriesState extends State<GrandCategories> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(42)),
             child: Stack(alignment: Alignment.center, children: <Widget>[
               Ink.image(
-                image: AssetImage('boxOfiice.jpg'),
+                image: const AssetImage('boxOfiice.jpg'),
                 colorFilter: ColorFilters.greyscale,
                 height: 150,
                 fit: BoxFit.cover,
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => MyHomePage(
+                      builder: ((context) => const MyHomePage(
                             grandCategorie: 'Box Office',
                           )),
                     ));
                   },
                 ),
               ),
-              Text(
+              const Text(
                 'BoxOffice',
                 style: TextStyle(
                     fontFamily: 'Comfortaa', color: Colors.white, fontSize: 24),
@@ -76,21 +76,21 @@ class _GrandCategoriesState extends State<GrandCategories> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(42)),
             child: Stack(alignment: Alignment.center, children: <Widget>[
               Ink.image(
-                image: AssetImage('comingsoon.jpg'),
+                image: const AssetImage('comingsoon.jpg'),
                 colorFilter: ColorFilters.greyscale,
                 height: 150,
                 fit: BoxFit.cover,
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => MyHomePage(
+                      builder: ((context) => const MyHomePage(
                             grandCategorie: 'Coming Soon',
                           )),
                     ));
                   },
                 ),
               ),
-              Text(
+              const Text(
                 'Coming Soon',
                 style: TextStyle(
                     fontFamily: 'Comfortaa', color: Colors.white, fontSize: 24),
@@ -106,21 +106,21 @@ class _GrandCategoriesState extends State<GrandCategories> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(42)),
             child: Stack(alignment: Alignment.center, children: <Widget>[
               Ink.image(
-                image: AssetImage('cinema.jpg'),
+                image: const AssetImage('cinema.jpg'),
                 colorFilter: ColorFilters.greyscale,
                 height: 150,
                 fit: BoxFit.cover,
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => MyHomePage(
+                      builder: ((context) => const MyHomePage(
                             grandCategorie: 'In Cinema',
                           )),
                     ));
                   },
                 ),
               ),
-              Text(
+              const Text(
                 'In Cinema',
                 style: TextStyle(
                     fontFamily: 'Comfortaa', color: Colors.white, fontSize: 24),

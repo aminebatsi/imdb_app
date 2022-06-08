@@ -1,17 +1,12 @@
-import 'dart:html';
-
 import 'package:tmdb_api/tmdb_api.dart';
 
 import 'package:flutter/material.dart';
-
-import 'package:tab_indicator_styler/tab_indicator_styler.dart';
-
-import 'package:fancy_bar/fancy_bar.dart';
 
 import 'SelectedFilm.dart';
 
 class MyHomePage extends StatefulWidget {
   final String grandCategorie;
+
   const MyHomePage({Key? key, required this.grandCategorie}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -67,8 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    var category = ['Action', 'Horror', 'Drama', 'History', 'Art'];
-
     print(size);
 
     return Scaffold(
@@ -79,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Image.asset('arrow-left-line.png'),
           onPressed: () {},
         ),
-        actions: <Widget>[
+        actions: const <Widget>[
           SizedBox(
             width: 10,
           )
@@ -95,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headline5,
             ),
           ),
-          MyWidget(),
+          const MyWidget(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -111,16 +104,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         size: size,
                         images:
                             "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}",
-                        FilmTitle: trendingMovies[index]['title'] != null
-                            ? trendingMovies[index]['title']
-                            : trendingMovies[index]['name'],
-                        overview: trendingMovies[index]['overview'] != null
-                            ? trendingMovies[index]['overview']
-                            : 'unavailable',
-                        realeaseDate:
-                            trendingMovies[index]['release_date'] != null
-                                ? trendingMovies[index]['release_date']
-                                : 'undifiened',
+                        FilmTitle: trendingMovies[index]['title'] ??
+                            trendingMovies[index]['name'],
+                        overview:
+                            trendingMovies[index]['overview'] ?? 'unavailable',
+                        realeaseDate: trendingMovies[index]['release_date'] ??
+                            'undefined',
                       )),
             ),
           )
@@ -167,19 +156,19 @@ class FilmItem extends StatelessWidget {
               );
             },
             child: Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage(images), fit: BoxFit.cover),
-                    borderRadius: BorderRadius.all(Radius.circular(10)))),
+                        image: NetworkImage(images), fit: BoxFit.contain),
+                    borderRadius: const BorderRadius.all(Radius.circular(60)))),
           )),
           SizedBox(
             height: 38,
             child: Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 8,left: 25,right: 10),
               child: Text(
                 FilmTitle,
-                style: TextStyle(fontFamily: 'Comfortaa'),
+                style: const TextStyle(fontFamily: 'Comfortaa'),
               ),
             ),
           ),
@@ -197,8 +186,8 @@ class MyWidget extends StatefulWidget {
 class _MyWidgetState extends State<MyWidget> {
   List<String> category = ['Action', 'Horror', 'Drama', 'History', 'Art'];
   int selectedCategory = 0;
-  Color KtextColor = Color(0xFF535353);
-  Color KtextLightColor = Color(0xFFACACAC);
+  Color KtextColor = const Color(0xFF535353);
+  Color KtextLightColor = const Color(0xFFACACAC);
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +218,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   : KtextLightColor),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 5),
+                          margin: const EdgeInsets.only(top: 5),
                           height: 2,
                           width: 30,
                           color: selectedCategory == index
