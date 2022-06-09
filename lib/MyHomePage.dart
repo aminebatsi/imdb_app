@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
           showLogs: true,
           showErrorLogs: true,
         ));
-    Map trendingFilm = await tmdbLogs.v3.trending.getTrending();
+    Map trendingFilm = await tmdbLogs.v3.trending.getTrending(page: 2);
     print(trendingFilm);
     setState(() {
       trendingMovies = trendingFilm['results'];
