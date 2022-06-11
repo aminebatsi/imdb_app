@@ -98,27 +98,34 @@ class _MyHomePageState extends State<MyHomePage> {
     Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);
     //print(trendingFilm);
     //print(trendingFilmPage2);
+    var allFIlms = [
+      ...trendingFilmPage1['results'],
+      ...trendingFilmPage2['results'],
+      ...trendingFilmPage3['results'],
+      ...trendingFilmPage4['results'],
+    ];
+    //print(allFIlms);
     int count = 0;
-    var tempMovies = trendingFilmPage2['results'];
+    var tempMovies = allFIlms;
     if (widget.selectedCategory != 0) {
       for (int i = 0; i < tempMovies.length; i++) {
         for (int j = 0; j < tempMovies[i]['genre_ids'].length; j++) {
           if (tempMovies[i]['genre_ids'][j] ==
               categoryGenres[widget.selectedCategory]['id']) {
             //print(tempMovies[i]);
-            //print(categoryGenres[widget.selectedCategory]);
-            //print(tempMovies[i]['genre_ids']);
+            print(categoryGenres[widget.selectedCategory]);
+            print(tempMovies[i]['genre_ids']);
             //print(tempMovies[i]);
             filtredMovies.add(tempMovies[i]);
           }
         }
       }
     }
-    print(filtredMovies);
+    //print(filtredMovies);
     //print(count);
     setState(() {
       if (widget.selectedCategory == 0) {
-        trendingMovies = trendingFilmPage2['results'];
+        trendingMovies = allFIlms;
       } else {
         trendingMovies = filtredMovies;
       }
