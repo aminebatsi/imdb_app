@@ -6,8 +6,14 @@ import 'SelectedFilm.dart';
 
 class MyHomePage extends StatefulWidget {
   final String grandCategorie;
-
-  const MyHomePage({Key? key, required this.grandCategorie}) : super(key: key);
+  final String category;
+  final int selectedCategory;
+  const MyHomePage({
+    Key? key,
+    required this.grandCategorie,
+    this.category = 'All',
+    this.selectedCategory = 0,
+  }) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -25,6 +31,55 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<String> category = [
+    'All',
+    'Action',
+    'Animation',
+    'Drama',
+    'Comedy',
+    'Family',
+    'Crime'
+  ];
+
+  var categoryGenres = [
+    {"id": 28, "index": 1},
+    {"id": 16, "index": 2},
+    {"id": 35, "index": 3},
+    {"id": 80, "index": 4},
+    {"id": 18, "index": 5},
+    {"id": 10751, "index": 6},
+  ];
+  var Allgenres = {
+    {"id": 28, "name": "Action"},
+    {"id": 12, "name": "Adventure"},
+    {"id": 16, "name": "Animation"},
+    {"id": 35, "name": "Comedy"},
+    {"id": 80, "name": "Crime"},
+    {"id": 99, "name": "Documentary"},
+    {"id": 18, "name": "Drama"},
+    {"id": 10751, "name": "Family"},
+    {"id": 14, "name": "Fantasy"},
+    {"id": 36, "name": "History"},
+    {"id": 27, "name": "Horror"},
+    {"id": 10402, "name": "Music"},
+    {"id": 9648, "name": "Mystery"},
+    {"id": 10749, "name": "Romance"},
+    {"id": 878, "name": "Science Fiction"},
+    {"id": 10770, "name": "TV Movie"},
+    {"id": 53, "name": "Thriller"},
+    {"id": 10752, "name": "War"},
+    {"id": 37, "name": "Western"},
+    {"id": 10759, "name": "Action & Adventure"},
+    {"id": 18, "name": "Drama"},
+    {"id": 10762, "name": "Kids"},
+    {"id": 10763, "name": "News"},
+    {"id": 10764, "name": "Reality"},
+    {"id": 10765, "name": "Sci-Fi & Fantasy"},
+    {"id": 10766, "name": "Soap"},
+    {"id": 10767, "name": "Talk"},
+    {"id": 10768, "name": "War & Politics"},
+    {"id": 37, "name": "Western"}
+  };
   List trendingMovies = [];
   final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';
   final readAccessToken =
@@ -36,10 +91,16 @@ class _MyHomePageState extends State<MyHomePage> {
           showLogs: true,
           showErrorLogs: true,
         ));
-    Map trendingFilm = await tmdbLogs.v3.trending.getTrending(page: 2);
-    print(trendingFilm);
+    Map trendingFilmPage1 = await tmdbLogs.v3.trending.getTrending(page: 1);
+    Map trendingFilmPage2 = await tmdbLogs.v3.trending.getTrending(page: 2);
+    Map trendingFilmPage3 = await tmdbLogs.v3.trending.getTrending(page: 3);
+    Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);
+    //print(trendingFilm);
+    print(trendingFilmPage2);
+    var tempMovies = trendingFilmPage2['results'];
+
     setState(() {
-      trendingMovies = trendingFilm['results'];
+      trendingMovies = trendingFilmPage2['results'];
     });
   }
 
@@ -88,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headline5,
             ),
           ),
-          const MyWidget(),
+          MyWidget(selectedCategory: widget.selectedCategory),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -177,15 +238,23 @@ class FilmItem extends StatelessWidget {
 }
 
 class MyWidget extends StatefulWidget {
-  const MyWidget({Key? key}) : super(key: key);
+  int selectedCategory;
+  MyWidget({Key? key, this.selectedCategory = 0}) : super(key: key);
 
   @override
   State<MyWidget> createState() => _MyWidgetState();
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  List<String> category = ['Action', 'Horror', 'Drama', 'History', 'Art'];
-  int selectedCategory = 0;
+  List<String> category = [
+    'All',
+    'Action',
+    'Horror',
+    'Drama',
+    'History',
+    'Art'
+  ];
+  //int selectedCategory ;
   Color KtextColor = const Color(0xFF535353);
   Color KtextLightColor = const Color(0xFFACACAC);
 
@@ -201,8 +270,17 @@ class _MyWidgetState extends State<MyWidget> {
             itemBuilder: ((context, index) => GestureDetector(
                   onTap: () {
                     setState(() {
-                      selectedCategory = index;
+                      widget.selectedCategory = index;
                     });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(
+                            grandCategorie: 'In Cinema',
+                            category: category[index],
+                            selectedCategory: index),
+                      ),
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -213,7 +291,7 @@ class _MyWidgetState extends State<MyWidget> {
                           category[index],
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: selectedCategory == index
+                              color: widget.selectedCategory == index
                                   ? KtextColor
                                   : KtextLightColor),
                         ),
@@ -221,7 +299,7 @@ class _MyWidgetState extends State<MyWidget> {
                           margin: const EdgeInsets.only(top: 5),
                           height: 2,
                           width: 30,
-                          color: selectedCategory == index
+                          color: widget.selectedCategory == index
                               ? Colors.black
                               : Colors.transparent,
                         )

@@ -12,7 +12,7 @@ class GrandCategories extends StatefulWidget {
 class _GrandCategoriesState extends State<GrandCategories> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold( 
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
