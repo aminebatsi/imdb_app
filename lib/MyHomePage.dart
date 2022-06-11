@@ -35,10 +35,10 @@ class _MyHomePageState extends State<MyHomePage> {
     'All',
     'Action',
     'Animation',
-    'Drama',
     'Comedy',
+    'Crime',
+    'Drama',
     'Family',
-    'Crime'
   ];
 
   var categoryGenres = [
@@ -81,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
     {"id": 37, "name": "Western"}
   };
   List trendingMovies = [];
+  var filtredMovies = [];
   final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';
   final readAccessToken =
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';
@@ -96,11 +97,31 @@ class _MyHomePageState extends State<MyHomePage> {
     Map trendingFilmPage3 = await tmdbLogs.v3.trending.getTrending(page: 3);
     Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);
     //print(trendingFilm);
-    print(trendingFilmPage2);
+    //print(trendingFilmPage2);
+    int count = 0;
     var tempMovies = trendingFilmPage2['results'];
-
+    if (widget.selectedCategory != 0) {
+      for (int i = 0; i < tempMovies.length; i++) {
+        for (int j = 0; j < tempMovies[i]['genre_ids'].length; j++) {
+          if (tempMovies[i]['genre_ids'][j] ==
+              categoryGenres[widget.selectedCategory]['id']) {
+            //print(tempMovies[i]);
+            //print(categoryGenres[widget.selectedCategory]);
+            //print(tempMovies[i]['genre_ids']);
+            //print(tempMovies[i]);
+            filtredMovies.add(tempMovies[i]);
+          }
+        }
+      }
+    }
+    print(filtredMovies);
+    //print(count);
     setState(() {
-      trendingMovies = trendingFilmPage2['results'];
+      if (widget.selectedCategory == 0) {
+        trendingMovies = trendingFilmPage2['results'];
+      } else {
+        trendingMovies = filtredMovies;
+      }
     });
   }
 
@@ -249,10 +270,11 @@ class _MyWidgetState extends State<MyWidget> {
   List<String> category = [
     'All',
     'Action',
-    'Horror',
+    'Animation',
+    'Comedy',
+    'Crime',
     'Drama',
-    'History',
-    'Art'
+    'Family',
   ];
   //int selectedCategory ;
   Color KtextColor = const Color(0xFF535353);
