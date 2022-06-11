@@ -15,17 +15,6 @@ class MyHomePage extends StatefulWidget {
     this.selectedCategory = 0,
   }) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  //final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -96,33 +85,33 @@ class _MyHomePageState extends State<MyHomePage> {
     Map trendingFilmPage2 = await tmdbLogs.v3.trending.getTrending(page: 2);
     Map trendingFilmPage3 = await tmdbLogs.v3.trending.getTrending(page: 3);
     Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);
-    //print(trendingFilm);
-    //print(trendingFilmPage2);
+    Map trendingFilmPage5 = await tmdbLogs.v3.trending.getTrending(page: 5);
+    Map trendingFilmPage6 = await tmdbLogs.v3.trending.getTrending(page: 6);
+    Map trendingFilmPage7 = await tmdbLogs.v3.trending.getTrending(page: 7);
+
     var allFIlms = [
       ...trendingFilmPage1['results'],
       ...trendingFilmPage2['results'],
       ...trendingFilmPage3['results'],
       ...trendingFilmPage4['results'],
+      ...trendingFilmPage5['results'],
+      ...trendingFilmPage6['results'],
+      ...trendingFilmPage7['results'],
     ];
-    //print(allFIlms);
-    int count = 0;
+
     var tempMovies = allFIlms;
+    //int tempSelectedCategory = widget.selectedCategory;
     if (widget.selectedCategory != 0) {
       for (int i = 0; i < tempMovies.length; i++) {
         for (int j = 0; j < tempMovies[i]['genre_ids'].length; j++) {
           if (tempMovies[i]['genre_ids'][j] ==
-              categoryGenres[widget.selectedCategory]['id']) {
-            //print(tempMovies[i]);
-            print(categoryGenres[widget.selectedCategory]);
-            print(tempMovies[i]['genre_ids']);
-            //print(tempMovies[i]);
+              categoryGenres[widget.selectedCategory - 1]['id']) {
             filtredMovies.add(tempMovies[i]);
           }
         }
       }
     }
-    //print(filtredMovies);
-    //print(count);
+    print(filtredMovies);
     setState(() {
       if (widget.selectedCategory == 0) {
         trendingMovies = allFIlms;
@@ -142,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    int tempSelectedCategory = widget.selectedCategory;
     int SizeScreen() {
       if (size.width < 667.0) {
         return 2;
@@ -150,8 +139,6 @@ class _MyHomePageState extends State<MyHomePage> {
         return 4;
       }
     }
-
-    print(size);
 
     return Scaffold(
       appBar: AppBar(
@@ -254,7 +241,7 @@ class FilmItem extends StatelessWidget {
           SizedBox(
             height: 38,
             child: Padding(
-              padding: const EdgeInsets.only(top: 8, left: 25, right: 10),
+              padding: const EdgeInsets.only(top: 8, left: 0, right: 10),
               child: Text(
                 FilmTitle,
                 style: const TextStyle(fontFamily: 'Comfortaa'),
@@ -301,6 +288,7 @@ class _MyWidgetState extends State<MyWidget> {
                     setState(() {
                       widget.selectedCategory = index;
                     });
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(

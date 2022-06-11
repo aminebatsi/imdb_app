@@ -54,14 +54,14 @@ class _GrandCategoriesState extends State<GrandCategories> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: ((context) => const MyHomePage(
-                            grandCategorie: 'Box Office',
+                            grandCategorie: 'Trending',
                           )),
                     ));
                   },
                 ),
               ),
               const Text(
-                'BoxOffice',
+                'Trending',
                 style: TextStyle(
                     fontFamily: 'Comfortaa', color: Colors.white, fontSize: 24),
               ),
@@ -84,14 +84,14 @@ class _GrandCategoriesState extends State<GrandCategories> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: ((context) => const MyHomePage(
-                            grandCategorie: 'Coming Soon',
+                            grandCategorie: 'All Movies',
                           )),
                     ));
                   },
                 ),
               ),
               const Text(
-                'Coming Soon',
+                'All Movies',
                 style: TextStyle(
                     fontFamily: 'Comfortaa', color: Colors.white, fontSize: 24),
               ),
