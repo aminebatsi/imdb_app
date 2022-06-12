@@ -111,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
     }
-    print(filtredMovies);
+    print(allFIlms[0]['poster_path']);
     setState(() {
       if (widget.selectedCategory == 0) {
         trendingMovies = allFIlms;

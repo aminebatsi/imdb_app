@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 import 'ColorFilters.dart';
 import 'MyHomePage.dart';
+import 'SearchScreen.dart';
 
 class GrandCategories extends StatefulWidget {
   const GrandCategories({Key? key}) : super(key: key);
@@ -22,7 +24,12 @@ class _GrandCategoriesState extends State<GrandCategories> {
               Icons.search,
               color: Color(0xFF535353),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchScreen()),
+              );
+            },
           ),
           const SizedBox(
             width: 10,
