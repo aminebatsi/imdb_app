@@ -39,7 +39,12 @@ dependencies:
   flashy_tab_bar: ^0.0.3
   fancy_bar: ^2.0.0
   tmdb_api: 
-  http:
+  firebase_core: ^1.17.1
+  firebase_auth: ^3.3.19
+  provider: ^6.0.3
+  cloud_firestore: ^3.1.17
+  fluttertoast: ^8.0.9
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:
