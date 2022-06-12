@@ -7,12 +7,11 @@ import 'SelectedFilm.dart';
 class MyHomePage extends StatefulWidget {
   final String grandCategorie;
   final String category;
-  final int selectedCategory;
   const MyHomePage({
     Key? key,
     required this.grandCategorie,
     this.category = 'All',
-    this.selectedCategory = 0,
+    //this.selectedCategory = 0,
   }) : super(key: key);
 
   @override
@@ -20,6 +19,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int selectedCategory = 0;
+  String textCategory = 'All';
   List<String> category = [
     'All',
     'Action',
@@ -99,21 +100,26 @@ class _MyHomePageState extends State<MyHomePage> {
       ...trendingFilmPage7['results'],
     ];
 
-    var tempMovies = allFIlms;
+    //var tempMovies = allFIlms;
     //int tempSelectedCategory = widget.selectedCategory;
-    if (widget.selectedCategory != 0) {
+    if (selectedCategory != 0) {
+      var tempMovies = allFIlms;
+      filtredMovies = [];
       for (int i = 0; i < tempMovies.length; i++) {
         for (int j = 0; j < tempMovies[i]['genre_ids'].length; j++) {
           if (tempMovies[i]['genre_ids'][j] ==
-              categoryGenres[widget.selectedCategory - 1]['id']) {
+              categoryGenres[selectedCategory - 1]['id']) {
+            //print(selectedCategory);
             filtredMovies.add(tempMovies[i]);
           }
         }
       }
     }
-    print(allFIlms[0]['poster_path']);
+    print(selectedCategory);
+    print(textCategory);
+    //print(allFIlms[0]['poster_path']);
     setState(() {
-      if (widget.selectedCategory == 0) {
+      if (selectedCategory == 0) {
         trendingMovies = allFIlms;
       } else {
         trendingMovies = filtredMovies;
@@ -131,7 +137,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    int tempSelectedCategory = widget.selectedCategory;
+    //int tempSelectedCategory = selectedCategory;
+    Color KtextColor = const Color(0xFF535353);
+    Color KtextLightColor = const Color(0xFFACACAC);
     int SizeScreen() {
       if (size.width < 667.0) {
         return 2;
@@ -164,7 +172,59 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headline5,
             ),
           ),
-          MyWidget(selectedCategory: widget.selectedCategory),
+          //MyWidget(selectedCategory: widget.selectedCategory),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: SizedBox(
+              height: 25,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: category.length,
+                  itemBuilder: ((context, index) => GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = index;
+                            textCategory = category[index];
+                          });
+
+                          loadMovies();
+                          /*Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyHomePage(
+                                grandCategorie: 'In Cinema',
+                                //category: category[index],
+                              ),
+                            ),
+                          );*/
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                category[index],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: selectedCategory == index
+                                        ? KtextColor
+                                        : KtextLightColor),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 5),
+                                height: 2,
+                                width: 30,
+                                color: selectedCategory == index
+                                    ? Colors.black
+                                    : Colors.transparent,
+                              )
+                            ],
+                          ),
+                        ),
+                      ))),
+            ),
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -293,9 +353,10 @@ class _MyWidgetState extends State<MyWidget> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => MyHomePage(
-                            grandCategorie: 'In Cinema',
-                            category: category[index],
-                            selectedCategory: index),
+                          grandCategorie: 'In Cinema',
+                          category: category[index],
+                          //selectedCategory: index
+                        ),
                       ),
                     );
                   },
