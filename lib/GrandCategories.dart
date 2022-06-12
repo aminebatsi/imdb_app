@@ -91,7 +91,7 @@ class _GrandCategoriesState extends State<GrandCategories> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: ((context) => const MyHomePage(
-                            grandCategorie: 'All Movies',
+                            grandCategorie: 'Top Rated',
                           )),
                     ));
                   },
@@ -121,7 +121,7 @@ class _GrandCategoriesState extends State<GrandCategories> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: ((context) => const MyHomePage(
-                            grandCategorie: 'In Cinema',
+                            grandCategorie: 'Your Fantasy',
                           )),
                     ));
                   },

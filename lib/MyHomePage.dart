@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:tmdb_api/tmdb_api.dart';
 
 import 'package:flutter/material.dart';
 
 import 'SelectedFilm.dart';
+
+import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatefulWidget {
   final String grandCategorie;
@@ -70,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
     {"id": 10768, "name": "War & Politics"},
     {"id": 37, "name": "Western"}
   };
+  var allFIlms = [];
   List trendingMovies = [];
   var filtredMovies = [];
   final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';
@@ -82,23 +87,55 @@ class _MyHomePageState extends State<MyHomePage> {
           showLogs: true,
           showErrorLogs: true,
         ));
-    Map trendingFilmPage1 = await tmdbLogs.v3.trending.getTrending(page: 1);
-    Map trendingFilmPage2 = await tmdbLogs.v3.trending.getTrending(page: 2);
-    Map trendingFilmPage3 = await tmdbLogs.v3.trending.getTrending(page: 3);
-    Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);
-    Map trendingFilmPage5 = await tmdbLogs.v3.trending.getTrending(page: 5);
-    Map trendingFilmPage6 = await tmdbLogs.v3.trending.getTrending(page: 6);
-    Map trendingFilmPage7 = await tmdbLogs.v3.trending.getTrending(page: 7);
+    if (widget.grandCategorie == 'Trending') {
+      Map trendingFilmPage1 = await tmdbLogs.v3.trending.getTrending(page: 1);
+      Map trendingFilmPage2 = await tmdbLogs.v3.trending.getTrending(page: 2);
+      Map trendingFilmPage3 = await tmdbLogs.v3.trending.getTrending(page: 3);
+      Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);
+      Map trendingFilmPage5 = await tmdbLogs.v3.trending.getTrending(page: 5);
+      Map trendingFilmPage6 = await tmdbLogs.v3.trending.getTrending(page: 6);
+      Map trendingFilmPage7 = await tmdbLogs.v3.trending.getTrending(page: 7);
 
-    var allFIlms = [
-      ...trendingFilmPage1['results'],
-      ...trendingFilmPage2['results'],
-      ...trendingFilmPage3['results'],
-      ...trendingFilmPage4['results'],
-      ...trendingFilmPage5['results'],
-      ...trendingFilmPage6['results'],
-      ...trendingFilmPage7['results'],
-    ];
+      allFIlms = [
+        ...trendingFilmPage1['results'],
+        ...trendingFilmPage2['results'],
+        ...trendingFilmPage3['results'],
+        ...trendingFilmPage4['results'],
+        ...trendingFilmPage5['results'],
+        ...trendingFilmPage6['results'],
+        ...trendingFilmPage7['results'],
+      ];
+    } else {
+      //print(myController.text);
+      var topJson1 = await http.get(Uri.parse(
+          'https://api.themoviedb.org/3/movie/top_rated?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
+
+      var topRated1 = jsonDecode(topJson1.body);
+
+      var topJson2 = await http.get(Uri.parse(
+          'https://api.themoviedb.org/3/movie/top_rated?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US&page=2'));
+
+      var topRated2 = jsonDecode(topJson2.body);
+
+      var topJson3 = await http.get(Uri.parse(
+          'https://api.themoviedb.org/3/movie/top_rated?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US&page=3'));
+
+      var topRated3 = jsonDecode(topJson3.body);
+
+      var topJson4 = await http.get(Uri.parse(
+          'https://api.themoviedb.org/3/movie/top_rated?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US&page=4'));
+
+      var topRated4 = jsonDecode(topJson4.body);
+
+      allFIlms = [
+        ...topRated1['results'],
+        ...topRated2['results'],
+        ...topRated3['results'],
+        ...topRated4['results']
+      ];
+
+      print(allFIlms);
+    }
 
     //var tempMovies = allFIlms;
     //int tempSelectedCategory = widget.selectedCategory;

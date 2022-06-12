@@ -92,12 +92,11 @@ class _SelectedFilmState extends State<SelectedFilm> {
             child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.redAccent,
-                shape : RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: const BorderSide(color: Colors.red)
-                ),),
-
+                  primary: Colors.redAccent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: const BorderSide(color: Colors.red)),
+                ),
                 child: const Icon(Icons.add)),
           ),
         ],
