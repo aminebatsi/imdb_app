@@ -81,6 +81,7 @@ class _SelectedFilmState extends State<SelectedFilm> {
                             image: NetworkImage(
                                 "https://image.tmdb.org/t/p/w300/${selectedMovie["backdrop_path"]}"))),
                   ),
+                  //ts
                   Positioned(
                       right: 0,
                       bottom: 0,
