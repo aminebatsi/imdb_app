@@ -1,4 +1,5 @@
 import 'dart:convert';
+//import 'dart:ffi';
 
 import 'package:tmdb_api/tmdb_api.dart';
 
@@ -280,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       crossAxisSpacing: 20),
                   itemBuilder: (context, index) => FilmItem(
                         size: size,
-                        images: trendingMovies[index]['poster_path'] == null
+                        images: trendingMovies[index]['poster_path'] != ''
                             ? "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}"
                             : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
                         FilmTitle: trendingMovies[index]['title'] ??
@@ -289,6 +290,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             trendingMovies[index]['overview'] ?? 'unavailable',
                         realeaseDate: trendingMovies[index]['release_date'] ??
                             'undefined',
+                        filmId: trendingMovies[index]['id'],
                       )),
             ),
           )
@@ -301,13 +303,14 @@ class _MyHomePageState extends State<MyHomePage> {
 class FilmItem extends StatelessWidget {
   const FilmItem(
       {Key? key,
+      required this.filmId,
       required this.size,
       required this.images,
       required this.FilmTitle,
       required this.overview,
       required this.realeaseDate})
       : super(key: key);
-
+  final int filmId;
   final Size size;
   final String images;
   final String FilmTitle;
@@ -330,6 +333,7 @@ class FilmItem extends StatelessWidget {
                     FilmTitle: FilmTitle,
                     overview: overview,
                     realeaseDate: realeaseDate,
+                    filmId: filmId,
                   ),
                 ),
               );

@@ -148,6 +148,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             searchedMovies[index]['overview'] ?? 'unavailable',
                         realeaseDate: searchedMovies[index]['release_date'] ??
                             'undefined',
+                        filmId: searchedMovies[index]['id'],
                       )),
             ),
           )
@@ -163,10 +164,12 @@ class FilmItem extends StatelessWidget {
       required this.size,
       required this.images,
       required this.FilmTitle,
+      required this.filmId,
       required this.overview,
       required this.realeaseDate})
       : super(key: key);
 
+  final int filmId;
   final Size size;
   final String images;
   final String FilmTitle;
@@ -189,6 +192,7 @@ class FilmItem extends StatelessWidget {
                     FilmTitle: FilmTitle,
                     overview: overview,
                     realeaseDate: realeaseDate,
+                    filmId: filmId,
                   ),
                 ),
               );
