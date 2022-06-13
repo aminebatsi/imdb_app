@@ -53,7 +53,8 @@ class _GrandCategoriesState extends State<GrandCategories> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(42)),
             child: Stack(alignment: Alignment.center, children: <Widget>[
               Ink.image(
-                image: const AssetImage('boxOfiice.jpg'),
+                image: NetworkImage(
+                    'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc='),
                 colorFilter: ColorFilters.greyscale,
                 height: 150,
                 fit: BoxFit.cover,
@@ -83,7 +84,8 @@ class _GrandCategoriesState extends State<GrandCategories> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(42)),
             child: Stack(alignment: Alignment.center, children: <Widget>[
               Ink.image(
-                image: const AssetImage('comingsoon.jpg'),
+                image: NetworkImage(
+                    'https://media.istockphoto.com/photos/girl-enjoying-watching-a-nice-movie-at-the-cinema-picture-id1340577488?k=20&m=1340577488&s=612x612&w=0&h=CmkT8ZjztgBlasHdWXtU6kuHHJU9f4FMlFSOtIeAes8='),
                 colorFilter: ColorFilters.greyscale,
                 height: 150,
                 fit: BoxFit.cover,

@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'SelectedFilm.dart';
 import 'package:http/http.dart' as http;
+import 'GrandCategories.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -46,7 +47,10 @@ class _SearchScreenState extends State<SearchScreen> {
         elevation: 0,
         leading: IconButton(
           icon: Image.asset('arrow-left-line.png'),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop(
+                MaterialPageRoute(builder: ((context) => GrandCategories())));
+          },
         ),
         actions: const <Widget>[
           SizedBox(

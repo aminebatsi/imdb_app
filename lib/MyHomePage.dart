@@ -8,6 +8,8 @@ import 'SelectedFilm.dart';
 
 import 'package:http/http.dart' as http;
 
+import 'GrandCategories.dart';
+
 class MyHomePage extends StatefulWidget {
   final String grandCategorie;
   final String category;
@@ -191,7 +193,10 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0,
         leading: IconButton(
           icon: Image.asset('arrow-left-line.png'),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop(
+                MaterialPageRoute(builder: ((context) => GrandCategories())));
+          },
         ),
         actions: const <Widget>[
           SizedBox(
@@ -275,8 +280,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       crossAxisSpacing: 20),
                   itemBuilder: (context, index) => FilmItem(
                         size: size,
-                        images:
-                            "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}",
+                        images: trendingMovies[index]['poster_path'] == null
+                            ? "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}"
+                            : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
                         FilmTitle: trendingMovies[index]['title'] ??
                             trendingMovies[index]['name'],
                         overview:
