@@ -31,7 +31,7 @@ class _RegisterPage extends State<RegisterPage> {
   final emailValidator = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   final passValidator =
-  RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+      RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
   final nameController = TextEditingController();
   final lastNameController = TextEditingController();
   final cPassController = TextEditingController();
@@ -41,9 +41,7 @@ class _RegisterPage extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SizedBox(
         height: size.height,
@@ -272,10 +270,10 @@ class _RegisterPage extends State<RegisterPage> {
                       },
                       style: ButtonStyle(
                           shape:
-                          MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              )),
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          )),
                           padding: MaterialStateProperty.all(
                               const EdgeInsets.all(0.0))),
                       child: Ink(
@@ -294,10 +292,10 @@ class _RegisterPage extends State<RegisterPage> {
                           constraints: const BoxConstraints(
                               minWidth: 88.0,
                               minHeight:
-                              36.0), // min sizes for Material buttons
+                                  36.0), // min sizes for Material buttons
                           alignment: Alignment.center,
                           child: const Text(
-                            "Login",
+                            "SignUp",
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white),
                           ),
@@ -341,10 +339,7 @@ class _RegisterPage extends State<RegisterPage> {
     if (_formKey.currentState!.validate()) {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) =>
-      {
-        postDetailsToFireStore()
-      })
+          .then((value) => {postDetailsToFireStore()})
           .catchError((e) {
         Fluttertoast.showToast(msg: 'Error While Signing Up');
       });
@@ -370,7 +365,6 @@ class _RegisterPage extends State<RegisterPage> {
         .set(userModel.toMap());
     Fluttertoast.showToast(msg: 'Account created Successfully');
     Navigator.pushAndRemoveUntil((context),
-        MaterialPageRoute(builder: (context) => LoginPage()
-        ), (route) => false);
+        MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
   }
 }

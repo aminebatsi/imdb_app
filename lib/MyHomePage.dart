@@ -224,14 +224,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   scrollDirection: Axis.horizontal,
                   itemCount: category.length,
                   itemBuilder: ((context, index) => GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedCategory = index;
-                            textCategory = category[index];
-                          });
+                    onTap: () {
+                      setState(() {
+                        selectedCategory = index;
+                        textCategory = category[index];
+                      });
 
-                          loadMovies();
-                          /*Navigator.push(
+                      loadMovies();
+                      /*Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => MyHomePage(
@@ -240,32 +240,32 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           );*/
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                category[index],
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: selectedCategory == index
-                                        ? KtextColor
-                                        : KtextLightColor),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(top: 5),
-                                height: 2,
-                                width: 30,
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            category[index],
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
                                 color: selectedCategory == index
-                                    ? Colors.black
-                                    : Colors.transparent,
-                              )
-                            ],
+                                    ? KtextColor
+                                    : KtextLightColor),
                           ),
-                        ),
-                      ))),
+                          Container(
+                            margin: const EdgeInsets.only(top: 5),
+                            height: 2,
+                            width: 30,
+                            color: selectedCategory == index
+                                ? Colors.black
+                                : Colors.transparent,
+                          )
+                        ],
+                      ),
+                    ),
+                  ))),
             ),
           ),
           Expanded(
@@ -280,18 +280,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisSpacing: 20,
                       crossAxisSpacing: 20),
                   itemBuilder: (context, index) => FilmItem(
-                        size: size,
-                        images: trendingMovies[index]['poster_path'] != ''
-                            ? "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}"
-                            : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
-                        FilmTitle: trendingMovies[index]['title'] ??
-                            trendingMovies[index]['name'],
-                        overview:
-                            trendingMovies[index]['overview'] ?? 'unavailable',
-                        realeaseDate: trendingMovies[index]['release_date'] ??
-                            'undefined',
-                        filmId: trendingMovies[index]['id'],
-                      )),
+                    size: size,
+                    images: trendingMovies[index]['poster_path'] != ''
+                        ? "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}"
+                        : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
+                    FilmTitle: trendingMovies[index]['title'] ??
+                        trendingMovies[index]['name'],
+                    overview:
+                    trendingMovies[index]['overview'] ?? 'unavailable',
+                    realeaseDate: trendingMovies[index]['release_date'] ??
+                        'undefined',
+                    filmId: trendingMovies[index]['id'],
+                  )),
             ),
           )
         ],
@@ -303,12 +303,12 @@ class _MyHomePageState extends State<MyHomePage> {
 class FilmItem extends StatelessWidget {
   const FilmItem(
       {Key? key,
-      required this.filmId,
-      required this.size,
-      required this.images,
-      required this.FilmTitle,
-      required this.overview,
-      required this.realeaseDate})
+        required this.filmId,
+        required this.size,
+        required this.images,
+        required this.FilmTitle,
+        required this.overview,
+        required this.realeaseDate})
       : super(key: key);
   final int filmId;
   final Size size;
@@ -324,27 +324,27 @@ class FilmItem extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SelectedFilm(
-                    images: images,
-                    FilmTitle: FilmTitle,
-                    overview: overview,
-                    realeaseDate: realeaseDate,
-                    filmId: filmId,
-                  ),
-                ),
-              );
-            },
-            child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(images), fit: BoxFit.fill),
-                    borderRadius: const BorderRadius.all(Radius.circular(20)))),
-          )),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectedFilm(
+                        images: images,
+                        FilmTitle: FilmTitle,
+                        overview: overview,
+                        realeaseDate: realeaseDate,
+                        filmId: filmId,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(images), fit: BoxFit.fill),
+                        borderRadius: const BorderRadius.all(Radius.circular(20)))),
+              )),
           SizedBox(
             height: 38,
             child: Padding(
@@ -391,47 +391,47 @@ class _MyWidgetState extends State<MyWidget> {
             scrollDirection: Axis.horizontal,
             itemCount: category.length,
             itemBuilder: ((context, index) => GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      widget.selectedCategory = index;
-                    });
+              onTap: () {
+                setState(() {
+                  widget.selectedCategory = index;
+                });
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyHomePage(
-                          grandCategorie: 'In Cinema',
-                          category: category[index],
-                          //selectedCategory: index
-                        ),
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          category[index],
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: widget.selectedCategory == index
-                                  ? KtextColor
-                                  : KtextLightColor),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 5),
-                          height: 2,
-                          width: 30,
-                          color: widget.selectedCategory == index
-                              ? Colors.black
-                              : Colors.transparent,
-                        )
-                      ],
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(
+                      grandCategorie: 'In Cinema',
+                      category: category[index],
+                      //selectedCategory: index
                     ),
                   ),
-                ))),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      category[index],
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: widget.selectedCategory == index
+                              ? KtextColor
+                              : KtextLightColor),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      height: 2,
+                      width: 30,
+                      color: widget.selectedCategory == index
+                          ? Colors.black
+                          : Colors.transparent,
+                    )
+                  ],
+                ),
+              ),
+            ))),
       ),
     );
   }
@@ -440,23 +440,18 @@ class _MyWidgetState extends State<MyWidget> {
 /*
 class CircleTabIndicator extends Decoration {
   final BoxPainter _painter;
-
   CircleTabIndicator({required Color color, required double radius})
       : _painter = _CirclePainter(color, radius);
-
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) => _painter;
 }
-
 class _CirclePainter extends BoxPainter {
   final Paint _paint;
   final double radius;
-
   _CirclePainter(Color color, this.radius)
       : _paint = Paint()
           ..color = color
           ..isAntiAlias = true;
-
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
     final Offset circleOffset =

@@ -22,7 +22,7 @@ Map<String,dynamic> toMap(){
       'uid' : uid,
       'email' : email,
       'name' : name,
-      'lastName' : lastName
+      'lastName' : lastName,
     };
 }
 }

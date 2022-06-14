@@ -363,3 +363,12 @@ class _CirclePainter extends BoxPainter {
   }
 }
 */
+
+
+
+ FirebaseFirestore.instance.collection("Users").doc(user!.uid).get()
+        .then((value) {
+      setState(() {
+        loggedUser = UserModel.fromMap(value.data());
+      });
+    });

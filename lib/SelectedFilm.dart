@@ -1,9 +1,13 @@
 import 'dart:convert';
-import 'dart:html';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:http/http.dart' as http;
+
+
 
 class SelectedFilm extends StatefulWidget {
   const SelectedFilm(
@@ -25,6 +29,7 @@ class SelectedFilm extends StatefulWidget {
 }
 
 class _SelectedFilmState extends State<SelectedFilm> {
+  final _auth = FirebaseAuth.instance;
   var selectedMovie = {};
   var genres = [];
   var actors = [];
@@ -61,19 +66,18 @@ class _SelectedFilmState extends State<SelectedFilm> {
   Widget build(BuildContext context) {
     Color KtextColor = const Color(0xFF535353);
     Color KtextLightColor = const Color(0xFFACACAC);
-    List<String> category = ['Action', 'Horror', 'Romance'];
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: <Widget>[
-          Container(
+          SizedBox(
               height: size.height * 0.45,
               child: Stack(
                 children: <Widget>[
                   Container(
                     height: size.height * 0.45 - 50,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(50),
                         ),
                         image: DecorationImage(
@@ -90,15 +94,15 @@ class _SelectedFilmState extends State<SelectedFilm> {
                           width: size.width * 0.9,
                           decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(50),
                                 topLeft: Radius.circular(50),
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  offset: Offset(0, 5),
+                                  offset: const Offset(0, 5),
                                   blurRadius: 50,
-                                  color: Color(0xFF121530).withOpacity(0.2),
+                                  color: const Color(0xFF121530).withOpacity(0.2),
                                 )
                               ]),
                           child: Row(
@@ -108,37 +112,37 @@ class _SelectedFilmState extends State<SelectedFilm> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Image.asset('star-half-fill.png'),
-                                    SizedBox(height: 5),
+                                    const SizedBox(height: 5),
                                     RichText(
                                         text: TextSpan(
                                             style:
-                                                TextStyle(color: Colors.black),
+                                            const TextStyle(color: Colors.black),
                                             children: [
-                                          TextSpan(
-                                              text:
+                                              TextSpan(
+                                                  text:
                                                   '${selectedMovie["vote_average"]}/',
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600)),
-                                          TextSpan(text: '10\n'),
-                                          TextSpan(
-                                              text:
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w600)),
+                                              const TextSpan(text: '10\n'),
+                                              TextSpan(
+                                                  text:
                                                   "${selectedMovie["vote_count"]}",
-                                              style: TextStyle(
-                                                  color: KtextLightColor))
-                                        ]))
+                                                  style: TextStyle(
+                                                      color: KtextLightColor))
+                                            ]))
                                   ],
                                 ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Container(
-                                      padding: EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(8.0),
                                       decoration: BoxDecoration(
-                                        color: Color(0xFF51CF66),
+                                        color: const Color(0xFF51CF66),
                                         borderRadius: BorderRadius.circular(5),
                                       ),
-                                      child: Text(
+                                      child: const Text(
                                         '--',
                                         style: TextStyle(
                                             fontSize: 10,
@@ -146,8 +150,8 @@ class _SelectedFilmState extends State<SelectedFilm> {
                                             color: Colors.white),
                                       ),
                                     ),
-                                    SizedBox(height: 5),
-                                    Text(
+                                    const SizedBox(height: 5),
+                                    const Text(
                                       'Popularity',
                                       style: TextStyle(
                                           fontSize: 16,
@@ -156,15 +160,15 @@ class _SelectedFilmState extends State<SelectedFilm> {
                                     ),
                                     Text('${selectedMovie["popularity"]}',
                                         style:
-                                            TextStyle(color: KtextLightColor))
+                                        TextStyle(color: KtextLightColor))
                                   ],
                                 )
                               ])))
                 ],
               )),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -175,17 +179,17 @@ class _SelectedFilmState extends State<SelectedFilm> {
                           widget.FilmTitle,
                           style: Theme.of(context).textTheme.headline5,
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Row(
                           children: [
                             Text('${selectedMovie["release_date"]}',
                                 style: TextStyle(color: KtextLightColor)),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Text('${selectedMovie["original_language"]}',
                                 style: TextStyle(color: KtextLightColor)),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Text('${selectedMovie["runtime"]} Min',
@@ -198,12 +202,14 @@ class _SelectedFilmState extends State<SelectedFilm> {
                   height: 50,
                   width: 50,
                   child: FlatButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        addToFav(selectedMovie['id']);
+                      },
                       color: Colors.pink,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                         size: 28,
                         color: Colors.white,
@@ -213,33 +219,33 @@ class _SelectedFilmState extends State<SelectedFilm> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: SizedBox(
               height: 36,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: genres.length,
                   itemBuilder: (context, index) => Container(
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.only(left: 20),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black26),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          genres[index]["name"],
-                          style: TextStyle(
-                              color: KtextColor.withOpacity(0.8), fontSize: 16),
-                        ),
-                      )),
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(left: 20),
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black26),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      genres[index]["name"],
+                      style: TextStyle(
+                          color: KtextColor.withOpacity(0.8), fontSize: 16),
+                    ),
+                  )),
             ),
           ),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Text(
                 'Overview',
                 style: Theme.of(context).textTheme.headline6,
@@ -247,12 +253,12 @@ class _SelectedFilmState extends State<SelectedFilm> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(widget.overview,
-                style: TextStyle(color: Color(0xFF737599))),
+                style: const TextStyle(color: Color(0xFF737599))),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(children: <Widget>[
               Align(
                 alignment: Alignment.centerLeft,
@@ -261,14 +267,14 @@ class _SelectedFilmState extends State<SelectedFilm> {
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 height: 160,
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: actors.length < 8 ? actors.length : 7,
                     itemBuilder: (context, index) => Container(
-                        margin: EdgeInsets.only(right: 20),
+                        margin: const EdgeInsets.only(right: 20),
                         width: 80,
                         child: Column(
                           children: <Widget>[
@@ -280,14 +286,14 @@ class _SelectedFilmState extends State<SelectedFilm> {
                                       image: NetworkImage(
                                           "https://image.tmdb.org/t/p/w300/${"https://image.tmdb.org/t/p/w300/${actors[index]['profile_path']}"}"))),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Text(
                               actors[index]['original_name'],
                               style: Theme.of(context).textTheme.bodyText2,
                               textAlign: TextAlign.center,
                               maxLines: 2,
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             Text(
                               actors[index]['character'],
                               style: TextStyle(color: KtextLightColor),
@@ -302,5 +308,19 @@ class _SelectedFilmState extends State<SelectedFilm> {
         ]),
       ),
     );
+  }
+
+  addToFav(int filmId) async {
+    try{
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+    await firebaseFirestore.collection("Users").doc(user?.uid).set(
+        {
+          "favorites" : FieldValue.arrayUnion([filmId]),
+        },SetOptions(merge: true));
+    Fluttertoast.showToast(msg: "Added");
+  } catch(e){
+      Fluttertoast.showToast(msg: 'Try Later');
+    }
   }
 }
