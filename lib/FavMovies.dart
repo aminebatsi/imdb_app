@@ -5,10 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:imdb_app/LoginPage.dart';
-import 'package:tmdb_api/tmdb_api.dart';
 import 'package:http/http.dart' as http;
 import 'GrandCategories.dart';
-import 'MyHomePage.dart';
+import 'SelectedFilm.dart';
 
 class FavMovies extends StatefulWidget {
   const FavMovies({Key? key}) : super(key: key);
@@ -117,44 +116,7 @@ class _FavMovies extends State<FavMovies> {
     var currentUser = FirebaseAuth.instance.currentUser;
     final doc = await fireStore.collection("Users").doc(currentUser?.uid).get();
     movieId.add(doc.data()!['favorites']);
-    /*
-    // filter movie
-    TMDB tmdbLogs = TMDB(ApiKeys(apiKey, readAccessToken),
-        logConfig: const ConfigLogger(
-          showLogs: true,
-          showErrorLogs: true,
-        ));
-    Map trendingFilmPage1 = await tmdbLogs.v3.trending.getTrending(page: 1);
-    Map trendingFilmPage2 = await tmdbLogs.v3.trending.getTrending(page: 2);
-    Map trendingFilmPage3 = await tmdbLogs.v3.trending.getTrending(page: 3);
-    Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);
-    Map trendingFilmPage5 = await tmdbLogs.v3.trending.getTrending(page: 5);
-    Map trendingFilmPage6 = await tmdbLogs.v3.trending.getTrending(page: 6);
-    Map trendingFilmPage7 = await tmdbLogs.v3.trending.getTrending(page: 7);
-
-    var allFIlms = [
-      ...trendingFilmPage1['results'],
-      ...trendingFilmPage2['results'],
-      ...trendingFilmPage3['results'],
-      ...trendingFilmPage4['results'],
-      ...trendingFilmPage5['results'],
-      ...trendingFilmPage6['results'],
-      ...trendingFilmPage7['results'],
-    ];*/
     List arrayFavs = movieId[0];
-    //print(movieId);
-    /*
-    for (var i = 0; i < allFIlms.length; i++) {
-      for (var j = 0; j < movieId[0].length; j++) {
-        if (movieId[0][j] == allFIlms[i]['id']) {
-          setState(() {
-            favMovies.add(allFIlms[i]);
-          });
-
-          break;
-        }
-      }
-    }*/
 
     for (var i = 0; i < arrayFavs.length; i++) {
       var FilmInformationsJson = await http.get(Uri.parse(
@@ -173,5 +135,102 @@ class _FavMovies extends State<FavMovies> {
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
     Fluttertoast.showToast(msg: 'See You Soon');
+  }
+}
+
+class FilmItem extends StatelessWidget {
+  const FilmItem(
+      {Key? key,
+      required this.filmId,
+      required this.size,
+      required this.images,
+      required this.FilmTitle,
+      required this.overview,
+      required this.realeaseDate})
+      : super(key: key);
+  final int filmId;
+  final Size size;
+  final String images;
+  final String FilmTitle;
+  final String overview;
+  final String realeaseDate;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SelectedFilm(
+                      images: images,
+                      FilmTitle: FilmTitle,
+                      overview: overview,
+                      realeaseDate: realeaseDate,
+                      filmId: filmId,
+                    ),
+                  ),
+                );
+              },
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(images), fit: BoxFit.fill),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 20,
+                    right: 15,
+                    child: IconButton(
+                        onPressed: () {
+                          deleteFav(filmId);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) => const FavMovies()));
+                        },
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.deepOrangeAccent,
+                        )),
+                  )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 38,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8, left: 0, right: 10),
+              child: Text(
+                FilmTitle,
+                style: const TextStyle(fontFamily: 'Comfortaa'),
+              ),
+            ),
+          ),
+        ]);
+  }
+
+  void deleteFav(int filmId) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    var fireStore = FirebaseFirestore.instance;
+
+    await fireStore.collection("Users").doc(user?.uid).update(
+      {
+        'favorites' : FieldValue.arrayRemove([filmId])
+      }
+    );
+
   }
 }

@@ -117,7 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       minHeight: 36.0), // min sizes for Material buttons
                   alignment: Alignment.center,
                   child: const Text(
-                    "Login",
+                    "Search",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white),
                   ),
