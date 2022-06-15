@@ -10,14 +10,14 @@ import 'package:http/http.dart' as http;
 import 'GrandCategories.dart';
 import 'MyHomePage.dart';
 
-class FavMovies extends StatefulWidget {
-  const FavMovies({Key? key}) : super(key: key);
+class SuggestionFilm extends StatefulWidget {
+  const SuggestionFilm({Key? key}) : super(key: key);
 
   @override
-  State<FavMovies> createState() => _FavMovies();
+  State<SuggestionFilm> createState() => _SuggestionFilmState();
 }
 
-class _FavMovies extends State<FavMovies> {
+class _SuggestionFilmState extends State<SuggestionFilm> {
   List idMovies = [];
   List favMovies = [];
 
@@ -155,17 +155,22 @@ class _FavMovies extends State<FavMovies> {
         }
       }
     }*/
-
-    for (var i = 0; i < arrayFavs.length; i++) {
+    var SuggestionFilm = [];
+    for (var i = arrayFavs.length - 5; i < arrayFavs.length; i++) {
       var FilmInformationsJson = await http.get(Uri.parse(
-          'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
+          'https://api.themoviedb.org/3/movie/${arrayFavs[i]}/similar?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US&page=1'));
       var film = jsonDecode(FilmInformationsJson.body);
-      //print(film);
-      print(arrayFavs[i]);
-      setState(() {
-        favMovies.add(film);
-      });
+      for (var j = 0;
+          j < (film['results'].length < 20 ? film['results'].length : 5);
+          j++) {
+        setState(() {
+          SuggestionFilm.add(film['results'][j]);
+        });
+      }
     }
+    setState(() {
+      favMovies = SuggestionFilm;
+    });
   }
 
   Future<void> logout(BuildContext context) async {
