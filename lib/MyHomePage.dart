@@ -1,10 +1,13 @@
 import 'dart:convert';
 //import 'dart:ffi';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import 'package:flutter/material.dart';
 
+import 'LoginPage.dart';
 import 'SelectedFilm.dart';
 
 import 'package:http/http.dart' as http;
@@ -199,10 +202,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 MaterialPageRoute(builder: ((context) => GrandCategories())));
           },
         ),
-        actions: const <Widget>[
-          SizedBox(
-            width: 10,
-          )
+        actions: [
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Padding(
+                padding: const EdgeInsetsDirectional.only(start: 40),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.login_outlined,
+                    color: Colors.black45,
+                  ),
+                  onPressed: () {
+                    logout(context);
+                  },
+                ))
+          ])
         ],
       ),
       body: Column(
@@ -297,6 +310,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+  Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+    Fluttertoast.showToast(msg: 'See You Soon');
   }
 }
 
@@ -435,6 +454,7 @@ class _MyWidgetState extends State<MyWidget> {
       ),
     );
   }
+
 }
 
 /*

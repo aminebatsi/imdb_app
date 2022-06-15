@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imdb_app/FavMovies.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'ColorFilters.dart';
 import 'MyHomePage.dart';
@@ -53,7 +54,7 @@ class _GrandCategoriesState extends State<GrandCategories> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(42)),
             child: Stack(alignment: Alignment.center, children: <Widget>[
               Ink.image(
-                image: NetworkImage(
+                image: const NetworkImage(
                     'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc='),
                 colorFilter: ColorFilters.greyscale,
                 height: 150,
@@ -84,7 +85,7 @@ class _GrandCategoriesState extends State<GrandCategories> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(42)),
             child: Stack(alignment: Alignment.center, children: <Widget>[
               Ink.image(
-                image: NetworkImage(
+                image: const NetworkImage(
                     'https://media.istockphoto.com/photos/girl-enjoying-watching-a-nice-movie-at-the-cinema-picture-id1340577488?k=20&m=1340577488&s=612x612&w=0&h=CmkT8ZjztgBlasHdWXtU6kuHHJU9f4FMlFSOtIeAes8='),
                 colorFilter: ColorFilters.greyscale,
                 height: 150,
@@ -122,15 +123,13 @@ class _GrandCategoriesState extends State<GrandCategories> {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => const MyHomePage(
-                            grandCategorie: 'Your Fantasy',
-                          )),
+                      builder: ((context) => const FavMovies()),
                     ));
                   },
                 ),
               ),
               const Text(
-                'In Cinema',
+                'Your Favorites',
                 style: TextStyle(
                     fontFamily: 'Comfortaa', color: Colors.white, fontSize: 24),
               ),
