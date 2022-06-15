@@ -1,0 +1,292 @@
+Index: pubspec.yaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>name: imdb_app\ndescription: A new Flutter project.\n\n# The following line prevents the package from being accidentally published to\n# pub.dev using `flutter pub publish`. This is preferred for private packages.\npublish_to: 'none' # Remove this line if you wish to publish to pub.dev\n\n# The following defines the version and build number for your application.\n# A version number is three numbers separated by dots, like 1.2.43\n# followed by an optional build number separated by a +.\n# Both the version and the builder number may be overridden in flutter\n# build by specifying --build-name and --build-number, respectively.\n# In Android, build-name is used as versionName while build-number used as versionCode.\n# Read more about Android versioning at https://developer.android.com/studio/publish/versioning\n# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.\n# Read more about iOS versioning at\n# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html\nversion: 1.0.0+1\n\nenvironment:\n  sdk: \">=2.17.1 <3.0.0\"\n\n# Dependencies specify other packages that your package needs in order to work.\n# To automatically upgrade your package dependencies to the latest versions\n# consider running `flutter pub upgrade --major-versions`. Alternatively,\n# dependencies can be manually updated by changing the version numbers below to\n# the latest version available on pub.dev. To see which dependencies have newer\n# versions available, run `flutter pub outdated`.\ndependencies:\n  flutter:\n    sdk: flutter\n\n\n  # The following adds the Cupertino Icons font to your application.\n  # Use with the CupertinoIcons class for iOS style icons.\n  cupertino_icons: ^1.0.2\n  tab_indicator_styler: ^2.0.0\n  scrollable_list_tabview: ^0.1.6\n  flashy_tab_bar: ^0.0.3\n  fancy_bar: ^2.0.0\n  tmdb_api: \n\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n  \n\n  # The \"flutter_lints\" package below contains a set of recommended lints to\n  # encourage good coding practices. The lint set provided by the package is\n  # activated in the `analysis_options.yaml` file located at the root of your\n  # package. See that file for information about deactivating specific lint\n  # rules and activating additional ones.\n  flutter_lints: ^2.0.0\n\n# For information on the generic Dart part of this file, see the\n# following page: https://dart.dev/tools/pub/pubspec\n\n# The following section is specific to Flutter packages.\nflutter:\n\n  # The following line ensures that the Material Icons font is\n  # included with your application, so that you can use the icons in\n  # the material Icons class.\n  uses-material-design: true\n\n  # To add assets to your application, add an assets section, like this: \n  assets:\n     - assets/\n     \n\n  # An image asset can refer to one or more resolution-specific \"variants\", see\n  # https://flutter.dev/assets-and-images/#resolution-aware\n\n  # For details regarding adding assets from package dependencies, see\n  # https://flutter.dev/assets-and-images/#from-packages\n\n  # To add custom fonts to your application, add a fonts section here,\n  # in this \"flutter\" section. Each entry in this list should have a\n  # \"family\" key with the font family name, and a \"fonts\" key with a\n  # list giving the asset and other descriptors for the font. For\n  # example:\n  fonts:\n     - family: Comfortaa\n       fonts:\n         - asset: fonts/Comfortaa-Regular.ttf\n  #       - asset: fonts/Schyler-Italic.ttf\n  #         style: italic\n  #   - family: Trajan Pro\n  #     fonts:\n  #       - asset: fonts/TrajanPro.ttf\n  #       - asset: fonts/TrajanPro_Bold.ttf\n  #         weight: 700\n  #\n  # For details regarding fonts from package dependencies,\n  # see https://flutter.dev/custom-fonts/#from-packages\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pubspec.yaml b/pubspec.yaml
+--- a/pubspec.yaml	(revision ceb35ff0e6a25aafb75a762c463725431d60e1be)
++++ b/pubspec.yaml	(date 1655028865781)
+@@ -39,6 +39,8 @@
+   flashy_tab_bar: ^0.0.3
+   fancy_bar: ^2.0.0
+   tmdb_api: 
++  firebase_core: ^1.17.1
++  firebase_auth: ^3.3.19
+ 
+ dev_dependencies:
+   flutter_test:
+Index: .idea/libraries/Flutter_Plugins.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\n  <library name=\"Flutter Plugins\" type=\"FlutterPluginsLibraryType\">\n    <CLASSES>\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flashy_tab_bar-0.0.3\" />\n    </CLASSES>\n    <JAVADOC />\n    <SOURCES />\n  </library>\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/libraries/Flutter_Plugins.xml b/.idea/libraries/Flutter_Plugins.xml
+--- a/.idea/libraries/Flutter_Plugins.xml	(revision ceb35ff0e6a25aafb75a762c463725431d60e1be)
++++ b/.idea/libraries/Flutter_Plugins.xml	(date 1655028886215)
+@@ -2,6 +2,10 @@
+   <library name="Flutter Plugins" type="FlutterPluginsLibraryType">
+     <CLASSES>
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flashy_tab_bar-0.0.3" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.17.1" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.6.4" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.16" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.19" />
+     </CLASSES>
+     <JAVADOC />
+     <SOURCES />
+Index: lib/MyHomePage.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'package:tmdb_api/tmdb_api.dart';\n\nimport 'package:flutter/material.dart';\n\nimport 'SelectedFilm.dart';\n\nclass MyHomePage extends StatefulWidget {\n  final String grandCategorie;\n  final String category;\n  final int selectedCategory;\n  const MyHomePage({\n    Key? key,\n    required this.grandCategorie,\n    this.category = 'All',\n    this.selectedCategory = 0,\n  }) : super(key: key);\n\n  // This widget is the home page of your application. It is stateful, meaning\n  // that it has a State object (defined below) that contains fields that affect\n  // how it looks.\n\n  // This class is the configuration for the state. It holds the values (in this\n  // case the title) provided by the parent (in this case the App widget) and\n  // used by the build method of the State. Fields in a Widget subclass are\n  // always marked \"final\".\n\n  //final String title;\n\n  @override\n  State<MyHomePage> createState() => _MyHomePageState();\n}\n\nclass _MyHomePageState extends State<MyHomePage> {\n  List<String> category = [\n    'All',\n    'Action',\n    'Animation',\n    'Comedy',\n    'Crime',\n    'Drama',\n    'Family',\n  ];\n\n  var categoryGenres = [\n    {\"id\": 28, \"index\": 1},\n    {\"id\": 16, \"index\": 2},\n    {\"id\": 35, \"index\": 3},\n    {\"id\": 80, \"index\": 4},\n    {\"id\": 18, \"index\": 5},\n    {\"id\": 10751, \"index\": 6},\n  ];\n  var Allgenres = {\n    {\"id\": 28, \"name\": \"Action\"},\n    {\"id\": 12, \"name\": \"Adventure\"},\n    {\"id\": 16, \"name\": \"Animation\"},\n    {\"id\": 35, \"name\": \"Comedy\"},\n    {\"id\": 80, \"name\": \"Crime\"},\n    {\"id\": 99, \"name\": \"Documentary\"},\n    {\"id\": 18, \"name\": \"Drama\"},\n    {\"id\": 10751, \"name\": \"Family\"},\n    {\"id\": 14, \"name\": \"Fantasy\"},\n    {\"id\": 36, \"name\": \"History\"},\n    {\"id\": 27, \"name\": \"Horror\"},\n    {\"id\": 10402, \"name\": \"Music\"},\n    {\"id\": 9648, \"name\": \"Mystery\"},\n    {\"id\": 10749, \"name\": \"Romance\"},\n    {\"id\": 878, \"name\": \"Science Fiction\"},\n    {\"id\": 10770, \"name\": \"TV Movie\"},\n    {\"id\": 53, \"name\": \"Thriller\"},\n    {\"id\": 10752, \"name\": \"War\"},\n    {\"id\": 37, \"name\": \"Western\"},\n    {\"id\": 10759, \"name\": \"Action & Adventure\"},\n    {\"id\": 18, \"name\": \"Drama\"},\n    {\"id\": 10762, \"name\": \"Kids\"},\n    {\"id\": 10763, \"name\": \"News\"},\n    {\"id\": 10764, \"name\": \"Reality\"},\n    {\"id\": 10765, \"name\": \"Sci-Fi & Fantasy\"},\n    {\"id\": 10766, \"name\": \"Soap\"},\n    {\"id\": 10767, \"name\": \"Talk\"},\n    {\"id\": 10768, \"name\": \"War & Politics\"},\n    {\"id\": 37, \"name\": \"Western\"}\n  };\n  List trendingMovies = [];\n  var filtredMovies = [];\n  final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';\n  final readAccessToken =\n      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';\n\n  loadMovies() async {\n    TMDB tmdbLogs = TMDB(ApiKeys(apiKey, readAccessToken),\n        logConfig: const ConfigLogger(\n          showLogs: true,\n          showErrorLogs: true,\n        ));\n    Map trendingFilmPage1 = await tmdbLogs.v3.trending.getTrending(page: 1);\n    Map trendingFilmPage2 = await tmdbLogs.v3.trending.getTrending(page: 2);\n    Map trendingFilmPage3 = await tmdbLogs.v3.trending.getTrending(page: 3);\n    Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);\n    //print(trendingFilm);\n    //print(trendingFilmPage2);\n    int count = 0;\n    var tempMovies = trendingFilmPage2['results'];\n    if (widget.selectedCategory != 0) {\n      for (int i = 0; i < tempMovies.length; i++) {\n        for (int j = 0; j < tempMovies[i]['genre_ids'].length; j++) {\n          if (tempMovies[i]['genre_ids'][j] ==\n              categoryGenres[widget.selectedCategory]['id']) {\n            //print(tempMovies[i]);\n            //print(categoryGenres[widget.selectedCategory]);\n            //print(tempMovies[i]['genre_ids']);\n            //print(tempMovies[i]);\n            filtredMovies.add(tempMovies[i]);\n          }\n        }\n      }\n    }\n    print(filtredMovies);\n    //print(count);\n    setState(() {\n      if (widget.selectedCategory == 0) {\n        trendingMovies = trendingFilmPage2['results'];\n      } else {\n        trendingMovies = filtredMovies;\n      }\n    });\n  }\n\n  @override\n  void initState() {\n    // TODO: implement initState\n    loadMovies();\n    super.initState();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    Size size = MediaQuery.of(context).size;\n\n    int SizeScreen() {\n      if (size.width < 667.0) {\n        return 2;\n      } else {\n        return 4;\n      }\n    }\n\n    print(size);\n\n    return Scaffold(\n      appBar: AppBar(\n        backgroundColor: Colors.transparent,\n        elevation: 0,\n        leading: IconButton(\n          icon: Image.asset('arrow-left-line.png'),\n          onPressed: () {},\n        ),\n        actions: const <Widget>[\n          SizedBox(\n            width: 10,\n          )\n        ],\n      ),\n      body: Column(\n        crossAxisAlignment: CrossAxisAlignment.start,\n        children: <Widget>[\n          Padding(\n            padding: const EdgeInsets.symmetric(horizontal: 20),\n            child: Text(\n              widget.grandCategorie,\n              style: Theme.of(context).textTheme.headline5,\n            ),\n          ),\n          MyWidget(selectedCategory: widget.selectedCategory),\n          Expanded(\n            child: Padding(\n              padding: const EdgeInsets.only(\n                  top: 20, right: 20, left: 20, bottom: 20),\n              child: GridView.builder(\n                  itemCount: trendingMovies.length,\n                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(\n                      crossAxisCount: SizeScreen(),\n                      childAspectRatio: 0.75,\n                      mainAxisSpacing: 20,\n                      crossAxisSpacing: 20),\n                  itemBuilder: (context, index) => FilmItem(\n                        size: size,\n                        images:\n                            \"https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}\",\n                        FilmTitle: trendingMovies[index]['title'] ??\n                            trendingMovies[index]['name'],\n                        overview:\n                            trendingMovies[index]['overview'] ?? 'unavailable',\n                        realeaseDate: trendingMovies[index]['release_date'] ??\n                            'undefined',\n                      )),\n            ),\n          )\n        ],\n      ),\n    );\n  }\n}\n\nclass FilmItem extends StatelessWidget {\n  const FilmItem(\n      {Key? key,\n      required this.size,\n      required this.images,\n      required this.FilmTitle,\n      required this.overview,\n      required this.realeaseDate})\n      : super(key: key);\n\n  final Size size;\n  final String images;\n  final String FilmTitle;\n  final String overview;\n  final String realeaseDate;\n\n  @override\n  Widget build(BuildContext context) {\n    return Column(\n        crossAxisAlignment: CrossAxisAlignment.start,\n        children: <Widget>[\n          Expanded(\n              child: GestureDetector(\n            onTap: () {\n              Navigator.push(\n                context,\n                MaterialPageRoute(\n                  builder: (context) => SelectedFilm(\n                    images: images,\n                    FilmTitle: FilmTitle,\n                    overview: overview,\n                    realeaseDate: realeaseDate,\n                  ),\n                ),\n              );\n            },\n            child: Container(\n                padding: const EdgeInsets.all(20),\n                decoration: BoxDecoration(\n                    image: DecorationImage(\n                        image: NetworkImage(images), fit: BoxFit.fill),\n                    borderRadius: const BorderRadius.all(Radius.circular(20)))),\n          )),\n          SizedBox(\n            height: 38,\n            child: Padding(\n              padding: const EdgeInsets.only(top: 8, left: 25, right: 10),\n              child: Text(\n                FilmTitle,\n                style: const TextStyle(fontFamily: 'Comfortaa'),\n              ),\n            ),\n          ),\n        ]);\n  }\n}\n\nclass MyWidget extends StatefulWidget {\n  int selectedCategory;\n  MyWidget({Key? key, this.selectedCategory = 0}) : super(key: key);\n\n  @override\n  State<MyWidget> createState() => _MyWidgetState();\n}\n\nclass _MyWidgetState extends State<MyWidget> {\n  List<String> category = [\n    'All',\n    'Action',\n    'Animation',\n    'Comedy',\n    'Crime',\n    'Drama',\n    'Family',\n  ];\n  //int selectedCategory ;\n  Color KtextColor = const Color(0xFF535353);\n  Color KtextLightColor = const Color(0xFFACACAC);\n\n  @override\n  Widget build(BuildContext context) {\n    return Padding(\n      padding: const EdgeInsets.symmetric(vertical: 20),\n      child: SizedBox(\n        height: 25,\n        child: ListView.builder(\n            scrollDirection: Axis.horizontal,\n            itemCount: category.length,\n            itemBuilder: ((context, index) => GestureDetector(\n                  onTap: () {\n                    setState(() {\n                      widget.selectedCategory = index;\n                    });\n                    Navigator.push(\n                      context,\n                      MaterialPageRoute(\n                        builder: (context) => MyHomePage(\n                            grandCategorie: 'In Cinema',\n                            category: category[index],\n                            selectedCategory: index),\n                      ),\n                    );\n                  },\n                  child: Padding(\n                    padding: const EdgeInsets.symmetric(horizontal: 20),\n                    child: Column(\n                      crossAxisAlignment: CrossAxisAlignment.start,\n                      children: [\n                        Text(\n                          category[index],\n                          style: TextStyle(\n                              fontWeight: FontWeight.bold,\n                              color: widget.selectedCategory == index\n                                  ? KtextColor\n                                  : KtextLightColor),\n                        ),\n                        Container(\n                          margin: const EdgeInsets.only(top: 5),\n                          height: 2,\n                          width: 30,\n                          color: widget.selectedCategory == index\n                              ? Colors.black\n                              : Colors.transparent,\n                        )\n                      ],\n                    ),\n                  ),\n                ))),\n      ),\n    );\n  }\n}\n\n/*\nclass CircleTabIndicator extends Decoration {\n  final BoxPainter _painter;\n\n  CircleTabIndicator({required Color color, required double radius})\n      : _painter = _CirclePainter(color, radius);\n\n  @override\n  BoxPainter createBoxPainter([VoidCallback? onChanged]) => _painter;\n}\n\nclass _CirclePainter extends BoxPainter {\n  final Paint _paint;\n  final double radius;\n\n  _CirclePainter(Color color, this.radius)\n      : _paint = Paint()\n          ..color = color\n          ..isAntiAlias = true;\n\n  @override\n  void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {\n    final Offset circleOffset =\n        offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius - 5);\n    canvas.drawCircle(circleOffset, radius, _paint);\n  }\n}\n*/\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/MyHomePage.dart b/lib/MyHomePage.dart
+--- a/lib/MyHomePage.dart	(revision ceb35ff0e6a25aafb75a762c463725431d60e1be)
++++ b/lib/MyHomePage.dart	(date 1654988143461)
+@@ -35,10 +35,10 @@
+     'All',
+     'Action',
+     'Animation',
+-    'Comedy',
+-    'Crime',
+     'Drama',
++    'Comedy',
+     'Family',
++    'Crime'
+   ];
+ 
+   var categoryGenres = [
+@@ -81,7 +81,7 @@
+     {"id": 37, "name": "Western"}
+   };
+   List trendingMovies = [];
+-  var filtredMovies = [];
++  List moviesByCategory = [];
+   final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';
+   final readAccessToken =
+       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';
+@@ -97,32 +97,20 @@
+     Map trendingFilmPage3 = await tmdbLogs.v3.trending.getTrending(page: 3);
+     Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);
+     //print(trendingFilm);
+-    //print(trendingFilmPage2);
+-    int count = 0;
+     var tempMovies = trendingFilmPage2['results'];
+-    if (widget.selectedCategory != 0) {
+-      for (int i = 0; i < tempMovies.length; i++) {
+-        for (int j = 0; j < tempMovies[i]['genre_ids'].length; j++) {
+-          if (tempMovies[i]['genre_ids'][j] ==
+-              categoryGenres[widget.selectedCategory]['id']) {
+-            //print(tempMovies[i]);
+-            //print(categoryGenres[widget.selectedCategory]);
+-            //print(tempMovies[i]['genre_ids']);
+-            //print(tempMovies[i]);
+-            filtredMovies.add(tempMovies[i]);
+-          }
+-        }
+-      }
+-    }
+-    print(filtredMovies);
+-    //print(count);
++
+     setState(() {
+-      if (widget.selectedCategory == 0) {
+-        trendingMovies = trendingFilmPage2['results'];
+-      } else {
+-        trendingMovies = filtredMovies;
+-      }
++      trendingMovies = trendingFilmPage2['results'];
+     });
++    for(int i = 0 ; i< trendingMovies.length; i++){
++      for(int j = 0 ; j< trendingMovies[i]['genre_ids'].length ; j++){
++        if(trendingMovies[i]['genre_ids'][j] == 16){
++          moviesByCategory.add(trendingMovies[i]);
++          break;
++        }
++      }
++    }
++    print(moviesByCategory);
+   }
+ 
+   @override
+@@ -270,11 +258,10 @@
+   List<String> category = [
+     'All',
+     'Action',
+-    'Animation',
+-    'Comedy',
+-    'Crime',
++    'Horror',
+     'Drama',
+-    'Family',
++    'History',
++    'Art'
+   ];
+   //int selectedCategory ;
+   Color KtextColor = const Color(0xFF535353);
+Index: .idea/libraries/Dart_Packages.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\n  <library name=\"Dart Packages\" type=\"DartPackagesLibraryType\">\n    <properties>\n      <option name=\"packageNameToDirsMap\">\n        <entry key=\"async\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.8.2/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"boolean_selector\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"characters\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"charcode\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.3.1/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"clock\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"collection\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"colorize\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/colorize-3.0.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"cupertino_icons\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.5/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"dio\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/dio-4.0.6/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"fake_async\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.3.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"fancy_bar\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fancy_bar-2.0.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"flashy_tab_bar\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flashy_tab_bar-0.0.3/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"flutter\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/packages/flutter/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"flutter_lints\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-2.0.1/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"flutter_test\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/packages/flutter_test/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"http_parser\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"lints\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/lints-2.0.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"matcher\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"material_color_utilities\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.1.4/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"meta\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.7.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"path\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"scrollable_list_tabview\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_list_tabview-0.1.6/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"scrollable_positioned_list\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_positioned_list-0.1.10/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"sky_engine\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/bin/cache/pkg/sky_engine/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"source_span\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.2/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"stack_trace\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"stream_channel\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"string_scanner\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"tab_indicator_styler\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tab_indicator_styler-2.0.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"term_glyph\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"test_api\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.9/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"tmdb_api\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tmdb_api-2.1.2/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"typed_data\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.1/lib\" />\n            </list>\n          </value>\n        </entry>\n        <entry key=\"vector_math\">\n          <value>\n            <list>\n              <option value=\"$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.2/lib\" />\n            </list>\n          </value>\n        </entry>\n      </option>\n    </properties>\n    <CLASSES>\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.8.2/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.3.1/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/colorize-3.0.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.5/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/dio-4.0.6/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.3.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fancy_bar-2.0.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flashy_tab_bar-0.0.3/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-2.0.1/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/lints-2.0.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.1.4/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.7.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_list_tabview-0.1.6/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_positioned_list-0.1.10/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.2/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tab_indicator_styler-2.0.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.9/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tmdb_api-2.1.2/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.1/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.2/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/bin/cache/pkg/sky_engine/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/packages/flutter/lib\" />\n      <root url=\"file://$USER_HOME$/Documents/flutter/packages/flutter_test/lib\" />\n    </CLASSES>\n    <JAVADOC />\n    <SOURCES />\n  </library>\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/libraries/Dart_Packages.xml b/.idea/libraries/Dart_Packages.xml
+--- a/.idea/libraries/Dart_Packages.xml	(revision ceb35ff0e6a25aafb75a762c463725431d60e1be)
++++ b/.idea/libraries/Dart_Packages.xml	(date 1655028886214)
+@@ -79,6 +79,48 @@
+             </list>
+           </value>
+         </entry>
++        <entry key="firebase_auth">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.19/lib" />
++            </list>
++          </value>
++        </entry>
++        <entry key="firebase_auth_platform_interface">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.2.7/lib" />
++            </list>
++          </value>
++        </entry>
++        <entry key="firebase_auth_web">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.16/lib" />
++            </list>
++          </value>
++        </entry>
++        <entry key="firebase_core">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.17.1/lib" />
++            </list>
++          </value>
++        </entry>
++        <entry key="firebase_core_platform_interface">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_platform_interface-4.4.0/lib" />
++            </list>
++          </value>
++        </entry>
++        <entry key="firebase_core_web">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.6.4/lib" />
++            </list>
++          </value>
++        </entry>
+         <entry key="flashy_tab_bar">
+           <value>
+             <list>
+@@ -107,6 +149,13 @@
+             </list>
+           </value>
+         </entry>
++        <entry key="flutter_web_plugins">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/packages/flutter_web_plugins/lib" />
++            </list>
++          </value>
++        </entry>
+         <entry key="http_parser">
+           <value>
+             <list>
+@@ -114,6 +163,20 @@
+             </list>
+           </value>
+         </entry>
++        <entry key="intl">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/lib" />
++            </list>
++          </value>
++        </entry>
++        <entry key="js">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4/lib" />
++            </list>
++          </value>
++        </entry>
+         <entry key="lints">
+           <value>
+             <list>
+@@ -146,6 +209,13 @@
+           <value>
+             <list>
+               <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/lib" />
++            </list>
++          </value>
++        </entry>
++        <entry key="plugin_platform_interface">
++          <value>
++            <list>
++              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/plugin_platform_interface-2.1.2/lib" />
+             </list>
+           </value>
+         </entry>
+@@ -254,14 +324,23 @@
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/dio-4.0.6/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.3.0/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fancy_bar-2.0.0/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.19/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.2.7/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.16/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.17.1/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_platform_interface-4.4.0/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.6.4/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flashy_tab_bar-0.0.3/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-2.0.1/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/lints-2.0.0/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.1.4/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.7.0/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/plugin_platform_interface-2.1.2/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_list_tabview-0.1.6/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_positioned_list-0.1.10/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.2/lib" />
+@@ -277,6 +356,7 @@
+       <root url="file://$USER_HOME$/Documents/flutter/bin/cache/pkg/sky_engine/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/packages/flutter/lib" />
+       <root url="file://$USER_HOME$/Documents/flutter/packages/flutter_test/lib" />
++      <root url="file://$USER_HOME$/Documents/flutter/packages/flutter_web_plugins/lib" />
+     </CLASSES>
+     <JAVADOC />
+     <SOURCES />
+Index: macos/Flutter/GeneratedPluginRegistrant.swift
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\n//  Generated file. Do not edit.\n//\n\nimport FlutterMacOS\nimport Foundation\n\n\nfunc RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/macos/Flutter/GeneratedPluginRegistrant.swift b/macos/Flutter/GeneratedPluginRegistrant.swift
+--- a/macos/Flutter/GeneratedPluginRegistrant.swift	(revision ceb35ff0e6a25aafb75a762c463725431d60e1be)
++++ b/macos/Flutter/GeneratedPluginRegistrant.swift	(date 1655028879874)
+@@ -5,6 +5,10 @@
+ import FlutterMacOS
+ import Foundation
+ 
++import firebase_auth
++import firebase_core
+ 
+ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
++  FLTFirebaseAuthPlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseAuthPlugin"))
++  FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))
+ }

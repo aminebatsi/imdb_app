@@ -1,0 +1,800 @@
+Index: lib/LoginPage.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'dart:html';\n\nimport 'package:flutter/material.dart';\n\nimport 'MyHomePage.dart';\n\nimport 'GrandCategories.dart';\n\nclass LoginPage extends StatefulWidget {\n  //const LoginPage({Key? key, required this.title}) : super(key: key);\n\n  // This widget is the home page of your application. It is stateful, meaning\n  // that it has a State object (defined below) that contains fields that affect\n  // how it looks.\n\n  // This class is the configuration for the state. It holds the values (in this\n  // case the title) provided by the parent (in this case the App widget) and\n  // used by the build method of the State. Fields in a Widget subclass are\n  // always marked \"final\".\n\n  //final String title;\n\n  @override\n  State<LoginPage> createState() => _LoginPageState();\n}\n\nclass _LoginPageState extends State<LoginPage> {\n  @override\n  Widget build(BuildContext context) {\n    Size size = MediaQuery.of(context).size;\n    return Scaffold(\n      body: Container(\n        height: size.height,\n        width: double.infinity,\n        child: Stack(\n          //alignment: Alignment.center,\n          children: [\n            Positioned(\n                top: 0,\n                right: 0,\n                child: Image.asset(\n                  \"twoelipse.png\",\n                  //width: size.width * 0.3,\n                )),\n            Positioned(\n                bottom: 0,\n                left: 0,\n                child: Image.asset(\n                  \"twoelipsebtm.png\",\n                  //width: size.width * 0.3,\n                )),\n            Column(\n              mainAxisAlignment: MainAxisAlignment.center,\n              children: [\n                Text(\n                  'Welcome To Mov.Flix',\n                  style: TextStyle(\n                      fontWeight: FontWeight.bold,\n                      fontFamily: 'Comfortaa',\n                      fontSize: 20),\n                ),\n                SizedBox(height: size.height * 0.08),\n                Image.asset(\n                  'backpng.png',\n                  height: size.height * 0.40,\n                  width: size.width * 0.9,\n                ),\n                SizedBox(height: size.height * 0.06),\n                Padding(\n                    padding: EdgeInsets.symmetric(\n                        horizontal: size.height / 10, vertical: 5),\n                    child: Container(\n                        decoration: BoxDecoration(\n                          color: Color.fromARGB(50, 228, 228, 228),\n                          borderRadius: BorderRadius.circular(5),\n                        ),\n                        child: Padding(\n                            padding:\n                                EdgeInsets.only(left: 15, right: 15, top: 5),\n                            child: TextFormField(\n                                decoration: InputDecoration(\n                                    prefixIcon: Icon(\n                                      Icons.email,\n                                      size: 20,\n                                    ),\n                                    prefixIconColor: Color(0xFF6C53EF),\n                                    border: InputBorder.none,\n                                    labelText: 'Email',\n                                    hintText: 'example@example.com'))))),\n                Padding(\n                    padding: EdgeInsets.symmetric(\n                        horizontal: size.height / 10, vertical: 5),\n                    child: Container(\n                        decoration: BoxDecoration(\n                          color: Color.fromARGB(50, 228, 228, 228),\n                          borderRadius: BorderRadius.circular(5),\n                        ),\n                        child: Padding(\n                            padding:\n                                EdgeInsets.only(left: 15, right: 15, top: 5),\n                            child: TextFormField(\n                                decoration: InputDecoration(\n                                    prefixIcon: Icon(\n                                      Icons.password,\n                                      size: 20,\n                                    ),\n                                    prefixIconColor: Color(0xFF6C53EF),\n                                    border: InputBorder.none,\n                                    labelText: 'Password',\n                                    hintText: '**********'))))),\n                SizedBox(height: size.width * 0.02),\n                Padding(\n                  padding: EdgeInsets.symmetric(horizontal: size.height / 10),\n                  child: Container(\n                    //width: size.height / 2,\n                    child: RaisedButton(\n                      onPressed: () {\n                        Navigator.of(context).push(MaterialPageRoute(\n                          builder: ((context) => GrandCategories()),\n                        ));\n                      },\n                      shape: RoundedRectangleBorder(\n                          borderRadius: BorderRadius.circular(5)),\n                      padding: const EdgeInsets.all(0.0),\n                      child: Ink(\n                        decoration: const BoxDecoration(\n                          gradient: LinearGradient(\n                              colors: [\n                                Color(0xFF6C53EF),\n                                Color.fromARGB(159, 108, 83, 239)\n                              ],\n                              begin: Alignment.topCenter,\n                              end: Alignment.bottomCenter,\n                              stops: [0.7, 1]),\n                          borderRadius: BorderRadius.all(Radius.circular(5)),\n                        ),\n                        child: Container(\n                          constraints: const BoxConstraints(\n                              minWidth: 88.0,\n                              minHeight:\n                                  36.0), // min sizes for Material buttons\n                          alignment: Alignment.center,\n                          child: const Text(\n                            \"Login\",\n                            textAlign: TextAlign.center,\n                            style: TextStyle(color: Colors.white),\n                          ),\n                        ),\n                      ),\n                    ),\n                  ),\n                )\n              ],\n            )\n          ],\n        ),\n      ), // This trailing comma makes auto-formatting nicer for build methods.\n    );\n  }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/LoginPage.dart b/lib/LoginPage.dart
+--- a/lib/LoginPage.dart	(revision e4709a85588a3afa0f88e9eceaa474a913f3aeb8)
++++ b/lib/LoginPage.dart	(date 1655068574089)
+@@ -1,10 +1,8 @@
+-import 'dart:html';
+-
++import 'package:firebase_auth/firebase_auth.dart';
+ import 'package:flutter/material.dart';
+-
+-import 'MyHomePage.dart';
+-
+-import 'GrandCategories.dart';
++import 'package:fluttertoast/fluttertoast.dart';
++import 'package:imdb_app/GrandCategories.dart';
++import 'package:imdb_app/RegisterPage.dart';
+ 
+ class LoginPage extends StatefulWidget {
+   //const LoginPage({Key? key, required this.title}) : super(key: key);
+@@ -25,11 +23,21 @@
+ }
+ 
+ class _LoginPageState extends State<LoginPage> {
++  // form Key
++  final _formKey = GlobalKey<FormState>();
++  final emailController = TextEditingController();
++  final passController = TextEditingController();
++  final emailValidator = RegExp(
++      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
++
++  //firebase
++  final _auth = FirebaseAuth.instance;
++
+   @override
+   Widget build(BuildContext context) {
+     Size size = MediaQuery.of(context).size;
+     return Scaffold(
+-      body: Container(
++      body: SizedBox(
+         height: size.height,
+         width: double.infinity,
+         child: Stack(
+@@ -49,36 +57,39 @@
+                   "twoelipsebtm.png",
+                   //width: size.width * 0.3,
+                 )),
+-            Column(
+-              mainAxisAlignment: MainAxisAlignment.center,
+-              children: [
+-                Text(
+-                  'Welcome To Mov.Flix',
+-                  style: TextStyle(
+-                      fontWeight: FontWeight.bold,
+-                      fontFamily: 'Comfortaa',
+-                      fontSize: 20),
+-                ),
+-                SizedBox(height: size.height * 0.08),
+-                Image.asset(
+-                  'backpng.png',
+-                  height: size.height * 0.40,
+-                  width: size.width * 0.9,
+-                ),
+-                SizedBox(height: size.height * 0.06),
+-                Padding(
+-                    padding: EdgeInsets.symmetric(
+-                        horizontal: size.height / 10, vertical: 5),
+-                    child: Container(
+-                        decoration: BoxDecoration(
+-                          color: Color.fromARGB(50, 228, 228, 228),
+-                          borderRadius: BorderRadius.circular(5),
+-                        ),
+-                        child: Padding(
+-                            padding:
+-                                EdgeInsets.only(left: 15, right: 15, top: 5),
+-                            child: TextFormField(
+-                                decoration: InputDecoration(
++            Form(
++              key: _formKey,
++              child: Column(
++                mainAxisAlignment: MainAxisAlignment.center,
++                children: [
++                  const Text(
++                    'Welcome To Mov.Flix',
++                    style: TextStyle(
++                        fontWeight: FontWeight.bold,
++                        fontFamily: 'Comfortaa',
++                        fontSize: 20),
++                  ),
++                  SizedBox(height: size.height * 0.02),
++                  Image.asset(
++                    'backpng.png',
++                    height: size.height * 0.40,
++                    width: size.width * 0.9,
++                  ),
++                  SizedBox(height: size.height * 0.03),
++                  Padding(
++                      padding: EdgeInsets.symmetric(
++                          horizontal: size.height / 10, vertical: 5),
++                      child: Container(
++                          decoration: BoxDecoration(
++                            color: const Color.fromARGB(50, 228, 228, 228),
++                            borderRadius: BorderRadius.circular(5),
++                          ),
++                          child: Padding(
++                              padding: const EdgeInsets.only(
++                                  left: 15, right: 15, top: 5),
++                              child: TextFormField(
++                                controller: emailController,
++                                decoration: const InputDecoration(
+                                     prefixIcon: Icon(
+                                       Icons.email,
+                                       size: 20,
+@@ -86,20 +97,36 @@
+                                     prefixIconColor: Color(0xFF6C53EF),
+                                     border: InputBorder.none,
+                                     labelText: 'Email',
+-                                    hintText: 'example@example.com'))))),
+-                Padding(
+-                    padding: EdgeInsets.symmetric(
+-                        horizontal: size.height / 10, vertical: 5),
+-                    child: Container(
+-                        decoration: BoxDecoration(
+-                          color: Color.fromARGB(50, 228, 228, 228),
+-                          borderRadius: BorderRadius.circular(5),
+-                        ),
+-                        child: Padding(
+-                            padding:
+-                                EdgeInsets.only(left: 15, right: 15, top: 5),
+-                            child: TextFormField(
+-                                decoration: InputDecoration(
++                                    hintText: 'example@example.com'),
++                                validator: (value) {
++                                  if (value!.isEmpty) {
++                                    return "Please enter your email";
++                                  }
++                                  if (!emailValidator.hasMatch(value)) {
++                                    return "Email entered not valid";
++                                  }
++                                  return null;
++                                },
++                                keyboardType: TextInputType.emailAddress,
++                                onSaved: (value) {
++                                  emailController.text = value!;
++                                },
++                                textInputAction: TextInputAction.next,
++                              )))),
++                  Padding(
++                      padding: EdgeInsets.symmetric(
++                          horizontal: size.height / 10, vertical: 5),
++                      child: Container(
++                          decoration: BoxDecoration(
++                            color: const Color.fromARGB(50, 228, 228, 228),
++                            borderRadius: BorderRadius.circular(5),
++                          ),
++                          child: Padding(
++                              padding: const EdgeInsets.only(
++                                  left: 15, right: 15, top: 5),
++                              child: TextFormField(
++                                controller: passController,
++                                decoration: const InputDecoration(
+                                     prefixIcon: Icon(
+                                       Icons.password,
+                                       size: 20,
+@@ -107,21 +134,34 @@
+                                     prefixIconColor: Color(0xFF6C53EF),
+                                     border: InputBorder.none,
+                                     labelText: 'Password',
+-                                    hintText: '**********'))))),
+-                SizedBox(height: size.width * 0.02),
+-                Padding(
+-                  padding: EdgeInsets.symmetric(horizontal: size.height / 10),
+-                  child: Container(
+-                    //width: size.height / 2,
+-                    child: RaisedButton(
++                                    hintText: '**********'),
++                                validator: (value) {
++                                  if (value!.isEmpty) {
++                                    return "Please enter your password";
++                                  }
++                                  return null;
++                                },
++                                onSaved: (value) {
++                                  passController.text = value!;
++                                },
++                                textInputAction: TextInputAction.done,
++                              )))),
++                  SizedBox(height: size.width * 0.02),
++                  Padding(
++                    padding: EdgeInsets.symmetric(horizontal: size.height / 10),
++                    child: ElevatedButton(
+                       onPressed: () {
+-                        Navigator.of(context).push(MaterialPageRoute(
+-                          builder: ((context) => GrandCategories()),
+-                        ));
++                        signIn(emailController.text.trim(),
++                            passController.text.trim());
+                       },
+-                      shape: RoundedRectangleBorder(
+-                          borderRadius: BorderRadius.circular(5)),
+-                      padding: const EdgeInsets.all(0.0),
++                      style: ButtonStyle(
++                          shape:
++                              MaterialStateProperty.all<RoundedRectangleBorder>(
++                                  RoundedRectangleBorder(
++                            borderRadius: BorderRadius.circular(5),
++                          )),
++                          padding: MaterialStateProperty.all(
++                              const EdgeInsets.all(0.0))),
+                       child: Ink(
+                         decoration: const BoxDecoration(
+                           gradient: LinearGradient(
+@@ -149,12 +189,51 @@
+                       ),
+                     ),
+                   ),
+-                )
+-              ],
++                  const SizedBox(
++                    height: 15,
++                  ),
++                  Row(
++                    mainAxisAlignment: MainAxisAlignment.center,
++                    children: [
++                      const Text('create an account ? '),
++                      GestureDetector(
++                        onTap: () {
++                          Navigator.push(context, MaterialPageRoute(
++                              builder: (context) => RegisterPage()));
++
++                        },
++                        child: const Text(
++                          'SignUp',
++                          style: TextStyle(
++                              fontWeight: FontWeight.bold,
++                              color: Colors.black54,
++                          fontSize: 15),
++                        ),
++                      )
++                    ],
++                  )
++                ],
++              ),
+             )
+           ],
+         ),
+       ), // This trailing comma makes auto-formatting nicer for build methods.
+     );
+   }
++
++  //Login function
++  void signIn(String email, String password) async {
++    if (_formKey.currentState!.validate()) {
++      await _auth
++          .signInWithEmailAndPassword(email: email, password: password)
++          .then((uid) => {
++                Fluttertoast.showToast(msg: 'Login Successful'),
++                Navigator.of(context).pushReplacement(MaterialPageRoute(
++                    builder: (context) => const GrandCategories()))
++              })
++          .catchError((e) {
++        Fluttertoast.showToast(msg: 'Email or Password not valid');
++      });
++    }
++  }
+ }
+Index: .idea/libraries/Dart_Packages.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/libraries/Dart_Packages.xml b/.idea/libraries/Dart_Packages.xml
+deleted file mode 100644
+--- a/.idea/libraries/Dart_Packages.xml	(revision e4709a85588a3afa0f88e9eceaa474a913f3aeb8)
++++ /dev/null	(revision e4709a85588a3afa0f88e9eceaa474a913f3aeb8)
+@@ -1,284 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Dart Packages" type="DartPackagesLibraryType">
+-    <properties>
+-      <option name="packageNameToDirsMap">
+-        <entry key="async">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.8.2/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="boolean_selector">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="characters">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="charcode">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.3.1/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="clock">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="collection">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="colorize">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/colorize-3.0.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="cupertino_icons">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.5/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="dio">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/dio-4.0.6/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="fake_async">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.3.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="fancy_bar">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fancy_bar-2.0.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="flashy_tab_bar">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flashy_tab_bar-0.0.3/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="flutter">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/packages/flutter/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="flutter_lints">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-2.0.1/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="flutter_test">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/packages/flutter_test/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="http_parser">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="lints">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/lints-2.0.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="matcher">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="material_color_utilities">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.1.4/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="meta">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.7.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="path">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="scrollable_list_tabview">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_list_tabview-0.1.6/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="scrollable_positioned_list">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_positioned_list-0.1.10/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="sky_engine">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/bin/cache/pkg/sky_engine/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="source_span">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.2/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="stack_trace">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="stream_channel">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="string_scanner">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="tab_indicator_styler">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tab_indicator_styler-2.0.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="term_glyph">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="test_api">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.9/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="tmdb_api">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tmdb_api-2.1.2/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="typed_data">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.1/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-        <entry key="vector_math">
+-          <value>
+-            <list>
+-              <option value="$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.2/lib" />
+-            </list>
+-          </value>
+-        </entry>
+-      </option>
+-    </properties>
+-    <CLASSES>
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.8.2/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.3.1/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/colorize-3.0.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.5/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/dio-4.0.6/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.3.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fancy_bar-2.0.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flashy_tab_bar-0.0.3/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-2.0.1/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/lints-2.0.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.1.4/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.7.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_list_tabview-0.1.6/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_positioned_list-0.1.10/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.2/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tab_indicator_styler-2.0.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.9/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/tmdb_api-2.1.2/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.1/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.2/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/bin/cache/pkg/sky_engine/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/packages/flutter/lib" />
+-      <root url="file://$USER_HOME$/Documents/flutter/packages/flutter_test/lib" />
+-    </CLASSES>
+-    <JAVADOC />
+-    <SOURCES />
+-  </library>
+-</component>
+\ No newline at end of file
+Index: lib/generated_plugin_registrant.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/generated_plugin_registrant.dart b/lib/generated_plugin_registrant.dart
+new file mode 100644
+--- /dev/null	(date 1655067521268)
++++ b/lib/generated_plugin_registrant.dart	(date 1655067521268)
+@@ -0,0 +1,23 @@
++//
++// Generated file. Do not edit.
++//
++
++// ignore_for_file: directives_ordering
++// ignore_for_file: lines_longer_than_80_chars
++// ignore_for_file: depend_on_referenced_packages
++
++import 'package:cloud_firestore_web/cloud_firestore_web.dart';
++import 'package:firebase_auth_web/firebase_auth_web.dart';
++import 'package:firebase_core_web/firebase_core_web.dart';
++import 'package:fluttertoast/fluttertoast_web.dart';
++
++import 'package:flutter_web_plugins/flutter_web_plugins.dart';
++
++// ignore: public_member_api_docs
++void registerPlugins(Registrar registrar) {
++  FirebaseFirestoreWeb.registerWith(registrar);
++  FirebaseAuthWeb.registerWith(registrar);
++  FirebaseCoreWeb.registerWith(registrar);
++  FluttertoastWebPlugin.registerWith(registrar);
++  registrar.registerMessageHandler();
++}
+Index: android/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>buildscript {\n    ext.kotlin_version = '1.6.10'\n    repositories {\n        google()\n        mavenCentral()\n    }\n\n    dependencies {\n        classpath 'com.android.tools.build:gradle:7.1.2'\n        classpath \"org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version\"\n    }\n}\n\nallprojects {\n    repositories {\n        google()\n        mavenCentral()\n    }\n}\n\nrootProject.buildDir = '../build'\nsubprojects {\n    project.buildDir = \"${rootProject.buildDir}/${project.name}\"\n}\nsubprojects {\n    project.evaluationDependsOn(':app')\n}\n\ntask clean(type: Delete) {\n    delete rootProject.buildDir\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/build.gradle b/android/build.gradle
+--- a/android/build.gradle	(revision e4709a85588a3afa0f88e9eceaa474a913f3aeb8)
++++ b/android/build.gradle	(date 1655034933693)
+@@ -7,6 +7,9 @@
+ 
+     dependencies {
+         classpath 'com.android.tools.build:gradle:7.1.2'
++        // START: FlutterFire Configuration
++        classpath 'com.google.gms:google-services:4.3.10'
++        // END: FlutterFire Configuration
+         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+     }
+ }
+Index: pubspec.yaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>name: imdb_app\ndescription: A new Flutter project.\n\n# The following line prevents the package from being accidentally published to\n# pub.dev using `flutter pub publish`. This is preferred for private packages.\npublish_to: 'none' # Remove this line if you wish to publish to pub.dev\n\n# The following defines the version and build number for your application.\n# A version number is three numbers separated by dots, like 1.2.43\n# followed by an optional build number separated by a +.\n# Both the version and the builder number may be overridden in flutter\n# build by specifying --build-name and --build-number, respectively.\n# In Android, build-name is used as versionName while build-number used as versionCode.\n# Read more about Android versioning at https://developer.android.com/studio/publish/versioning\n# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.\n# Read more about iOS versioning at\n# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html\nversion: 1.0.0+1\n\nenvironment:\n  sdk: \">=2.17.1 <3.0.0\"\n\n# Dependencies specify other packages that your package needs in order to work.\n# To automatically upgrade your package dependencies to the latest versions\n# consider running `flutter pub upgrade --major-versions`. Alternatively,\n# dependencies can be manually updated by changing the version numbers below to\n# the latest version available on pub.dev. To see which dependencies have newer\n# versions available, run `flutter pub outdated`.\ndependencies:\n  flutter:\n    sdk: flutter\n\n\n  # The following adds the Cupertino Icons font to your application.\n  # Use with the CupertinoIcons class for iOS style icons.\n  cupertino_icons: ^1.0.2\n  tab_indicator_styler: ^2.0.0\n  scrollable_list_tabview: ^0.1.6\n  flashy_tab_bar: ^0.0.3\n  fancy_bar: ^2.0.0\n  tmdb_api: \n\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n  \n\n  # The \"flutter_lints\" package below contains a set of recommended lints to\n  # encourage good coding practices. The lint set provided by the package is\n  # activated in the `analysis_options.yaml` file located at the root of your\n  # package. See that file for information about deactivating specific lint\n  # rules and activating additional ones.\n  flutter_lints: ^2.0.0\n\n# For information on the generic Dart part of this file, see the\n# following page: https://dart.dev/tools/pub/pubspec\n\n# The following section is specific to Flutter packages.\nflutter:\n\n  # The following line ensures that the Material Icons font is\n  # included with your application, so that you can use the icons in\n  # the material Icons class.\n  uses-material-design: true\n\n  # To add assets to your application, add an assets section, like this: \n  assets:\n     - assets/\n     \n\n  # An image asset can refer to one or more resolution-specific \"variants\", see\n  # https://flutter.dev/assets-and-images/#resolution-aware\n\n  # For details regarding adding assets from package dependencies, see\n  # https://flutter.dev/assets-and-images/#from-packages\n\n  # To add custom fonts to your application, add a fonts section here,\n  # in this \"flutter\" section. Each entry in this list should have a\n  # \"family\" key with the font family name, and a \"fonts\" key with a\n  # list giving the asset and other descriptors for the font. For\n  # example:\n  fonts:\n     - family: Comfortaa\n       fonts:\n         - asset: fonts/Comfortaa-Regular.ttf\n  #       - asset: fonts/Schyler-Italic.ttf\n  #         style: italic\n  #   - family: Trajan Pro\n  #     fonts:\n  #       - asset: fonts/TrajanPro.ttf\n  #       - asset: fonts/TrajanPro_Bold.ttf\n  #         weight: 700\n  #\n  # For details regarding fonts from package dependencies,\n  # see https://flutter.dev/custom-fonts/#from-packages\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pubspec.yaml b/pubspec.yaml
+--- a/pubspec.yaml	(revision e4709a85588a3afa0f88e9eceaa474a913f3aeb8)
++++ b/pubspec.yaml	(date 1655050389597)
+@@ -39,6 +39,11 @@
+   flashy_tab_bar: ^0.0.3
+   fancy_bar: ^2.0.0
+   tmdb_api: 
++  firebase_core: ^1.17.1
++  firebase_auth: ^3.3.19
++  provider: ^6.0.3
++  cloud_firestore: ^3.1.17
++  fluttertoast: ^8.0.9
+ 
+ dev_dependencies:
+   flutter_test:
+Index: lib/main.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'package:flutter/material.dart';\n\n//Indicator widget package\nimport 'package:tab_indicator_styler/tab_indicator_styler.dart';\nimport 'SplashScreen.dart';\n\n//List package\n\nvoid main() {\n  runApp(const MyApp());\n}\n\nclass MyApp extends StatelessWidget {\n  const MyApp({Key? key}) : super(key: key);\n\n  // This widget is the root of your application.\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      debugShowCheckedModeBanner: false,\n      title: 'Flutter Demo',\n      theme: ThemeData(\n        // This is the theme of your application.\n        //\n        // Try running your application with \"flutter run\". You'll see the\n        // application has a blue toolbar. Then, without quitting the app, try\n        // changing the primarySwatch below to Colors.green and then invoke\n        // \"hot reload\" (press \"r\" in the console where you ran \"flutter run\",\n        // or simply save your changes to \"hot reload\" in a Flutter IDE).\n        // Notice that the counter didn't reset back to zero; the application\n        // is not restarted.\n        primarySwatch: Colors.blue,\n      ),\n      home: const MyHomePage(title: 'Flutter Demo Home Page'),\n    );\n  }\n}\n\nclass MyHomePage extends StatefulWidget {\n  const MyHomePage({Key? key, required this.title}) : super(key: key);\n\n  // This widget is the home page of your application. It is stateful, meaning\n  // that it has a State object (defined below) that contains fields that affect\n  // how it looks.\n\n  // This class is the configuration for the state. It holds the values (in this\n  // case the title) provided by the parent (in this case the App widget) and\n  // used by the build method of the State. Fields in a Widget subclass are\n  // always marked \"final\".\n\n  final String title;\n\n  @override\n  State<MyHomePage> createState() => _MyHomePageState();\n}\n\nclass _MyHomePageState extends State<MyHomePage> {\n  int _counter = 0;\n\n  void _incrementCounter() {\n    setState(() {\n      // This call to setState tells the Flutter framework that something has\n      // changed in this State, which causes it to rerun the build method below\n      // so that the display can reflect the updated values. If we changed\n      // _counter without calling setState(), then the build method would not be\n      // called again, and so nothing would appear to happen.\n      _counter++;\n    });\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    // This method is rerun every time setState is called, for instance as done\n    // by the _incrementCounter method above.\n    //\n    // The Flutter framework has been optimized to make rerunning build methods\n    // fast, so that you can just rebuild anything that needs updating rather\n    // than having to individually change instances of widgets.\n\n    return Scaffold(\n      body: SplashScreen(),\n    );\n  }\n}\n\n\n/*\nclass CircleTabIndicator extends Decoration {\n  final BoxPainter _painter;\n\n  CircleTabIndicator({required Color color, required double radius})\n      : _painter = _CirclePainter(color, radius);\n\n  @override\n  BoxPainter createBoxPainter([VoidCallback? onChanged]) => _painter;\n}\n\nclass _CirclePainter extends BoxPainter {\n  final Paint _paint;\n  final double radius;\n\n  _CirclePainter(Color color, this.radius)\n      : _paint = Paint()\n          ..color = color\n          ..isAntiAlias = true;\n\n  @override\n  void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {\n    final Offset circleOffset =\n        offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius - 5);\n    canvas.drawCircle(circleOffset, radius, _paint);\n  }\n}\n*/
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/main.dart b/lib/main.dart
+--- a/lib/main.dart	(revision e4709a85588a3afa0f88e9eceaa474a913f3aeb8)
++++ b/lib/main.dart	(date 1655051060483)
+@@ -1,12 +1,18 @@
++import 'package:firebase_core/firebase_core.dart';
+ import 'package:flutter/material.dart';
+ 
+-//Indicator widget package
+-import 'package:tab_indicator_styler/tab_indicator_styler.dart';
++
++
+ import 'SplashScreen.dart';
++import 'firebase_options.dart';
+ 
+ //List package
+ 
+-void main() {
++Future<void> main() async{
++  WidgetsFlutterBinding.ensureInitialized();
++  await Firebase.initializeApp(
++    options: DefaultFirebaseOptions.currentPlatform,
++  );
+   runApp(const MyApp());
+ }
+ 
+@@ -55,18 +61,7 @@
+ }
+ 
+ class _MyHomePageState extends State<MyHomePage> {
+-  int _counter = 0;
+ 
+-  void _incrementCounter() {
+-    setState(() {
+-      // This call to setState tells the Flutter framework that something has
+-      // changed in this State, which causes it to rerun the build method below
+-      // so that the display can reflect the updated values. If we changed
+-      // _counter without calling setState(), then the build method would not be
+-      // called again, and so nothing would appear to happen.
+-      _counter++;
+-    });
+-  }
+ 
+   @override
+   Widget build(BuildContext context) {
+@@ -77,38 +72,10 @@
+     // fast, so that you can just rebuild anything that needs updating rather
+     // than having to individually change instances of widgets.
+ 
+-    return Scaffold(
++    return const Scaffold(
+       body: SplashScreen(),
+     );
+   }
+ }
+ 
+ 
+-/*
+-class CircleTabIndicator extends Decoration {
+-  final BoxPainter _painter;
+-
+-  CircleTabIndicator({required Color color, required double radius})
+-      : _painter = _CirclePainter(color, radius);
+-
+-  @override
+-  BoxPainter createBoxPainter([VoidCallback? onChanged]) => _painter;
+-}
+-
+-class _CirclePainter extends BoxPainter {
+-  final Paint _paint;
+-  final double radius;
+-
+-  _CirclePainter(Color color, this.radius)
+-      : _paint = Paint()
+-          ..color = color
+-          ..isAntiAlias = true;
+-
+-  @override
+-  void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
+-    final Offset circleOffset =
+-        offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius - 5);
+-    canvas.drawCircle(circleOffset, radius, _paint);
+-  }
+-}
+-*/
+\ No newline at end of file
+Index: android/app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>def localProperties = new Properties()\ndef localPropertiesFile = rootProject.file('local.properties')\nif (localPropertiesFile.exists()) {\n    localPropertiesFile.withReader('UTF-8') { reader ->\n        localProperties.load(reader)\n    }\n}\n\ndef flutterRoot = localProperties.getProperty('flutter.sdk')\nif (flutterRoot == null) {\n    throw new GradleException(\"Flutter SDK not found. Define location with flutter.sdk in the local.properties file.\")\n}\n\ndef flutterVersionCode = localProperties.getProperty('flutter.versionCode')\nif (flutterVersionCode == null) {\n    flutterVersionCode = '1'\n}\n\ndef flutterVersionName = localProperties.getProperty('flutter.versionName')\nif (flutterVersionName == null) {\n    flutterVersionName = '1.0'\n}\n\napply plugin: 'com.android.application'\napply plugin: 'kotlin-android'\napply from: \"$flutterRoot/packages/flutter_tools/gradle/flutter.gradle\"\n\nandroid {\n    compileSdkVersion flutter.compileSdkVersion\n    ndkVersion flutter.ndkVersion\n\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_1_8\n        targetCompatibility JavaVersion.VERSION_1_8\n    }\n\n    kotlinOptions {\n        jvmTarget = '1.8'\n    }\n\n    sourceSets {\n        main.java.srcDirs += 'src/main/kotlin'\n    }\n\n    defaultConfig {\n        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).\n        applicationId \"com.example.imdb_app\"\n        // You can update the following values to match your application needs.\n        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.\n        minSdkVersion flutter.minSdkVersion\n        targetSdkVersion flutter.targetSdkVersion\n        versionCode flutterVersionCode.toInteger()\n        versionName flutterVersionName\n    }\n\n    buildTypes {\n        release {\n            // TODO: Add your own signing config for the release build.\n            // Signing with the debug keys for now, so `flutter run --release` works.\n            signingConfig signingConfigs.debug\n        }\n    }\n}\n\nflutter {\n    source '../..'\n}\n\ndependencies {\n    implementation \"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version\"\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/build.gradle b/android/app/build.gradle
+--- a/android/app/build.gradle	(revision e4709a85588a3afa0f88e9eceaa474a913f3aeb8)
++++ b/android/app/build.gradle	(date 1655034933694)
+@@ -22,6 +22,9 @@
+ }
+ 
+ apply plugin: 'com.android.application'
++// START: FlutterFire Configuration
++apply plugin: 'com.google.gms.google-services'
++// END: FlutterFire Configuration
+ apply plugin: 'kotlin-android'
+ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+ 
+Index: .idea/libraries/Flutter_Plugins.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\n  <library name=\"Flutter Plugins\" type=\"FlutterPluginsLibraryType\">\n    <CLASSES>\n      <root url=\"file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flashy_tab_bar-0.0.3\" />\n    </CLASSES>\n    <JAVADOC />\n    <SOURCES />\n  </library>\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/libraries/Flutter_Plugins.xml b/.idea/libraries/Flutter_Plugins.xml
+--- a/.idea/libraries/Flutter_Plugins.xml	(revision e4709a85588a3afa0f88e9eceaa474a913f3aeb8)
++++ b/.idea/libraries/Flutter_Plugins.xml	(date 1655050409402)
+@@ -2,6 +2,13 @@
+   <library name="Flutter Plugins" type="FlutterPluginsLibraryType">
+     <CLASSES>
+       <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/flashy_tab_bar-0.0.3" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.17.1" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.6.4" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.16" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.19" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-3.1.17" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-2.6.16" />
++      <root url="file://$USER_HOME$/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.0.9" />
+     </CLASSES>
+     <JAVADOC />
+     <SOURCES />
+Index: macos/Flutter/GeneratedPluginRegistrant.swift
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\n//  Generated file. Do not edit.\n//\n\nimport FlutterMacOS\nimport Foundation\n\n\nfunc RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/macos/Flutter/GeneratedPluginRegistrant.swift b/macos/Flutter/GeneratedPluginRegistrant.swift
+--- a/macos/Flutter/GeneratedPluginRegistrant.swift	(revision e4709a85588a3afa0f88e9eceaa474a913f3aeb8)
++++ b/macos/Flutter/GeneratedPluginRegistrant.swift	(date 1655067521016)
+@@ -5,6 +5,12 @@
+ import FlutterMacOS
+ import Foundation
+ 
++import cloud_firestore
++import firebase_auth
++import firebase_core
+ 
+ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
++  FLTFirebaseFirestorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseFirestorePlugin"))
++  FLTFirebaseAuthPlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseAuthPlugin"))
++  FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))
+ }

@@ -1,0 +1,741 @@
+Index: lib/MyHomePage.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'dart:convert';\n//import 'dart:ffi';\n\nimport 'package:tmdb_api/tmdb_api.dart';\n\nimport 'package:flutter/material.dart';\n\nimport 'SelectedFilm.dart';\n\nimport 'package:http/http.dart' as http;\n\nimport 'GrandCategories.dart';\n\nclass MyHomePage extends StatefulWidget {\n  final String grandCategorie;\n  final String category;\n  const MyHomePage({\n    Key? key,\n    required this.grandCategorie,\n    this.category = 'All',\n    //this.selectedCategory = 0,\n  }) : super(key: key);\n\n  @override\n  State<MyHomePage> createState() => _MyHomePageState();\n}\n\nclass _MyHomePageState extends State<MyHomePage> {\n  int selectedCategory = 0;\n  String textCategory = 'All';\n  List<String> category = [\n    'All',\n    'Action',\n    'Animation',\n    'Comedy',\n    'Crime',\n    'Drama',\n    'Family',\n  ];\n\n  var categoryGenres = [\n    {\"id\": 28, \"index\": 1},\n    {\"id\": 16, \"index\": 2},\n    {\"id\": 35, \"index\": 3},\n    {\"id\": 80, \"index\": 4},\n    {\"id\": 18, \"index\": 5},\n    {\"id\": 10751, \"index\": 6},\n  ];\n  var Allgenres = {\n    {\"id\": 28, \"name\": \"Action\"},\n    {\"id\": 12, \"name\": \"Adventure\"},\n    {\"id\": 16, \"name\": \"Animation\"},\n    {\"id\": 35, \"name\": \"Comedy\"},\n    {\"id\": 80, \"name\": \"Crime\"},\n    {\"id\": 99, \"name\": \"Documentary\"},\n    {\"id\": 18, \"name\": \"Drama\"},\n    {\"id\": 10751, \"name\": \"Family\"},\n    {\"id\": 14, \"name\": \"Fantasy\"},\n    {\"id\": 36, \"name\": \"History\"},\n    {\"id\": 27, \"name\": \"Horror\"},\n    {\"id\": 10402, \"name\": \"Music\"},\n    {\"id\": 9648, \"name\": \"Mystery\"},\n    {\"id\": 10749, \"name\": \"Romance\"},\n    {\"id\": 878, \"name\": \"Science Fiction\"},\n    {\"id\": 10770, \"name\": \"TV Movie\"},\n    {\"id\": 53, \"name\": \"Thriller\"},\n    {\"id\": 10752, \"name\": \"War\"},\n    {\"id\": 37, \"name\": \"Western\"},\n    {\"id\": 10759, \"name\": \"Action & Adventure\"},\n    {\"id\": 18, \"name\": \"Drama\"},\n    {\"id\": 10762, \"name\": \"Kids\"},\n    {\"id\": 10763, \"name\": \"News\"},\n    {\"id\": 10764, \"name\": \"Reality\"},\n    {\"id\": 10765, \"name\": \"Sci-Fi & Fantasy\"},\n    {\"id\": 10766, \"name\": \"Soap\"},\n    {\"id\": 10767, \"name\": \"Talk\"},\n    {\"id\": 10768, \"name\": \"War & Politics\"},\n    {\"id\": 37, \"name\": \"Western\"}\n  };\n  var allFIlms = [];\n  List trendingMovies = [];\n  var filtredMovies = [];\n  final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';\n  final readAccessToken =\n      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';\n\n  loadMovies() async {\n    TMDB tmdbLogs = TMDB(ApiKeys(apiKey, readAccessToken),\n        logConfig: const ConfigLogger(\n          showLogs: true,\n          showErrorLogs: true,\n        ));\n    if (widget.grandCategorie == 'Trending') {\n      Map trendingFilmPage1 = await tmdbLogs.v3.trending.getTrending(page: 1);\n      Map trendingFilmPage2 = await tmdbLogs.v3.trending.getTrending(page: 2);\n      Map trendingFilmPage3 = await tmdbLogs.v3.trending.getTrending(page: 3);\n      Map trendingFilmPage4 = await tmdbLogs.v3.trending.getTrending(page: 4);\n      Map trendingFilmPage5 = await tmdbLogs.v3.trending.getTrending(page: 5);\n      Map trendingFilmPage6 = await tmdbLogs.v3.trending.getTrending(page: 6);\n      Map trendingFilmPage7 = await tmdbLogs.v3.trending.getTrending(page: 7);\n\n      allFIlms = [\n        ...trendingFilmPage1['results'],\n        ...trendingFilmPage2['results'],\n        ...trendingFilmPage3['results'],\n        ...trendingFilmPage4['results'],\n        ...trendingFilmPage5['results'],\n        ...trendingFilmPage6['results'],\n        ...trendingFilmPage7['results'],\n      ];\n    } else {\n      //print(myController.text);\n      var topJson1 = await http.get(Uri.parse(\n          'https://api.themoviedb.org/3/movie/top_rated?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));\n\n      var topRated1 = jsonDecode(topJson1.body);\n\n      var topJson2 = await http.get(Uri.parse(\n          'https://api.themoviedb.org/3/movie/top_rated?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US&page=2'));\n\n      var topRated2 = jsonDecode(topJson2.body);\n\n      var topJson3 = await http.get(Uri.parse(\n          'https://api.themoviedb.org/3/movie/top_rated?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US&page=3'));\n\n      var topRated3 = jsonDecode(topJson3.body);\n\n      var topJson4 = await http.get(Uri.parse(\n          'https://api.themoviedb.org/3/movie/top_rated?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US&page=4'));\n\n      var topRated4 = jsonDecode(topJson4.body);\n\n      allFIlms = [\n        ...topRated1['results'],\n        ...topRated2['results'],\n        ...topRated3['results'],\n        ...topRated4['results']\n      ];\n\n      print(allFIlms);\n    }\n\n    //var tempMovies = allFIlms;\n    //int tempSelectedCategory = widget.selectedCategory;\n    if (selectedCategory != 0) {\n      var tempMovies = allFIlms;\n      filtredMovies = [];\n      for (int i = 0; i < tempMovies.length; i++) {\n        for (int j = 0; j < tempMovies[i]['genre_ids'].length; j++) {\n          if (tempMovies[i]['genre_ids'][j] ==\n              categoryGenres[selectedCategory - 1]['id']) {\n            //print(selectedCategory);\n            filtredMovies.add(tempMovies[i]);\n          }\n        }\n      }\n    }\n    print(selectedCategory);\n    print(textCategory);\n    //print(allFIlms[0]['poster_path']);\n    setState(() {\n      if (selectedCategory == 0) {\n        trendingMovies = allFIlms;\n      } else {\n        trendingMovies = filtredMovies;\n      }\n    });\n  }\n\n  @override\n  void initState() {\n    // TODO: implement initState\n    loadMovies();\n    super.initState();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    Size size = MediaQuery.of(context).size;\n    //int tempSelectedCategory = selectedCategory;\n    Color KtextColor = const Color(0xFF535353);\n    Color KtextLightColor = const Color(0xFFACACAC);\n    int SizeScreen() {\n      if (size.width < 667.0) {\n        return 2;\n      } else {\n        return 4;\n      }\n    }\n\n    return Scaffold(\n      appBar: AppBar(\n        backgroundColor: Colors.transparent,\n        elevation: 0,\n        leading: IconButton(\n          icon: Image.asset('arrow-left-line.png'),\n          onPressed: () {\n            Navigator.of(context).pop(\n                MaterialPageRoute(builder: ((context) => GrandCategories())));\n          },\n        ),\n        actions: const <Widget>[\n          SizedBox(\n            width: 10,\n          )\n        ],\n      ),\n      body: Column(\n        crossAxisAlignment: CrossAxisAlignment.start,\n        children: <Widget>[\n          Padding(\n            padding: const EdgeInsets.symmetric(horizontal: 20),\n            child: Text(\n              widget.grandCategorie,\n              style: Theme.of(context).textTheme.headline5,\n            ),\n          ),\n          //MyWidget(selectedCategory: widget.selectedCategory),\n          Padding(\n            padding: const EdgeInsets.symmetric(vertical: 20),\n            child: SizedBox(\n              height: 25,\n              child: ListView.builder(\n                  scrollDirection: Axis.horizontal,\n                  itemCount: category.length,\n                  itemBuilder: ((context, index) => GestureDetector(\n                        onTap: () {\n                          setState(() {\n                            selectedCategory = index;\n                            textCategory = category[index];\n                          });\n\n                          loadMovies();\n                          /*Navigator.push(\n                            context,\n                            MaterialPageRoute(\n                              builder: (context) => MyHomePage(\n                                grandCategorie: 'In Cinema',\n                                //category: category[index],\n                              ),\n                            ),\n                          );*/\n                        },\n                        child: Padding(\n                          padding: const EdgeInsets.symmetric(horizontal: 20),\n                          child: Column(\n                            crossAxisAlignment: CrossAxisAlignment.start,\n                            children: [\n                              Text(\n                                category[index],\n                                style: TextStyle(\n                                    fontWeight: FontWeight.bold,\n                                    color: selectedCategory == index\n                                        ? KtextColor\n                                        : KtextLightColor),\n                              ),\n                              Container(\n                                margin: const EdgeInsets.only(top: 5),\n                                height: 2,\n                                width: 30,\n                                color: selectedCategory == index\n                                    ? Colors.black\n                                    : Colors.transparent,\n                              )\n                            ],\n                          ),\n                        ),\n                      ))),\n            ),\n          ),\n          Expanded(\n            child: Padding(\n              padding: const EdgeInsets.only(\n                  top: 20, right: 20, left: 20, bottom: 20),\n              child: GridView.builder(\n                  itemCount: trendingMovies.length,\n                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(\n                      crossAxisCount: SizeScreen(),\n                      childAspectRatio: 0.75,\n                      mainAxisSpacing: 20,\n                      crossAxisSpacing: 20),\n                  itemBuilder: (context, index) => FilmItem(\n                        size: size,\n                        images: trendingMovies[index]['poster_path'] != ''\n                            ? \"https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}\"\n                            : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',\n                        FilmTitle: trendingMovies[index]['title'] ??\n                            trendingMovies[index]['name'],\n                        overview:\n                            trendingMovies[index]['overview'] ?? 'unavailable',\n                        realeaseDate: trendingMovies[index]['release_date'] ??\n                            'undefined',\n                        filmId: trendingMovies[index]['id'],\n                      )),\n            ),\n          )\n        ],\n      ),\n    );\n  }\n}\n\nclass FilmItem extends StatelessWidget {\n  const FilmItem(\n      {Key? key,\n      required this.filmId,\n      required this.size,\n      required this.images,\n      required this.FilmTitle,\n      required this.overview,\n      required this.realeaseDate})\n      : super(key: key);\n  final int filmId;\n  final Size size;\n  final String images;\n  final String FilmTitle;\n  final String overview;\n  final String realeaseDate;\n\n  @override\n  Widget build(BuildContext context) {\n    return Column(\n        crossAxisAlignment: CrossAxisAlignment.start,\n        children: <Widget>[\n          Expanded(\n              child: GestureDetector(\n            onTap: () {\n              Navigator.push(\n                context,\n                MaterialPageRoute(\n                  builder: (context) => SelectedFilm(\n                    images: images,\n                    FilmTitle: FilmTitle,\n                    overview: overview,\n                    realeaseDate: realeaseDate,\n                    filmId: filmId,\n                  ),\n                ),\n              );\n            },\n            child: Container(\n                padding: const EdgeInsets.all(20),\n                decoration: BoxDecoration(\n                    image: DecorationImage(\n                        image: NetworkImage(images), fit: BoxFit.fill),\n                    borderRadius: const BorderRadius.all(Radius.circular(20)))),\n          )),\n          SizedBox(\n            height: 38,\n            child: Padding(\n              padding: const EdgeInsets.only(top: 8, left: 0, right: 10),\n              child: Text(\n                FilmTitle,\n                style: const TextStyle(fontFamily: 'Comfortaa'),\n              ),\n            ),\n          ),\n        ]);\n  }\n}\n\nclass MyWidget extends StatefulWidget {\n  int selectedCategory;\n  MyWidget({Key? key, this.selectedCategory = 0}) : super(key: key);\n\n  @override\n  State<MyWidget> createState() => _MyWidgetState();\n}\n\nclass _MyWidgetState extends State<MyWidget> {\n  List<String> category = [\n    'All',\n    'Action',\n    'Animation',\n    'Comedy',\n    'Crime',\n    'Drama',\n    'Family',\n  ];\n  //int selectedCategory ;\n  Color KtextColor = const Color(0xFF535353);\n  Color KtextLightColor = const Color(0xFFACACAC);\n\n  @override\n  Widget build(BuildContext context) {\n    return Padding(\n      padding: const EdgeInsets.symmetric(vertical: 20),\n      child: SizedBox(\n        height: 25,\n        child: ListView.builder(\n            scrollDirection: Axis.horizontal,\n            itemCount: category.length,\n            itemBuilder: ((context, index) => GestureDetector(\n                  onTap: () {\n                    setState(() {\n                      widget.selectedCategory = index;\n                    });\n\n                    Navigator.push(\n                      context,\n                      MaterialPageRoute(\n                        builder: (context) => MyHomePage(\n                          grandCategorie: 'In Cinema',\n                          category: category[index],\n                          //selectedCategory: index\n                        ),\n                      ),\n                    );\n                  },\n                  child: Padding(\n                    padding: const EdgeInsets.symmetric(horizontal: 20),\n                    child: Column(\n                      crossAxisAlignment: CrossAxisAlignment.start,\n                      children: [\n                        Text(\n                          category[index],\n                          style: TextStyle(\n                              fontWeight: FontWeight.bold,\n                              color: widget.selectedCategory == index\n                                  ? KtextColor\n                                  : KtextLightColor),\n                        ),\n                        Container(\n                          margin: const EdgeInsets.only(top: 5),\n                          height: 2,\n                          width: 30,\n                          color: widget.selectedCategory == index\n                              ? Colors.black\n                              : Colors.transparent,\n                        )\n                      ],\n                    ),\n                  ),\n                ))),\n      ),\n    );\n  }\n}\n\n/*\nclass CircleTabIndicator extends Decoration {\n  final BoxPainter _painter;\n\n  CircleTabIndicator({required Color color, required double radius})\n      : _painter = _CirclePainter(color, radius);\n\n  @override\n  BoxPainter createBoxPainter([VoidCallback? onChanged]) => _painter;\n}\n\nclass _CirclePainter extends BoxPainter {\n  final Paint _paint;\n  final double radius;\n\n  _CirclePainter(Color color, this.radius)\n      : _paint = Paint()\n          ..color = color\n          ..isAntiAlias = true;\n\n  @override\n  void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {\n    final Offset circleOffset =\n        offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius - 5);\n    canvas.drawCircle(circleOffset, radius, _paint);\n  }\n}\n*/\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/MyHomePage.dart b/lib/MyHomePage.dart
+--- a/lib/MyHomePage.dart	(revision 92ef4ff5d3d82020016f27dd0bd975c0ece4a673)
++++ b/lib/MyHomePage.dart	(date 1655157484900)
+@@ -1,19 +1,21 @@
+ import 'dart:convert';
+-//import 'dart:ffi';
+ 
++import 'package:cloud_firestore/cloud_firestore.dart';
++import 'package:firebase_auth/firebase_auth.dart';
++import 'package:imdb_app/model/UserModel.dart';
+ import 'package:tmdb_api/tmdb_api.dart';
+ 
+ import 'package:flutter/material.dart';
+ 
++import 'LoginPage.dart';
+ import 'SelectedFilm.dart';
+ 
+ import 'package:http/http.dart' as http;
+ 
+-import 'GrandCategories.dart';
+-
+ class MyHomePage extends StatefulWidget {
+   final String grandCategorie;
+   final String category;
++
+   const MyHomePage({
+     Key? key,
+     required this.grandCategorie,
+@@ -26,6 +28,9 @@
+ }
+ 
+ class _MyHomePageState extends State<MyHomePage> {
++
++  User? user = FirebaseAuth.instance.currentUser;
++  UserModel loggedUser = UserModel();
+   int selectedCategory = 0;
+   String textCategory = 'All';
+   List<String> category = [
+@@ -167,16 +172,26 @@
+     });
+   }
+ 
++
+   @override
+   void initState() {
+     // TODO: implement initState
+     loadMovies();
+     super.initState();
++    FirebaseFirestore.instance.collection("Users").doc(user!.uid).get()
++        .then((value) {
++      setState(() {
++        loggedUser = UserModel.fromMap(value.data());
++      });
++    });
+   }
++
+ 
+   @override
+   Widget build(BuildContext context) {
+-    Size size = MediaQuery.of(context).size;
++    Size size = MediaQuery
++        .of(context)
++        .size;
+     //int tempSelectedCategory = selectedCategory;
+     Color KtextColor = const Color(0xFF535353);
+     Color KtextLightColor = const Color(0xFFACACAC);
+@@ -194,10 +209,7 @@
+         elevation: 0,
+         leading: IconButton(
+           icon: Image.asset('arrow-left-line.png'),
+-          onPressed: () {
+-            Navigator.of(context).pop(
+-                MaterialPageRoute(builder: ((context) => GrandCategories())));
+-          },
++          onPressed: () {},
+         ),
+         actions: const <Widget>[
+           SizedBox(
+@@ -208,11 +220,21 @@
+       body: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: <Widget>[
++          Row(
++            mainAxisAlignment: MainAxisAlignment.end,
++            children: [
++              Text("${loggedUser.name} "),
++              Text("${loggedUser.lastName}")
++            ],
++          ),
+           Padding(
+             padding: const EdgeInsets.symmetric(horizontal: 20),
+             child: Text(
+               widget.grandCategorie,
+-              style: Theme.of(context).textTheme.headline5,
++              style: Theme
++                  .of(context)
++                  .textTheme
++                  .headline5,
+             ),
+           ),
+           //MyWidget(selectedCategory: widget.selectedCategory),
+@@ -223,7 +245,8 @@
+               child: ListView.builder(
+                   scrollDirection: Axis.horizontal,
+                   itemCount: category.length,
+-                  itemBuilder: ((context, index) => GestureDetector(
++                  itemBuilder: ((context, index) =>
++                      GestureDetector(
+                         onTap: () {
+                           setState(() {
+                             selectedCategory = index;
+@@ -279,18 +302,17 @@
+                       childAspectRatio: 0.75,
+                       mainAxisSpacing: 20,
+                       crossAxisSpacing: 20),
+-                  itemBuilder: (context, index) => FilmItem(
++                  itemBuilder: (context, index) =>
++                      FilmItem(
+                         size: size,
+-                        images: trendingMovies[index]['poster_path'] != ''
+-                            ? "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}"
+-                            : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
++                        images:
++                        "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}",
+                         FilmTitle: trendingMovies[index]['title'] ??
+                             trendingMovies[index]['name'],
+                         overview:
+-                            trendingMovies[index]['overview'] ?? 'unavailable',
++                        trendingMovies[index]['overview'] ?? 'unavailable',
+                         realeaseDate: trendingMovies[index]['release_date'] ??
+                             'undefined',
+-                        filmId: trendingMovies[index]['id'],
+                       )),
+             ),
+           )
+@@ -298,19 +320,25 @@
+       ),
+     );
+   }
++
++  Future<void> logout(BuildContext context) async {
++    await FirebaseAuth.instance.signOut();
++    Navigator.of(context)
++        .pushReplacement(MaterialPageRoute(
++        builder: (context) => LoginPage())
++    );
++  }
+ }
+ 
+ class FilmItem extends StatelessWidget {
+-  const FilmItem(
+-      {Key? key,
+-      required this.filmId,
+-      required this.size,
+-      required this.images,
+-      required this.FilmTitle,
+-      required this.overview,
+-      required this.realeaseDate})
++  const FilmItem({Key? key,
++    required this.size,
++    required this.images,
++    required this.FilmTitle,
++    required this.overview,
++    required this.realeaseDate})
+       : super(key: key);
+-  final int filmId;
++
+   final Size size;
+   final String images;
+   final String FilmTitle;
+@@ -324,27 +352,29 @@
+         children: <Widget>[
+           Expanded(
+               child: GestureDetector(
+-            onTap: () {
+-              Navigator.push(
+-                context,
+-                MaterialPageRoute(
+-                  builder: (context) => SelectedFilm(
+-                    images: images,
+-                    FilmTitle: FilmTitle,
+-                    overview: overview,
+-                    realeaseDate: realeaseDate,
+-                    filmId: filmId,
+-                  ),
+-                ),
+-              );
+-            },
+-            child: Container(
+-                padding: const EdgeInsets.all(20),
+-                decoration: BoxDecoration(
+-                    image: DecorationImage(
+-                        image: NetworkImage(images), fit: BoxFit.fill),
+-                    borderRadius: const BorderRadius.all(Radius.circular(20)))),
+-          )),
++                onTap: () {
++                  Navigator.push(
++                    context,
++                    MaterialPageRoute(
++                      builder: (context) =>
++                          SelectedFilm(
++                            images: images,
++                            FilmTitle: FilmTitle,
++                            overview: overview,
++                            realeaseDate: realeaseDate,
++                            filmId: ,
++                          ),
++                    ),
++                  );
++                },
++                child: Container(
++                    padding: const EdgeInsets.all(20),
++                    decoration: BoxDecoration(
++                        image: DecorationImage(
++                            image: NetworkImage(images), fit: BoxFit.fill),
++                        borderRadius: const BorderRadius.all(
++                            Radius.circular(20)))),
++              )),
+           SizedBox(
+             height: 38,
+             child: Padding(
+@@ -361,6 +391,7 @@
+ 
+ class MyWidget extends StatefulWidget {
+   int selectedCategory;
++
+   MyWidget({Key? key, this.selectedCategory = 0}) : super(key: key);
+ 
+   @override
+@@ -377,6 +408,7 @@
+     'Drama',
+     'Family',
+   ];
++
+   //int selectedCategory ;
+   Color KtextColor = const Color(0xFF535353);
+   Color KtextLightColor = const Color(0xFFACACAC);
+@@ -390,7 +422,8 @@
+         child: ListView.builder(
+             scrollDirection: Axis.horizontal,
+             itemCount: category.length,
+-            itemBuilder: ((context, index) => GestureDetector(
++            itemBuilder: ((context, index) =>
++                GestureDetector(
+                   onTap: () {
+                     setState(() {
+                       widget.selectedCategory = index;
+@@ -399,11 +432,12 @@
+                     Navigator.push(
+                       context,
+                       MaterialPageRoute(
+-                        builder: (context) => MyHomePage(
+-                          grandCategorie: 'In Cinema',
+-                          category: category[index],
+-                          //selectedCategory: index
+-                        ),
++                        builder: (context) =>
++                            MyHomePage(
++                              grandCategorie: 'In Cinema',
++                              category: category[index],
++                              //selectedCategory: index
++                            ),
+                       ),
+                     );
+                   },
+Index: lib/SelectedFilm.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'dart:convert';\nimport 'dart:html';\n\nimport 'package:flutter/material.dart';\n\nimport 'package:http/http.dart' as http;\n\nclass SelectedFilm extends StatefulWidget {\n  const SelectedFilm(\n      {Key? key,\n      required this.images,\n      required this.FilmTitle,\n      required this.overview,\n      required this.realeaseDate,\n      required this.filmId})\n      : super(key: key);\n  final int filmId;\n  final String images;\n  final String FilmTitle;\n  final String overview;\n  final String realeaseDate;\n\n  @override\n  State<SelectedFilm> createState() => _SelectedFilmState();\n}\n\nclass _SelectedFilmState extends State<SelectedFilm> {\n  var selectedMovie = {};\n  var genres = [];\n  var actors = [];\n  final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';\n  final readAccessToken =\n      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';\n\n  loadMovies() async {\n    var FilmInformationsJson = await http.get(Uri.parse(\n        'https://api.themoviedb.org/3/movie/${widget.filmId}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));\n\n    var filmCreditJson = await http.get(Uri.parse(\n        'https://api.themoviedb.org/3/movie/${widget.filmId}/credits?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));\n\n    //var filmInformations = jsonDecode(FilmInformationsJson.body);\n    //print(filmInformations);\n    var filmCredit = jsonDecode(filmCreditJson.body);\n    setState(() {\n      selectedMovie = jsonDecode(FilmInformationsJson.body);\n      actors = filmCredit['cast'];\n      genres = selectedMovie['genres'];\n    });\n    print(actors);\n    //print(genres[1][\"name\"]);\n  }\n\n  void initState() {\n    // TODO: implement initState\n    loadMovies();\n    super.initState();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    Color KtextColor = const Color(0xFF535353);\n    Color KtextLightColor = const Color(0xFFACACAC);\n    List<String> category = ['Action', 'Horror', 'Romance'];\n    Size size = MediaQuery.of(context).size;\n    return Scaffold(\n      body: SingleChildScrollView(\n        child: Column(children: <Widget>[\n          Container(\n              height: size.height * 0.45,\n              child: Stack(\n                children: <Widget>[\n                  Container(\n                    height: size.height * 0.45 - 50,\n                    decoration: BoxDecoration(\n                        borderRadius: BorderRadius.only(\n                          bottomLeft: Radius.circular(50),\n                        ),\n                        image: DecorationImage(\n                            fit: BoxFit.fill,\n                            image: NetworkImage(\n                                \"https://image.tmdb.org/t/p/w300/${selectedMovie[\"backdrop_path\"]}\"))),\n                  ),\n                  Positioned(\n                      right: 0,\n                      bottom: 0,\n                      child: Container(\n                          height: 80,\n                          width: size.width * 0.9,\n                          decoration: BoxDecoration(\n                              color: Colors.white,\n                              borderRadius: BorderRadius.only(\n                                bottomLeft: Radius.circular(50),\n                                topLeft: Radius.circular(50),\n                              ),\n                              boxShadow: [\n                                BoxShadow(\n                                  offset: Offset(0, 5),\n                                  blurRadius: 50,\n                                  color: Color(0xFF121530).withOpacity(0.2),\n                                )\n                              ]),\n                          child: Row(\n                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,\n                              children: <Widget>[\n                                Column(\n                                  mainAxisAlignment: MainAxisAlignment.center,\n                                  children: <Widget>[\n                                    Image.asset('star-half-fill.png'),\n                                    SizedBox(height: 5),\n                                    RichText(\n                                        text: TextSpan(\n                                            style:\n                                                TextStyle(color: Colors.black),\n                                            children: [\n                                          TextSpan(\n                                              text:\n                                                  '${selectedMovie[\"vote_average\"]}/',\n                                              style: TextStyle(\n                                                  fontSize: 16,\n                                                  fontWeight: FontWeight.w600)),\n                                          TextSpan(text: '10\\n'),\n                                          TextSpan(\n                                              text:\n                                                  \"${selectedMovie[\"vote_count\"]}\",\n                                              style: TextStyle(\n                                                  color: KtextLightColor))\n                                        ]))\n                                  ],\n                                ),\n                                Column(\n                                  mainAxisAlignment: MainAxisAlignment.center,\n                                  children: <Widget>[\n                                    Container(\n                                      padding: EdgeInsets.all(8.0),\n                                      decoration: BoxDecoration(\n                                        color: Color(0xFF51CF66),\n                                        borderRadius: BorderRadius.circular(5),\n                                      ),\n                                      child: Text(\n                                        '--',\n                                        style: TextStyle(\n                                            fontSize: 10,\n                                            fontWeight: FontWeight.w500,\n                                            color: Colors.white),\n                                      ),\n                                    ),\n                                    SizedBox(height: 5),\n                                    Text(\n                                      'Popularity',\n                                      style: TextStyle(\n                                          fontSize: 16,\n                                          fontWeight: FontWeight.w500,\n                                          color: Colors.black),\n                                    ),\n                                    Text('${selectedMovie[\"popularity\"]}',\n                                        style:\n                                            TextStyle(color: KtextLightColor))\n                                  ],\n                                )\n                              ])))\n                ],\n              )),\n          SizedBox(height: 20),\n          Padding(\n            padding: EdgeInsets.all(10),\n            child: Row(\n              children: <Widget>[\n                Expanded(\n                  child: Column(\n                      crossAxisAlignment: CrossAxisAlignment.start,\n                      children: <Widget>[\n                        Text(\n                          widget.FilmTitle,\n                          style: Theme.of(context).textTheme.headline5,\n                        ),\n                        SizedBox(height: 5),\n                        Row(\n                          children: [\n                            Text('${selectedMovie[\"release_date\"]}',\n                                style: TextStyle(color: KtextLightColor)),\n                            SizedBox(\n                              width: 10,\n                            ),\n                            Text('${selectedMovie[\"original_language\"]}',\n                                style: TextStyle(color: KtextLightColor)),\n                            SizedBox(\n                              width: 10,\n                            ),\n                            Text('${selectedMovie[\"runtime\"]} Min',\n                                style: TextStyle(color: KtextLightColor)),\n                          ],\n                        )\n                      ]),\n                ),\n                SizedBox(\n                  height: 50,\n                  width: 50,\n                  child: FlatButton(\n                      onPressed: () {},\n                      color: Colors.pink,\n                      shape: RoundedRectangleBorder(\n                        borderRadius: BorderRadius.circular(20),\n                      ),\n                      child: Icon(\n                        Icons.add,\n                        size: 28,\n                        color: Colors.white,\n                      )),\n                ),\n              ],\n            ),\n          ),\n          Padding(\n            padding: EdgeInsets.symmetric(vertical: 10),\n            child: SizedBox(\n              height: 36,\n              child: ListView.builder(\n                  scrollDirection: Axis.horizontal,\n                  itemCount: genres.length,\n                  itemBuilder: (context, index) => Container(\n                        alignment: Alignment.center,\n                        margin: EdgeInsets.only(left: 20),\n                        padding:\n                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),\n                        decoration: BoxDecoration(\n                          border: Border.all(color: Colors.black26),\n                          borderRadius: BorderRadius.circular(20),\n                        ),\n                        child: Text(\n                          genres[index][\"name\"],\n                          style: TextStyle(\n                              color: KtextColor.withOpacity(0.8), fontSize: 16),\n                        ),\n                      )),\n            ),\n          ),\n          Align(\n            alignment: Alignment.centerLeft,\n            child: Padding(\n              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),\n              child: Text(\n                'Overview',\n                style: Theme.of(context).textTheme.headline6,\n              ),\n            ),\n          ),\n          Padding(\n            padding: EdgeInsets.symmetric(horizontal: 10),\n            child: Text(widget.overview,\n                style: TextStyle(color: Color(0xFF737599))),\n          ),\n          Padding(\n            padding: EdgeInsets.all(10),\n            child: Column(children: <Widget>[\n              Align(\n                alignment: Alignment.centerLeft,\n                child: Text(\n                  'Cast & Credit',\n                  style: Theme.of(context).textTheme.headline6,\n                ),\n              ),\n              SizedBox(height: 10),\n              SizedBox(\n                height: 160,\n                child: ListView.builder(\n                    scrollDirection: Axis.horizontal,\n                    itemCount: actors.length < 8 ? actors.length : 7,\n                    itemBuilder: (context, index) => Container(\n                        margin: EdgeInsets.only(right: 20),\n                        width: 80,\n                        child: Column(\n                          children: <Widget>[\n                            Container(\n                              height: 80,\n                              decoration: BoxDecoration(\n                                  shape: BoxShape.circle,\n                                  image: DecorationImage(\n                                      image: NetworkImage(\n                                          \"https://image.tmdb.org/t/p/w300/${\"https://image.tmdb.org/t/p/w300/${actors[index]['profile_path']}\"}\"))),\n                            ),\n                            SizedBox(height: 10),\n                            Text(\n                              actors[index]['original_name'],\n                              style: Theme.of(context).textTheme.bodyText2,\n                              textAlign: TextAlign.center,\n                              maxLines: 2,\n                            ),\n                            SizedBox(height: 5),\n                            Text(\n                              actors[index]['character'],\n                              style: TextStyle(color: KtextLightColor),\n                              textAlign: TextAlign.center,\n                              maxLines: 1,\n                            ),\n                          ],\n                        ))),\n              )\n            ]),\n          )\n        ]),\n      ),\n    );\n  }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/SelectedFilm.dart b/lib/SelectedFilm.dart
+--- a/lib/SelectedFilm.dart	(revision 92ef4ff5d3d82020016f27dd0bd975c0ece4a673)
++++ b/lib/SelectedFilm.dart	(date 1655159234916)
+@@ -1,10 +1,14 @@
+ import 'dart:convert';
+-import 'dart:html';
+ 
++import 'package:cloud_firestore/cloud_firestore.dart';
++import 'package:firebase_auth/firebase_auth.dart';
+ import 'package:flutter/material.dart';
++import 'package:fluttertoast/fluttertoast.dart';
+ 
+ import 'package:http/http.dart' as http;
+ 
++import 'model/UserModel.dart';
++
+ class SelectedFilm extends StatefulWidget {
+   const SelectedFilm(
+       {Key? key,
+@@ -31,7 +35,6 @@
+   final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';
+   final readAccessToken =
+       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';
+-
+   loadMovies() async {
+     var FilmInformationsJson = await http.get(Uri.parse(
+         'https://api.themoviedb.org/3/movie/${widget.filmId}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
+@@ -61,7 +64,6 @@
+   Widget build(BuildContext context) {
+     Color KtextColor = const Color(0xFF535353);
+     Color KtextLightColor = const Color(0xFFACACAC);
+-    List<String> category = ['Action', 'Horror', 'Romance'];
+     Size size = MediaQuery.of(context).size;
+     return Scaffold(
+       body: SingleChildScrollView(
+@@ -73,7 +75,7 @@
+                   Container(
+                     height: size.height * 0.45 - 50,
+                     decoration: BoxDecoration(
+-                        borderRadius: BorderRadius.only(
++                        borderRadius: const BorderRadius.only(
+                           bottomLeft: Radius.circular(50),
+                         ),
+                         image: DecorationImage(
+@@ -89,15 +91,15 @@
+                           width: size.width * 0.9,
+                           decoration: BoxDecoration(
+                               color: Colors.white,
+-                              borderRadius: BorderRadius.only(
+-                                bottomLeft: Radius.circular(50),
++                              borderRadius: const BorderRadius.only(
++                                bottomLeft: const Radius.circular(50),
+                                 topLeft: Radius.circular(50),
+                               ),
+                               boxShadow: [
+                                 BoxShadow(
+-                                  offset: Offset(0, 5),
++                                  offset: const Offset(0, 5),
+                                   blurRadius: 50,
+-                                  color: Color(0xFF121530).withOpacity(0.2),
++                                  color: const Color(0xFF121530).withOpacity(0.2),
+                                 )
+                               ]),
+                           child: Row(
+@@ -107,19 +109,19 @@
+                                   mainAxisAlignment: MainAxisAlignment.center,
+                                   children: <Widget>[
+                                     Image.asset('star-half-fill.png'),
+-                                    SizedBox(height: 5),
++                                    const SizedBox(height: 5),
+                                     RichText(
+                                         text: TextSpan(
+                                             style:
+-                                                TextStyle(color: Colors.black),
++                                                const TextStyle(color: Colors.black),
+                                             children: [
+                                           TextSpan(
+                                               text:
+                                                   '${selectedMovie["vote_average"]}/',
+-                                              style: TextStyle(
++                                              style: const TextStyle(
+                                                   fontSize: 16,
+                                                   fontWeight: FontWeight.w600)),
+-                                          TextSpan(text: '10\n'),
++                                          const TextSpan(text: '10\n'),
+                                           TextSpan(
+                                               text:
+                                                   "${selectedMovie["vote_count"]}",
+@@ -132,12 +134,12 @@
+                                   mainAxisAlignment: MainAxisAlignment.center,
+                                   children: <Widget>[
+                                     Container(
+-                                      padding: EdgeInsets.all(8.0),
++                                      padding: const EdgeInsets.all(8.0),
+                                       decoration: BoxDecoration(
+-                                        color: Color(0xFF51CF66),
++                                        color: const Color(0xFF51CF66),
+                                         borderRadius: BorderRadius.circular(5),
+                                       ),
+-                                      child: Text(
++                                      child: const Text(
+                                         '--',
+                                         style: TextStyle(
+                                             fontSize: 10,
+@@ -145,8 +147,8 @@
+                                             color: Colors.white),
+                                       ),
+                                     ),
+-                                    SizedBox(height: 5),
+-                                    Text(
++                                    const SizedBox(height: 5),
++                                    const Text(
+                                       'Popularity',
+                                       style: TextStyle(
+                                           fontSize: 16,
+@@ -161,9 +163,9 @@
+                               ])))
+                 ],
+               )),
+-          SizedBox(height: 20),
++          const SizedBox(height: 20),
+           Padding(
+-            padding: EdgeInsets.all(10),
++            padding: const EdgeInsets.all(10),
+             child: Row(
+               children: <Widget>[
+                 Expanded(
+@@ -174,17 +176,17 @@
+                           widget.FilmTitle,
+                           style: Theme.of(context).textTheme.headline5,
+                         ),
+-                        SizedBox(height: 5),
++                        const SizedBox(height: 5),
+                         Row(
+                           children: [
+                             Text('${selectedMovie["release_date"]}',
+                                 style: TextStyle(color: KtextLightColor)),
+-                            SizedBox(
++                            const SizedBox(
+                               width: 10,
+                             ),
+                             Text('${selectedMovie["original_language"]}',
+                                 style: TextStyle(color: KtextLightColor)),
+-                            SizedBox(
++                            const SizedBox(
+                               width: 10,
+                             ),
+                             Text('${selectedMovie["runtime"]} Min',
+@@ -197,12 +199,14 @@
+                   height: 50,
+                   width: 50,
+                   child: FlatButton(
+-                      onPressed: () {},
++                      onPressed: () {
++                        getUserDetails();
++                      },
+                       color: Colors.pink,
+                       shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(20),
+                       ),
+-                      child: Icon(
++                      child: const Icon(
+                         Icons.add,
+                         size: 28,
+                         color: Colors.white,
+@@ -212,7 +216,7 @@
+             ),
+           ),
+           Padding(
+-            padding: EdgeInsets.symmetric(vertical: 10),
++            padding: const EdgeInsets.symmetric(vertical: 10),
+             child: SizedBox(
+               height: 36,
+               child: ListView.builder(
+@@ -220,9 +224,9 @@
+                   itemCount: genres.length,
+                   itemBuilder: (context, index) => Container(
+                         alignment: Alignment.center,
+-                        margin: EdgeInsets.only(left: 20),
++                        margin: const EdgeInsets.only(left: 20),
+                         padding:
+-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
++                            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                         decoration: BoxDecoration(
+                           border: Border.all(color: Colors.black26),
+                           borderRadius: BorderRadius.circular(20),
+@@ -238,7 +242,7 @@
+           Align(
+             alignment: Alignment.centerLeft,
+             child: Padding(
+-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
++              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+               child: Text(
+                 'Overview',
+                 style: Theme.of(context).textTheme.headline6,
+@@ -246,12 +250,12 @@
+             ),
+           ),
+           Padding(
+-            padding: EdgeInsets.symmetric(horizontal: 10),
++            padding: const EdgeInsets.symmetric(horizontal: 10),
+             child: Text(widget.overview,
+-                style: TextStyle(color: Color(0xFF737599))),
++                style: const TextStyle(color: Color(0xFF737599))),
+           ),
+           Padding(
+-            padding: EdgeInsets.all(10),
++            padding: const EdgeInsets.all(10),
+             child: Column(children: <Widget>[
+               Align(
+                 alignment: Alignment.centerLeft,
+@@ -260,14 +264,14 @@
+                   style: Theme.of(context).textTheme.headline6,
+                 ),
+               ),
+-              SizedBox(height: 10),
++              const SizedBox(height: 10),
+               SizedBox(
+                 height: 160,
+                 child: ListView.builder(
+                     scrollDirection: Axis.horizontal,
+                     itemCount: actors.length < 8 ? actors.length : 7,
+                     itemBuilder: (context, index) => Container(
+-                        margin: EdgeInsets.only(right: 20),
++                        margin: const EdgeInsets.only(right: 20),
+                         width: 80,
+                         child: Column(
+                           children: <Widget>[
+@@ -279,14 +283,14 @@
+                                       image: NetworkImage(
+                                           "https://image.tmdb.org/t/p/w300/${"https://image.tmdb.org/t/p/w300/${actors[index]['profile_path']}"}"))),
+                             ),
+-                            SizedBox(height: 10),
++                            const SizedBox(height: 10),
+                             Text(
+                               actors[index]['original_name'],
+                               style: Theme.of(context).textTheme.bodyText2,
+                               textAlign: TextAlign.center,
+                               maxLines: 2,
+                             ),
+-                            SizedBox(height: 5),
++                            const SizedBox(height: 5),
+                             Text(
+                               actors[index]['character'],
+                               style: TextStyle(color: KtextLightColor),
+@@ -302,4 +306,23 @@
+       ),
+     );
+   }
++
++  getUserDetails() async{
++    // get detail from fire store
++    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
++    User? user = FirebaseAuth.instance.currentUser;
++    UserModel LoggedUser = UserModel();
++    UserModel userModel = UserModel();
++    FirebaseFirestore.instance.collection("Users").doc(user!.uid).get()
++        .then((value) {
++      LoggedUser = UserModel.fromMap(value.data());
++    });
++    // copying values to the model
++    userModel.favorites?.add(widget.filmId);
++    await firebaseFirestore
++        .collection("Users")
++        .doc(LoggedUser?.uid)
++        .set(userModel.toMap());
++    Fluttertoast.showToast(msg: 'Account created Successfully');
++  }
+ }
+Index: macos/Flutter/Flutter-Debug.xcconfig
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"ephemeral/Flutter-Generated.xcconfig\"\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/macos/Flutter/Flutter-Debug.xcconfig b/macos/Flutter/Flutter-Debug.xcconfig
+--- a/macos/Flutter/Flutter-Debug.xcconfig	(revision 92ef4ff5d3d82020016f27dd0bd975c0ece4a673)
++++ b/macos/Flutter/Flutter-Debug.xcconfig	(date 1655155967163)
+@@ -1,1 +1,2 @@
++#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
+ #include "ephemeral/Flutter-Generated.xcconfig"
+Index: macos/Podfile
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/macos/Podfile b/macos/Podfile
+new file mode 100644
+--- /dev/null	(date 1652988654000)
++++ b/macos/Podfile	(date 1652988654000)
+@@ -0,0 +1,40 @@
++platform :osx, '10.11'
++
++# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
++ENV['COCOAPODS_DISABLE_STATS'] = 'true'
++
++project 'Runner', {
++  'Debug' => :debug,
++  'Profile' => :release,
++  'Release' => :release,
++}
++
++def flutter_root
++  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'ephemeral', 'Flutter-Generated.xcconfig'), __FILE__)
++  unless File.exist?(generated_xcode_build_settings_path)
++    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure \"flutter pub get\" is executed first"
++  end
++
++  File.foreach(generated_xcode_build_settings_path) do |line|
++    matches = line.match(/FLUTTER_ROOT\=(.*)/)
++    return matches[1].strip if matches
++  end
++  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Flutter-Generated.xcconfig, then run \"flutter pub get\""
++end
++
++require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
++
++flutter_macos_podfile_setup
++
++target 'Runner' do
++  use_frameworks!
++  use_modular_headers!
++
++  flutter_install_all_macos_pods File.dirname(File.realpath(__FILE__))
++end
++
++post_install do |installer|
++  installer.pods_project.targets.each do |target|
++    flutter_additional_macos_build_settings(target)
++  end
++end
+Index: ios/Podfile
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ios/Podfile b/ios/Podfile
+new file mode 100644
+--- /dev/null	(date 1652988654000)
++++ b/ios/Podfile	(date 1652988654000)
+@@ -0,0 +1,41 @@
++# Uncomment this line to define a global platform for your project
++# platform :ios, '9.0'
++
++# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
++ENV['COCOAPODS_DISABLE_STATS'] = 'true'
++
++project 'Runner', {
++  'Debug' => :debug,
++  'Profile' => :release,
++  'Release' => :release,
++}
++
++def flutter_root
++  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
++  unless File.exist?(generated_xcode_build_settings_path)
++    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
++  end
++
++  File.foreach(generated_xcode_build_settings_path) do |line|
++    matches = line.match(/FLUTTER_ROOT\=(.*)/)
++    return matches[1].strip if matches
++  end
++  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
++end
++
++require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
++
++flutter_ios_podfile_setup
++
++target 'Runner' do
++  use_frameworks!
++  use_modular_headers!
++
++  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
++end
++
++post_install do |installer|
++  installer.pods_project.targets.each do |target|
++    flutter_additional_ios_build_settings(target)
++  end
++end
+Index: ios/Flutter/Release.xcconfig
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"Generated.xcconfig\"\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ios/Flutter/Release.xcconfig b/ios/Flutter/Release.xcconfig
+--- a/ios/Flutter/Release.xcconfig	(revision 92ef4ff5d3d82020016f27dd0bd975c0ece4a673)
++++ b/ios/Flutter/Release.xcconfig	(date 1655155967162)
+@@ -1,1 +1,2 @@
++#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
+ #include "Generated.xcconfig"
+Index: ios/Flutter/Debug.xcconfig
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"Generated.xcconfig\"\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ios/Flutter/Debug.xcconfig b/ios/Flutter/Debug.xcconfig
+--- a/ios/Flutter/Debug.xcconfig	(revision 92ef4ff5d3d82020016f27dd0bd975c0ece4a673)
++++ b/ios/Flutter/Debug.xcconfig	(date 1655155967162)
+@@ -1,1 +1,2 @@
++#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
+ #include "Generated.xcconfig"
+Index: macos/Flutter/Flutter-Release.xcconfig
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"ephemeral/Flutter-Generated.xcconfig\"\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/macos/Flutter/Flutter-Release.xcconfig b/macos/Flutter/Flutter-Release.xcconfig
+--- a/macos/Flutter/Flutter-Release.xcconfig	(revision 92ef4ff5d3d82020016f27dd0bd975c0ece4a673)
++++ b/macos/Flutter/Flutter-Release.xcconfig	(date 1655155967164)
+@@ -1,1 +1,2 @@
++#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
+ #include "ephemeral/Flutter-Generated.xcconfig"
+Index: lib/model/UserModel.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>class UserModel{\n  String? uid;\n  String? email;\n  String? name;\n  String? lastName;\n\n  UserModel({this.uid, this.email, this.name, this.lastName});\n\n  // data from server\n  factory UserModel.fromMap(map){\n    return UserModel(\n      uid: map['uid'],\n      email: map['email'],\n      name : map['name'],\n      lastName: map['lastName'],\n    );\n  }\n\n  // Save data to server\nMap<String,dynamic> toMap(){\n    return{\n      'uid' : uid,\n      'email' : email,\n      'name' : name,\n      'lastName' : lastName\n    };\n}\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/model/UserModel.dart b/lib/model/UserModel.dart
+--- a/lib/model/UserModel.dart	(revision 92ef4ff5d3d82020016f27dd0bd975c0ece4a673)
++++ b/lib/model/UserModel.dart	(date 1655157484893)
+@@ -3,8 +3,9 @@
+   String? email;
+   String? name;
+   String? lastName;
++  List<int>? favorites;
+ 
+-  UserModel({this.uid, this.email, this.name, this.lastName});
++  UserModel({this.uid, this.email, this.name, this.lastName, this.favorites});
+ 
+   // data from server
+   factory UserModel.fromMap(map){
+@@ -13,6 +14,7 @@
+       email: map['email'],
+       name : map['name'],
+       lastName: map['lastName'],
++      favorites: map['favorites']
+     );
+   }
+ 
+@@ -22,7 +24,8 @@
+       'uid' : uid,
+       'email' : email,
+       'name' : name,
+-      'lastName' : lastName
++      'lastName' : lastName,
++      'favorites' : favorites
+     };
+ }
+ }
+\ No newline at end of file
