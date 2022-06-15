@@ -19,7 +19,7 @@ class FavMovies extends StatefulWidget {
 class _FavMovies extends State<FavMovies> {
   List idMovies = [];
   List favMovies = [];
-
+  var movieId = [];
   final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';
   final readAccessToken =
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';
@@ -80,38 +80,135 @@ class _FavMovies extends State<FavMovies> {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 20, right: 20, left: 20, bottom: 20),
-                child: GridView.builder(
-                    itemCount: favMovies.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: sizeScreen(),
-                        childAspectRatio: 0.75,
-                        mainAxisSpacing: 20,
-                        crossAxisSpacing: 20),
-                    itemBuilder: (context, index) => FilmItem(
-                          size: size,
-                          images: favMovies[index]['poster_path'] != ''
-                              ? "https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}"
-                              : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
-                          FilmTitle: favMovies[index]['title'] ??
-                              favMovies[index]['name'],
-                          overview:
-                              favMovies[index]['overview'] ?? 'unavailable',
-                          realeaseDate:
-                              favMovies[index]['release_date'] ?? 'undefined',
-                          filmId: favMovies[index]['id'],
-                        )),
+                child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 20, right: 20, left: 20, bottom: 20),
+              child: GridView.builder(
+                itemCount: favMovies.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: sizeScreen(),
+                    childAspectRatio: 0.75,
+                    mainAxisSpacing: 20,
+                    crossAxisSpacing: 20),
+                itemBuilder: (context, index) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SelectedFilm(
+                                  images: favMovies[index]['poster_path'] != ''
+                                      ? "https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}"
+                                      : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
+                                  FilmTitle: favMovies[index]['title'] ??
+                                      favMovies[index]['name'],
+                                  overview: favMovies[index]['overview'] ??
+                                      'unavailable',
+                                  realeaseDate: favMovies[index]
+                                          ['release_date'] ??
+                                      'undefined',
+                                  filmId: favMovies[index]['id'],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Stack(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                          favMovies[index]['poster_path'] != ''
+                                              ? "https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}"
+                                              : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
+                                        ),
+                                        fit: BoxFit.fill),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(20)),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 20,
+                                right: 15,
+                                child: IconButton(
+                                    onPressed: () {
+                                      deleteFav(favMovies[index]['id']);
+                                      refreshAfterdelete();
+
+                                      /*
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  const FavMovies()));*/
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.deepOrangeAccent,
+                                    )),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 38,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(top: 8, left: 0, right: 10),
+                          child: Text(
+                            favMovies[index]['title'] ??
+                                favMovies[index]['name'],
+                            style: const TextStyle(fontFamily: 'Comfortaa'),
+                          ),
+                        ),
+                      ),
+                    ]),
               ),
-            )
+            ))
           ],
         ));
   }
 
+  refreshAfterdelete() async {
+    setState(() {
+      favMovies.clear();
+      movieId.clear();
+    });
+    List arrayFavs = [];
+    //var movieIds = [];
+    var fireStore = FirebaseFirestore.instance;
+    var currentUser = FirebaseAuth.instance.currentUser;
+    final doc = await fireStore.collection("Users").doc(currentUser?.uid).get();
+    movieId.insertAll(0, doc.data()!['favorites']);
+    arrayFavs = movieId;
+    print(arrayFavs.length);
+    for (var i = 0; i < arrayFavs.length; i++) {
+      var FilmInformationsJson = await http.get(Uri.parse(
+          'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
+      var film = jsonDecode(FilmInformationsJson.body);
+      //print(film);
+      print(arrayFavs[i]);
+      setState(() {
+        favMovies.add(film);
+      });
+    }
+    print(favMovies);
+  }
+
   loadData() async {
     //getMovies from firebase
-    var movieId = [];
+    setState(() {
+      favMovies.clear();
+      movieId.clear();
+    });
+
     var fireStore = FirebaseFirestore.instance;
     var currentUser = FirebaseAuth.instance.currentUser;
     final doc = await fireStore.collection("Users").doc(currentUser?.uid).get();
@@ -136,11 +233,21 @@ class _FavMovies extends State<FavMovies> {
         .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
     Fluttertoast.showToast(msg: 'See You Soon');
   }
+
+  void deleteFav(int filmId) async {
+    //var movieId = [];
+    User? user = FirebaseAuth.instance.currentUser;
+    var fireStore = FirebaseFirestore.instance;
+    await fireStore.collection("Users").doc(user?.uid).update({
+      'favorites': FieldValue.arrayRemove([filmId])
+    });
+  }
 }
 
 class FilmItem extends StatelessWidget {
   const FilmItem(
       {Key? key,
+      required this.favMovies,
       required this.filmId,
       required this.size,
       required this.images,
@@ -154,6 +261,7 @@ class FilmItem extends StatelessWidget {
   final String FilmTitle;
   final String overview;
   final String realeaseDate;
+  final List favMovies;
 
   @override
   Widget build(BuildContext context) {
@@ -195,10 +303,12 @@ class FilmItem extends StatelessWidget {
                     child: IconButton(
                         onPressed: () {
                           deleteFav(filmId);
+
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (BuildContext context) => const FavMovies()));
+                                  builder: (BuildContext context) =>
+                                      const FavMovies()));
                         },
                         icon: const Icon(
                           Icons.delete,
@@ -223,14 +333,25 @@ class FilmItem extends StatelessWidget {
   }
 
   void deleteFav(int filmId) async {
+    var movieId = [];
     User? user = FirebaseAuth.instance.currentUser;
     var fireStore = FirebaseFirestore.instance;
+    var currentUser = FirebaseAuth.instance.currentUser;
+    await fireStore.collection("Users").doc(user?.uid).update({
+      'favorites': FieldValue.arrayRemove([filmId])
+    });
+    final doc = await fireStore.collection("Users").doc(currentUser?.uid).get();
+    movieId.add(doc.data()!['favorites']);
+    List arrayFavs = movieId[0];
 
-    await fireStore.collection("Users").doc(user?.uid).update(
-      {
-        'favorites' : FieldValue.arrayRemove([filmId])
-      }
-    );
+    for (var i = 0; i < arrayFavs.length; i++) {
+      var FilmInformationsJson = await http.get(Uri.parse(
+          'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
+      var film = jsonDecode(FilmInformationsJson.body);
+      //print(film);
+      print(arrayFavs[i]);
 
+      favMovies.add(film);
+    }
   }
 }
