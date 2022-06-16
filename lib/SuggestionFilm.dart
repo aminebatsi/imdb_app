@@ -80,36 +80,46 @@ class _SuggestionFilmState extends State<SuggestionFilm> {
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 20, right: 20, left: 20, bottom: 20),
-                child: GridView.builder(
-                    itemCount: favMovies.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: sizeScreen(),
-                        childAspectRatio: 0.75,
-                        mainAxisSpacing: 20,
-                        crossAxisSpacing: 20),
-                    itemBuilder: (context, index) => FilmItem(
-                          size: size,
-                          images: favMovies[index]['poster_path'] != ''
-                              ? "https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}"
-                              : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
-                          FilmTitle: favMovies[index]['title'] ??
-                              favMovies[index]['name'],
-                          overview:
-                              favMovies[index]['overview'] ?? 'unavailable',
-                          realeaseDate:
-                              favMovies[index]['release_date'] ?? 'undefined',
-                          filmId: favMovies[index]['id'],
-                        )),
-              ),
-            )
+            isLoading == false
+                ? Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 20, right: 20, left: 20, bottom: 20),
+                      child: GridView.builder(
+                          itemCount: favMovies.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: sizeScreen(),
+                                  childAspectRatio: 0.75,
+                                  mainAxisSpacing: 20,
+                                  crossAxisSpacing: 20),
+                          itemBuilder: (context, index) => FilmItem(
+                                size: size,
+                                images: favMovies[index]['poster_path'] != ''
+                                    ? "https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}"
+                                    : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
+                                FilmTitle: favMovies[index]['title'] ??
+                                    favMovies[index]['name'],
+                                overview: favMovies[index]['overview'] ??
+                                    'unavailable',
+                                realeaseDate: favMovies[index]
+                                        ['release_date'] ??
+                                    'undefined',
+                                filmId: favMovies[index]['id'],
+                              )),
+                    ),
+                  )
+                : Padding(
+                    padding: EdgeInsets.only(top: size.height * 0.45),
+                    child: Container(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(color: Colors.pink)),
+                  ),
           ],
         ));
   }
 
+  var isLoading = true;
   loadData() async {
     //getMovies from firebase
     var movieId = [];
@@ -156,7 +166,8 @@ class _SuggestionFilmState extends State<SuggestionFilm> {
       }
     }*/
     var SuggestionFilm = [];
-    for (var i = arrayFavs.length - 5; i < arrayFavs.length; i++) {
+    var lenghtSuggestion = arrayFavs.length > 10 ? arrayFavs.length - 5 : 0;
+    for (var i = lenghtSuggestion; i < arrayFavs.length; i++) {
       var FilmInformationsJson = await http.get(Uri.parse(
           'https://api.themoviedb.org/3/movie/${arrayFavs[i]}/similar?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US&page=1'));
       var film = jsonDecode(FilmInformationsJson.body);
@@ -171,6 +182,11 @@ class _SuggestionFilmState extends State<SuggestionFilm> {
     setState(() {
       favMovies = SuggestionFilm;
     });
+    if (favMovies != null) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> logout(BuildContext context) async {

@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';
   final readAccessToken =
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';
-
+  var isLoading = true;
   loadMovies() async {
     TMDB tmdbLogs = TMDB(ApiKeys(apiKey, readAccessToken),
         logConfig: const ConfigLogger(
@@ -140,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ...topRated4['results']
       ];
 
-      print(allFIlms);
+      //print(allFIlms);
     }
 
     //var tempMovies = allFIlms;
@@ -158,8 +158,9 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
     }
-    print(selectedCategory);
-    print(textCategory);
+
+    //print(selectedCategory);
+    //print(textCategory);
     //print(allFIlms[0]['poster_path']);
     setState(() {
       if (selectedCategory == 0) {
@@ -167,7 +168,13 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         trendingMovies = filtredMovies;
       }
+      if (allFIlms != null) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
+    print(isLoading);
   }
 
   @override
@@ -237,14 +244,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   scrollDirection: Axis.horizontal,
                   itemCount: category.length,
                   itemBuilder: ((context, index) => GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedCategory = index;
-                        textCategory = category[index];
-                      });
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = index;
+                            textCategory = category[index];
+                          });
 
-                      loadMovies();
-                      /*Navigator.push(
+                          loadMovies();
+                          /*Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => MyHomePage(
@@ -253,64 +260,73 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           );*/
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            category[index],
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                category[index],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: selectedCategory == index
+                                        ? KtextColor
+                                        : KtextLightColor),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 5),
+                                height: 2,
+                                width: 30,
                                 color: selectedCategory == index
-                                    ? KtextColor
-                                    : KtextLightColor),
+                                    ? Colors.black
+                                    : Colors.transparent,
+                              )
+                            ],
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 5),
-                            height: 2,
-                            width: 30,
-                            color: selectedCategory == index
-                                ? Colors.black
-                                : Colors.transparent,
-                          )
-                        ],
-                      ),
-                    ),
-                  ))),
+                        ),
+                      ))),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 20, right: 20, left: 20, bottom: 20),
-              child: GridView.builder(
-                  itemCount: trendingMovies.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: SizeScreen(),
-                      childAspectRatio: 0.75,
-                      mainAxisSpacing: 20,
-                      crossAxisSpacing: 20),
-                  itemBuilder: (context, index) => FilmItem(
-                    size: size,
-                    images: trendingMovies[index]['poster_path'] != ''
-                        ? "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}"
-                        : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
-                    FilmTitle: trendingMovies[index]['title'] ??
-                        trendingMovies[index]['name'],
-                    overview:
-                    trendingMovies[index]['overview'] ?? 'unavailable',
-                    realeaseDate: trendingMovies[index]['release_date'] ??
-                        'undefined',
-                    filmId: trendingMovies[index]['id'],
-                  )),
-            ),
-          )
+          isLoading == false
+              ? Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20, right: 20, left: 20, bottom: 20),
+                    child: GridView.builder(
+                        itemCount: trendingMovies.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: SizeScreen(),
+                            childAspectRatio: 0.75,
+                            mainAxisSpacing: 20,
+                            crossAxisSpacing: 20),
+                        itemBuilder: (context, index) => FilmItem(
+                              size: size,
+                              images: trendingMovies[index]['poster_path'] != ''
+                                  ? "https://image.tmdb.org/t/p/w500/${trendingMovies[index]['poster_path']}"
+                                  : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
+                              FilmTitle: trendingMovies[index]['title'] ??
+                                  trendingMovies[index]['name'],
+                              overview: trendingMovies[index]['overview'] ??
+                                  'unavailable',
+                              realeaseDate: trendingMovies[index]
+                                      ['release_date'] ??
+                                  'undefined',
+                              filmId: trendingMovies[index]['id'],
+                            )),
+                  ),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(top: size.height * 0.45),
+                  child: Container(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(color: Colors.pink)),
+                ),
         ],
       ),
     );
   }
+
   Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context)
@@ -322,12 +338,12 @@ class _MyHomePageState extends State<MyHomePage> {
 class FilmItem extends StatelessWidget {
   const FilmItem(
       {Key? key,
-        required this.filmId,
-        required this.size,
-        required this.images,
-        required this.FilmTitle,
-        required this.overview,
-        required this.realeaseDate})
+      required this.filmId,
+      required this.size,
+      required this.images,
+      required this.FilmTitle,
+      required this.overview,
+      required this.realeaseDate})
       : super(key: key);
   final int filmId;
   final Size size;
@@ -343,27 +359,27 @@ class FilmItem extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SelectedFilm(
-                        images: images,
-                        FilmTitle: FilmTitle,
-                        overview: overview,
-                        realeaseDate: realeaseDate,
-                        filmId: filmId,
-                      ),
-                    ),
-                  );
-                },
-                child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(images), fit: BoxFit.fill),
-                        borderRadius: const BorderRadius.all(Radius.circular(20)))),
-              )),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SelectedFilm(
+                    images: images,
+                    FilmTitle: FilmTitle,
+                    overview: overview,
+                    realeaseDate: realeaseDate,
+                    filmId: filmId,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(images), fit: BoxFit.fill),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)))),
+          )),
           SizedBox(
             height: 38,
             child: Padding(
@@ -410,51 +426,50 @@ class _MyWidgetState extends State<MyWidget> {
             scrollDirection: Axis.horizontal,
             itemCount: category.length,
             itemBuilder: ((context, index) => GestureDetector(
-              onTap: () {
-                setState(() {
-                  widget.selectedCategory = index;
-                });
+                  onTap: () {
+                    setState(() {
+                      widget.selectedCategory = index;
+                    });
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyHomePage(
-                      grandCategorie: 'In Cinema',
-                      category: category[index],
-                      //selectedCategory: index
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(
+                          grandCategorie: 'In Cinema',
+                          category: category[index],
+                          //selectedCategory: index
+                        ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          category[index],
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: widget.selectedCategory == index
+                                  ? KtextColor
+                                  : KtextLightColor),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 5),
+                          height: 2,
+                          width: 30,
+                          color: widget.selectedCategory == index
+                              ? Colors.black
+                              : Colors.transparent,
+                        )
+                      ],
                     ),
                   ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      category[index],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: widget.selectedCategory == index
-                              ? KtextColor
-                              : KtextLightColor),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 5),
-                      height: 2,
-                      width: 30,
-                      color: widget.selectedCategory == index
-                          ? Colors.black
-                          : Colors.transparent,
-                    )
-                  ],
-                ),
-              ),
-            ))),
+                ))),
       ),
     );
   }
-
 }
 
 /*

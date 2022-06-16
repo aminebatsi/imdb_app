@@ -8,6 +8,7 @@ import 'package:imdb_app/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'GrandCategories.dart';
 import 'SelectedFilm.dart';
+import 'Profile.dart';
 
 class FavMovies extends StatefulWidget {
   const FavMovies({Key? key}) : super(key: key);
@@ -56,16 +57,17 @@ class _FavMovies extends State<FavMovies> {
           actions: [
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 40),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.login_outlined,
-                      color: Colors.black45,
-                    ),
+                padding: const EdgeInsetsDirectional.only(start: 40),
+                child: IconButton(
+                    icon: Image.asset('boxOfiice.jpg'),
                     onPressed: () {
-                      logout(context);
-                    },
-                  ))
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: ((context) => Profile())));
+                    }),
+                /*onPressed: () {
+                  logout(context);
+                },*/
+              )
             ])
           ],
         ),
@@ -93,70 +95,83 @@ class _FavMovies extends State<FavMovies> {
                 itemBuilder: (context, index) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SelectedFilm(
-                                  images: favMovies[index]['poster_path'] != ''
-                                      ? "https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}"
-                                      : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
-                                  FilmTitle: favMovies[index]['title'] ??
-                                      favMovies[index]['name'],
-                                  overview: favMovies[index]['overview'] ??
-                                      'unavailable',
-                                  realeaseDate: favMovies[index]
-                                          ['release_date'] ??
-                                      'undefined',
-                                  filmId: favMovies[index]['id'],
-                                ),
-                              ),
-                            );
-                          },
-                          child: Stack(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                          favMovies[index]['poster_path'] != ''
-                                              ? "https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}"
-                                              : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
+                      isLoading == false
+                          ? Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SelectedFilm(
+                                        images: favMovies[index]
+                                                    ['poster_path'] !=
+                                                ''
+                                            ? "https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}"
+                                            : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
+                                        FilmTitle: favMovies[index]['title'] ??
+                                            favMovies[index]['name'],
+                                        overview: favMovies[index]
+                                                ['overview'] ??
+                                            'unavailable',
+                                        realeaseDate: favMovies[index]
+                                                ['release_date'] ??
+                                            'undefined',
+                                        filmId: favMovies[index]['id'],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                favMovies[index]
+                                                            ['poster_path'] !=
+                                                        ''
+                                                    ? "https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}"
+                                                    : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',
+                                              ),
+                                              fit: BoxFit.fill),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(20)),
                                         ),
-                                        fit: BoxFit.fill),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 20,
-                                right: 15,
-                                child: IconButton(
-                                    onPressed: () {
-                                      deleteFav(favMovies[index]['id']);
-                                      refreshAfterdelete();
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 10,
+                                      right: 10,
+                                      child: IconButton(
+                                          onPressed: () {
+                                            deleteFav(favMovies[index]['id']);
+                                            refreshAfterdelete();
 
-                                      /*
+                                            /*
                                       Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                               builder: (BuildContext context) =>
                                                   const FavMovies()));*/
-                                    },
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: Colors.deepOrangeAccent,
-                                    )),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                                          },
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: Colors.deepOrangeAccent,
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(top: 40),
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  child: CircularProgressIndicator(
+                                      color: Colors.pink)),
+                            ),
                       SizedBox(
                         height: 38,
                         child: Padding(
@@ -176,6 +191,7 @@ class _FavMovies extends State<FavMovies> {
         ));
   }
 
+  var isLoading = true;
   refreshAfterdelete() async {
     setState(() {
       favMovies.clear();
@@ -197,6 +213,11 @@ class _FavMovies extends State<FavMovies> {
       print(arrayFavs[i]);
       setState(() {
         favMovies.add(film);
+      });
+    }
+    if (favMovies != null) {
+      setState(() {
+        isLoading = false;
       });
     }
     print(favMovies);
@@ -223,6 +244,11 @@ class _FavMovies extends State<FavMovies> {
       print(arrayFavs[i]);
       setState(() {
         favMovies.add(film);
+      });
+    }
+    if (favMovies != null) {
+      setState(() {
+        isLoading = false;
       });
     }
   }
@@ -354,4 +380,33 @@ class FilmItem extends StatelessWidget {
       favMovies.add(film);
     }
   }
+
+  Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+    Fluttertoast.showToast(msg: 'See You Soon');
+  }
+}
+
+Widget _buildPopupDialog(BuildContext context) {
+  return new AlertDialog(
+    title: const Text('Popup example'),
+    content: new Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text("Hello"),
+      ],
+    ),
+    actions: <Widget>[
+      new FlatButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        textColor: Theme.of(context).primaryColor,
+        child: const Text('Close'),
+      ),
+    ],
+  );
 }
