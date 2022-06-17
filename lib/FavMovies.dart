@@ -57,17 +57,13 @@ class _FavMovies extends State<FavMovies> {
           actions: [
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               Padding(
-                padding: const EdgeInsetsDirectional.only(start: 40),
-                child: IconButton(
-                    icon: Image.asset('boxOfiice.jpg'),
+                  padding: const EdgeInsetsDirectional.only(start: 40),
+                  child: IconButton(
+                    icon: Icon(Icons.logout, color: Colors.black),
                     onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: ((context) => Profile())));
-                    }),
-                /*onPressed: () {
-                  logout(context);
-                },*/
-              )
+                      logout(context);
+                    },
+                  ))
             ])
           ],
         ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'Profile.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,6 +31,18 @@ class _SuggestionFilmState extends State<SuggestionFilm> {
     // TODO: implement initState
     super.initState();
     loadData();
+    inputData();
+  }
+
+  var userName;
+  void inputData() {
+    var fireStore = FirebaseFirestore.instance;
+    var currentUser = FirebaseAuth.instance.currentUser;
+    setState(() {
+      userName = currentUser!.email;
+    });
+    print(userName);
+    // here you write the codes to input the data into firestore
   }
 
   @override
@@ -59,10 +72,7 @@ class _SuggestionFilmState extends State<SuggestionFilm> {
               Padding(
                   padding: const EdgeInsetsDirectional.only(start: 40),
                   child: IconButton(
-                    icon: const Icon(
-                      Icons.login_outlined,
-                      color: Colors.black45,
-                    ),
+                    icon: Icon(Icons.logout, color: Colors.black),
                     onPressed: () {
                       logout(context);
                     },
@@ -76,7 +86,7 @@ class _SuggestionFilmState extends State<SuggestionFilm> {
             Padding(
               padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
               child: Text(
-                'Favorites',
+                'Suggestions',
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
@@ -188,6 +198,8 @@ class _SuggestionFilmState extends State<SuggestionFilm> {
       });
     }
   }
+
+  //final FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();

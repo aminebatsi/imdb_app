@@ -5,6 +5,7 @@ import 'package:tmdb_api/tmdb_api.dart';
 import 'ColorFilters.dart';
 import 'MyHomePage.dart';
 import 'SearchScreen.dart';
+import 'Profile.dart';
 
 class GrandCategories extends StatefulWidget {
   const GrandCategories({Key? key}) : super(key: key);
@@ -20,22 +21,21 @@ class _GrandCategoriesState extends State<GrandCategories> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-              color: Color(0xFF535353),
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchScreen()),
-              );
-            },
-          ),
-          const SizedBox(
-            width: 10,
-          )
+        actions: [
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Padding(
+              padding: const EdgeInsetsDirectional.only(start: 40),
+              child: IconButton(
+                  icon: Icon(Icons.search, color: Colors.black),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: ((context) => SearchScreen())));
+                  }),
+              /*onPressed: () {
+                  logout(context);
+                },*/
+            )
+          ])
         ],
       ),
       body: SingleChildScrollView(
@@ -106,7 +106,7 @@ class _GrandCategoriesState extends State<GrandCategories> {
                       ),
                     ),
                     const Text(
-                      'All Movies',
+                      'Top Rated',
                       style: TextStyle(
                           fontFamily: 'Comfortaa',
                           color: Colors.white,

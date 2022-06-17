@@ -5,7 +5,47 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'LoginPage.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  const Profile({Key? key}) : super(key: key);
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    inputData();
+    loadData();
+  }
+
+  var userName;
+  var cmp;
+  void inputData() {
+    var fireStore = FirebaseFirestore.instance;
+    var currentUser = FirebaseAuth.instance.currentUser;
+    setState(() {
+      userName = currentUser!.email;
+    });
+    print(userName);
+    // here you write the codes to input the data into firestore
+  }
+
+  loadData() async {
+    //getMovies from firebase
+    var movieId = [];
+    var fireStore = FirebaseFirestore.instance;
+    var currentUser = FirebaseAuth.instance.currentUser;
+    final doc = await fireStore.collection("Users").doc(currentUser?.uid).get();
+    movieId.add(doc.data()!['favorites']);
+    setState(() {
+      cmp = movieId[0].lenght;
+    });
+    print(cmp);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +72,7 @@ class Profile extends StatelessWidget {
             height: 80,
           ),
           Text(
-            "Rajat Palankar",
+            userName,
             style: TextStyle(
                 fontSize: 25.0,
                 color: Colors.blueGrey,
@@ -40,13 +80,7 @@ class Profile extends StatelessWidget {
                 fontWeight: FontWeight.w400),
           ),
           SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 10,
+            height: 20,
           ),
           Card(
               margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
@@ -59,7 +93,7 @@ class Profile extends StatelessWidget {
                         letterSpacing: 2.0, fontWeight: FontWeight.w300),
                   ))),
           SizedBox(
-            height: 15,
+            height: 20,
           ),
           Card(
             margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
@@ -82,7 +116,7 @@ class Profile extends StatelessWidget {
                           height: 7,
                         ),
                         Text(
-                          "15",
+                          cmp,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 22.0,
@@ -96,7 +130,7 @@ class Profile extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 50,
+            height: 20,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

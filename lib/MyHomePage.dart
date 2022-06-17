@@ -1,5 +1,6 @@
 import 'dart:convert';
 //import 'dart:ffi';
+import 'Profile.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -214,10 +215,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
                 padding: const EdgeInsetsDirectional.only(start: 40),
                 child: IconButton(
-                  icon: const Icon(
-                    Icons.login_outlined,
-                    color: Colors.black45,
-                  ),
+                  icon: Icon(Icons.logout,
+                      color: Color.fromARGB(255, 112, 107, 107)),
                   onPressed: () {
                     logout(context);
                   },
