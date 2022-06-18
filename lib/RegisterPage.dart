@@ -53,14 +53,14 @@ class _RegisterPage extends State<RegisterPage> {
                 top: 0,
                 right: 0,
                 child: Image.asset(
-                  "twoelipse.png",
+                  "assets/background/twoelipse.png",
                   //width: size.width * 0.3,
                 )),
             Positioned(
                 bottom: 0,
                 left: 0,
                 child: Image.asset(
-                  "twoelipsebtm.png",
+                  "assets/background/twoelipsebtm.png",
                   //width: size.width * 0.3,
                 )),
             Form(

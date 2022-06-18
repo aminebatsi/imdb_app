@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'Profile.dart';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:imdb_app/LoginPage.dart';
-import 'package:tmdb_api/tmdb_api.dart';
 import 'package:http/http.dart' as http;
 import 'GrandCategories.dart';
 import 'MyHomePage.dart';
@@ -61,7 +60,7 @@ class _SuggestionFilmState extends State<SuggestionFilm> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: Image.asset('arrow-left-line.png'),
+            icon: Image.asset('assets/background/arrow-left-line.png'),
             onPressed: () {
               Navigator.of(context).pop(MaterialPageRoute(
                   builder: ((context) => const GrandCategories())));

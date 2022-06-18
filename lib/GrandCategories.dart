@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:imdb_app/FavMovies.dart';
 import 'package:imdb_app/SuggestionFilm.dart';
-import 'package:tmdb_api/tmdb_api.dart';
 import 'ColorFilters.dart';
 import 'MyHomePage.dart';
 import 'SearchScreen.dart';
-import 'Profile.dart';
 
 class GrandCategories extends StatefulWidget {
   const GrandCategories({Key? key}) : super(key: key);
@@ -123,7 +121,7 @@ class _GrandCategoriesState extends State<GrandCategories> {
                       borderRadius: BorderRadius.circular(42)),
                   child: Stack(alignment: Alignment.center, children: <Widget>[
                     Ink.image(
-                      image: const AssetImage('cinema.jpg'),
+                      image: const AssetImage('assets/background/cinema.jpg'),
                       colorFilter: ColorFilters.greyscale,
                       height: 150,
                       fit: BoxFit.cover,

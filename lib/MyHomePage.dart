@@ -1,6 +1,4 @@
 import 'dart:convert';
-//import 'dart:ffi';
-import 'Profile.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +16,7 @@ import 'GrandCategories.dart';
 class MyHomePage extends StatefulWidget {
   final String grandCategorie;
   final String category;
+
   const MyHomePage({
     Key? key,
     required this.grandCategorie,
@@ -88,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final readAccessToken =
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';
   var isLoading = true;
+
   loadMovies() async {
     TMDB tmdbLogs = TMDB(ApiKeys(apiKey, readAccessToken),
         logConfig: const ConfigLogger(
@@ -204,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Image.asset('arrow-left-line.png'),
+          icon: Image.asset('assets/background/arrow-left-line.png'),
           onPressed: () {
             Navigator.of(context).pop(
                 MaterialPageRoute(builder: ((context) => GrandCategories())));
@@ -395,6 +395,7 @@ class FilmItem extends StatelessWidget {
 
 class MyWidget extends StatefulWidget {
   int selectedCategory;
+
   MyWidget({Key? key, this.selectedCategory = 0}) : super(key: key);
 
   @override
@@ -411,6 +412,7 @@ class _MyWidgetState extends State<MyWidget> {
     'Drama',
     'Family',
   ];
+
   //int selectedCategory ;
   Color KtextColor = const Color(0xFF535353);
   Color KtextLightColor = const Color(0xFFACACAC);

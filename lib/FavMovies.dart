@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:imdb_app/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'GrandCategories.dart';
 import 'SelectedFilm.dart';
-import 'Profile.dart';
 
 class FavMovies extends StatefulWidget {
   const FavMovies({Key? key}) : super(key: key);
@@ -48,7 +46,7 @@ class _FavMovies extends State<FavMovies> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: Image.asset('arrow-left-line.png'),
+            icon: Image.asset('assets/background/arrow-left-line.png'),
             onPressed: () {
               Navigator.of(context).pop(MaterialPageRoute(
                   builder: ((context) => const GrandCategories())));
@@ -138,8 +136,8 @@ class _FavMovies extends State<FavMovies> {
                                       ),
                                     ),
                                     Positioned(
-                                      top: 10,
-                                      right: 10,
+                                      top: 0,
+                                      right: 0,
                                       child: IconButton(
                                           onPressed: () {
                                             deleteFav(favMovies[index]['id']);
@@ -200,13 +198,10 @@ class _FavMovies extends State<FavMovies> {
     final doc = await fireStore.collection("Users").doc(currentUser?.uid).get();
     movieId.insertAll(0, doc.data()!['favorites']);
     arrayFavs = movieId;
-    print(arrayFavs.length);
     for (var i = 0; i < arrayFavs.length; i++) {
       var FilmInformationsJson = await http.get(Uri.parse(
           'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
       var film = jsonDecode(FilmInformationsJson.body);
-      //print(film);
-      print(arrayFavs[i]);
       setState(() {
         favMovies.add(film);
       });
@@ -216,7 +211,6 @@ class _FavMovies extends State<FavMovies> {
         isLoading = false;
       });
     }
-    print(favMovies);
   }
 
   loadData() async {
@@ -237,7 +231,6 @@ class _FavMovies extends State<FavMovies> {
           'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
       var film = jsonDecode(FilmInformationsJson.body);
       //print(film);
-      print(arrayFavs[i]);
       setState(() {
         favMovies.add(film);
       });
@@ -371,7 +364,6 @@ class FilmItem extends StatelessWidget {
           'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
       var film = jsonDecode(FilmInformationsJson.body);
       //print(film);
-      print(arrayFavs[i]);
 
       favMovies.add(film);
     }
@@ -385,24 +377,3 @@ class FilmItem extends StatelessWidget {
   }
 }
 
-Widget _buildPopupDialog(BuildContext context) {
-  return new AlertDialog(
-    title: const Text('Popup example'),
-    content: new Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text("Hello"),
-      ],
-    ),
-    actions: <Widget>[
-      new FlatButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        textColor: Theme.of(context).primaryColor,
-        child: const Text('Close'),
-      ),
-    ],
-  );
-}

@@ -37,24 +37,29 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SizedBox(
-        height: size.height,
-        width: double.infinity,
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Stack(
+
+
           //alignment: Alignment.center,
           children: [
+          Container(
+            height: size.height,
+          ),
             Positioned(
                 top: 0,
                 right: 0,
                 child: Image.asset(
-                  "twoelipse.png",
+                  "assets/background/twoelipse.png",
                   //width: size.width * 0.3,
                 )),
             Positioned(
                 bottom: 0,
                 left: 0,
                 child: Image.asset(
-                  "twoelipsebtm.png",
+                  "assets/background/twoelipsebtm.png",
                   //width: size.width * 0.3,
                 )),
             Form(
@@ -71,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: size.height * 0.02),
                   Image.asset(
-                    'backpng.png',
+                    'assets/background/backpng.png',
                     height: size.height * 0.40,
                     width: size.width * 0.9,
                   ),

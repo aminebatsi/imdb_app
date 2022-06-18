@@ -1,4 +1,4 @@
-import 'dart:html';
+
 
 import 'package:flutter/material.dart';
 
@@ -30,9 +30,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         //background image
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('splashscreen.jpg'), fit: BoxFit.fill)),
+                image: AssetImage('assets/background/splashscreen.jpg'), fit: BoxFit.fill)),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: [
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Container(
               height: size.height / 5,
               width: size.height / 5,
-              child: Image(image: AssetImage('logowtitle.png')),
+              child: Image(image: AssetImage('assets/background/logowtitle.png')),
             ),
             SizedBox(
               height: size.height / 3.2,

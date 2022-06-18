@@ -83,7 +83,7 @@ class _SelectedFilmState extends State<SelectedFilm> {
                         image: DecorationImage(
                             fit: BoxFit.fill,
                             image: NetworkImage(
-                                "https://image.tmdb.org/t/p/w300/${selectedMovie["backdrop_path"]}"))),
+                                "https://image.tmdb.org/t/p/w300/${selectedMovie["poster_path"]}"))),
                   ),
                   //ts
                   Positioned(
@@ -111,7 +111,7 @@ class _SelectedFilmState extends State<SelectedFilm> {
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    Image.asset('star-half-fill.png'),
+                                    Image.asset('assets/background/star-half-fill.png'),
                                     const SizedBox(height: 5),
                                     RichText(
                                         text: TextSpan(
@@ -198,7 +198,7 @@ class _SelectedFilmState extends State<SelectedFilm> {
                         )
                       ]),
                 ),
-                SizedBox(
+                Container(
                   height: 50,
                   width: 50,
                   child: FlatButton(
@@ -209,10 +209,12 @@ class _SelectedFilmState extends State<SelectedFilm> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Icon(
-                        Icons.add,
-                        size: 28,
-                        color: Colors.white,
+                      child: const Center(
+                        child:  Icon(
+                          Icons.add,
+                          size: 20,
+                          color: Colors.white,
+                        ),
                       )),
                 ),
               ],
