@@ -43,6 +43,7 @@ class _RegisterPage extends State<RegisterPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SizedBox(
         height: size.height,
         width: double.infinity,
@@ -63,271 +64,274 @@ class _RegisterPage extends State<RegisterPage> {
                   "assets/background/twoelipsebtm.png",
                   //width: size.width * 0.3,
                 )),
-            Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'SignUp',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Comfortaa',
-                        fontSize: 20),
-                  ),
-                  SizedBox(height: size.height * 0.03),
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.height / 10, vertical: 5),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(50, 228, 228, 228),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15, right: 15, top: 5),
-                              child: TextFormField(
-                                controller: nameController,
-                                decoration: const InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.person,
-                                      size: 20,
-                                    ),
-                                    prefixIconColor: Color(0xFF6C53EF),
-                                    border: InputBorder.none,
-                                    labelText: 'Name',
-                                    hintText: 'Enter your Name'),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please enter your email";
-                                  }
-                                  return null;
-                                },
-                                keyboardType: TextInputType.name,
-                                onSaved: (value) {
-                                  nameController.text = value!;
-                                },
-                                textInputAction: TextInputAction.next,
-                              )))),
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.height / 10, vertical: 5),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(50, 228, 228, 228),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15, right: 15, top: 5),
-                              child: TextFormField(
-                                controller: lastNameController,
-                                decoration: const InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.person,
-                                      size: 20,
-                                    ),
-                                    prefixIconColor: Color(0xFF6C53EF),
-                                    border: InputBorder.none,
-                                    labelText: 'Last Name',
-                                    hintText: 'Enter Last Name'),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please enter your email";
-                                  }
-                                  return null;
-                                },
-                                keyboardType: TextInputType.name,
-                                onSaved: (value) {
-                                  lastNameController.text = value!;
-                                },
-                                textInputAction: TextInputAction.next,
-                              )))),
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.height / 10, vertical: 5),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(50, 228, 228, 228),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15, right: 15, top: 5),
-                              child: TextFormField(
-                                controller: emailController,
-                                decoration: const InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.email,
-                                      size: 20,
-                                    ),
-                                    prefixIconColor: Color(0xFF6C53EF),
-                                    border: InputBorder.none,
-                                    labelText: 'Email',
-                                    hintText: 'example@example.com'),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please enter your email";
-                                  }
-                                  if (!emailValidator.hasMatch(value)) {
-                                    return "Email entered not valid";
-                                  }
-                                  return null;
-                                },
-                                keyboardType: TextInputType.emailAddress,
-                                onSaved: (value) {
-                                  emailController.text = value!;
-                                },
-                                textInputAction: TextInputAction.next,
-                              )))),
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.height / 10, vertical: 5),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(50, 228, 228, 228),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15, right: 15, top: 5),
-                              child: TextFormField(
-                                controller: passController,
-                                decoration: const InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.password,
-                                      size: 20,
-                                    ),
-                                    prefixIconColor: Color(0xFF6C53EF),
-                                    border: InputBorder.none,
-                                    labelText: 'Password',
-                                    hintText: '**********'),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please enter your password";
-                                  }
-                                  if (!passValidator.hasMatch(value)) {
-                                    return 'Your Password must contain at least one upper case,'
-                                        'one lower case,one digit,one Special character and'
-                                        '8 characters in length  ';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  passController.text = value!;
-                                },
-                                textInputAction: TextInputAction.next,
-                              )))),
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.height / 10, vertical: 5),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(50, 228, 228, 228),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15, right: 15, top: 5),
-                              child: TextFormField(
-                                controller: cPassController,
-                                decoration: const InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.password,
-                                      size: 20,
-                                    ),
-                                    prefixIconColor: Color(0xFF6C53EF),
-                                    border: InputBorder.none,
-                                    labelText: 'Confirm Password',
-                                    hintText: '**********'),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please enter your password";
-                                  }
-                                  if (!passValidator.hasMatch(value)) {
-                                    return 'Your Password must contain at least one upper case,'
-                                        'one lower case,one digit,one Special character and '
-                                        '8 characters in length  ';
-                                  }
-                                  if (passController.text != value) {
-                                    return "Passwords don't Match";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  passController.text = value!;
-                                },
-                                textInputAction: TextInputAction.done,
-                              )))),
-                  SizedBox(height: size.width * 0.02),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: size.height / 10),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        signUp(emailController.text.trim(),
-                            passController.text.trim());
-                      },
-                      style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          )),
-                          padding: MaterialStateProperty.all(
-                              const EdgeInsets.all(0.0))),
-                      child: Ink(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [
-                                Color(0xFF6C53EF),
-                                Color.fromARGB(159, 108, 83, 239)
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              stops: [0.7, 1]),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
+            ListView(
+              padding: const EdgeInsets.fromLTRB(0, 180, 0, 0), children: [
+             Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'SignUp',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Comfortaa',
+                          fontSize: 20),
+                    ),
+                    SizedBox(height: size.height * 0.03),
+                    Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size.height / 10, vertical: 5),
                         child: Container(
-                          constraints: const BoxConstraints(
-                              minWidth: 88.0,
-                              minHeight:
-                                  36.0), // min sizes for Material buttons
-                          alignment: Alignment.center,
-                          child: const Text(
-                            "SignUp",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(50, 228, 228, 228),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 5),
+                                child: TextFormField(
+                                  controller: nameController,
+                                  decoration: const InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.person,
+                                        size: 20,
+                                      ),
+                                      prefixIconColor: Color(0xFF6C53EF),
+                                      border: InputBorder.none,
+                                      labelText: 'Name',
+                                      hintText: 'Enter your Name'),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Please enter your email";
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.name,
+                                  onSaved: (value) {
+                                    nameController.text = value!;
+                                  },
+                                  textInputAction: TextInputAction.next,
+                                )))),
+                    Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size.height / 10, vertical: 5),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(50, 228, 228, 228),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 5),
+                                child: TextFormField(
+                                  controller: lastNameController,
+                                  decoration: const InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.person,
+                                        size: 20,
+                                      ),
+                                      prefixIconColor: Color(0xFF6C53EF),
+                                      border: InputBorder.none,
+                                      labelText: 'Last Name',
+                                      hintText: 'Enter Last Name'),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Please enter your email";
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.name,
+                                  onSaved: (value) {
+                                    lastNameController.text = value!;
+                                  },
+                                  textInputAction: TextInputAction.next,
+                                )))),
+                    Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size.height / 10, vertical: 5),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(50, 228, 228, 228),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 5),
+                                child: TextFormField(
+                                  controller: emailController,
+                                  decoration: const InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.email,
+                                        size: 20,
+                                      ),
+                                      prefixIconColor: Color(0xFF6C53EF),
+                                      border: InputBorder.none,
+                                      labelText: 'Email',
+                                      hintText: 'example@example.com'),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Please enter your email";
+                                    }
+                                    if (!emailValidator.hasMatch(value)) {
+                                      return "Email entered not valid";
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.emailAddress,
+                                  onSaved: (value) {
+                                    emailController.text = value!;
+                                  },
+                                  textInputAction: TextInputAction.next,
+                                )))),
+                    Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size.height / 10, vertical: 5),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(50, 228, 228, 228),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 5),
+                                child: TextFormField(
+                                  controller: passController,
+                                  decoration: const InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.password,
+                                        size: 20,
+                                      ),
+                                      prefixIconColor: Color(0xFF6C53EF),
+                                      border: InputBorder.none,
+                                      labelText: 'Password',
+                                      hintText: '**********'),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Please enter your password";
+                                    }
+                                    if (!passValidator.hasMatch(value)) {
+                                      return 'Your Password must contain at least one upper case,'
+                                          'one lower case,one digit,one Special character and'
+                                          '8 characters in length  ';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    passController.text = value!;
+                                  },
+                                  textInputAction: TextInputAction.next,
+                                )))),
+                    Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size.height / 10, vertical: 5),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(50, 228, 228, 228),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 5),
+                                child: TextFormField(
+                                  controller: cPassController,
+                                  decoration: const InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.password,
+                                        size: 20,
+                                      ),
+                                      prefixIconColor: Color(0xFF6C53EF),
+                                      border: InputBorder.none,
+                                      labelText: 'Confirm Password',
+                                      hintText: '**********'),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Please enter your password";
+                                    }
+                                    if (!passValidator.hasMatch(value)) {
+                                      return 'Your Password must contain at least one upper case,'
+                                          'one lower case,one digit,one Special character and '
+                                          '8 characters in length  ';
+                                    }
+                                    if (passController.text != value) {
+                                      return "Passwords don't Match";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    passController.text = value!;
+                                  },
+                                  textInputAction: TextInputAction.done,
+                                )))),
+                    SizedBox(height: size.width * 0.02),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: size.height / 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          signUp(emailController.text.trim(),
+                              passController.text.trim());
+                        },
+                        style: ButtonStyle(
+                            shape:
+                                MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            )),
+                            padding: MaterialStateProperty.all(
+                                const EdgeInsets.all(0.0))),
+                        child: Ink(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFF6C53EF),
+                                  Color.fromARGB(159, 108, 83, 239)
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: [0.7, 1]),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          child: Container(
+                            constraints: const BoxConstraints(
+                                minWidth: 88.0,
+                                minHeight:
+                                    36.0), // min sizes for Material buttons
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "SignUp",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: size.width * 0.02),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Already have an account ? '),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
-                        },
-                        child: const Text(
-                          'SignIn',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54,
-                              fontSize: 15),
-                        ),
-                      )
-                    ],
-                  )
-                ],
+                    SizedBox(height: size.width * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Already have an account ? '),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          },
+                          child: const Text(
+                            'SignIn',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black54,
+                                fontSize: 15),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
-            )
+            ])
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.

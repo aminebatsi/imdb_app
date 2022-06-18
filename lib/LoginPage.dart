@@ -37,31 +37,28 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Stack(
-
-
-          //alignment: Alignment.center,
-          children: [
+      resizeToAvoidBottomInset: true,
+      body: Stack(
+        //alignment: Alignment.center,
+        children: [
           Container(
             height: size.height,
           ),
-            Positioned(
-                top: 0,
-                right: 0,
-                child: Image.asset(
-                  "assets/background/twoelipse.png",
-                  //width: size.width * 0.3,
-                )),
-            Positioned(
-                bottom: 0,
-                left: 0,
-                child: Image.asset(
-                  "assets/background/twoelipsebtm.png",
-                  //width: size.width * 0.3,
-                )),
+          Positioned(
+              top: 0,
+              right: 0,
+              child: Image.asset(
+                "assets/background/twoelipse.png",
+                //width: size.width * 0.3,
+              )),
+          Positioned(
+              bottom: 0,
+              left: 0,
+              child: Image.asset(
+                "assets/background/twoelipsebtm.png",
+                //width: size.width * 0.3,
+              )),
+          ListView(padding: const EdgeInsets.fromLTRB(0, 100, 0, 0), children: [
             Form(
               key: _formKey,
               child: Column(
@@ -203,27 +200,28 @@ class _LoginPageState extends State<LoginPage> {
                       const Text('create an account ? '),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => RegisterPage()));
-
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegisterPage()));
                         },
                         child: const Text(
                           'SignUp',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black54,
-                          fontSize: 15),
+                              fontSize: 15),
                         ),
                       )
                     ],
                   )
                 ],
               ),
-            )
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+            ),
+          ])
+        ],
+      ),
+    ); // This trailing comma makes auto-formatting nicer for build methods.
   }
 
   //Login function
