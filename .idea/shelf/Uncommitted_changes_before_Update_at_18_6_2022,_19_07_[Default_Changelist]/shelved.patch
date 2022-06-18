@@ -1,0 +1,1258 @@
+Index: ios/Runner.xcworkspace/contents.xcworkspacedata
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Workspace\n   version = \"1.0\">\n   <FileRef\n      location = \"group:Runner.xcodeproj\">\n   </FileRef>\n</Workspace>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ios/Runner.xcworkspace/contents.xcworkspacedata b/ios/Runner.xcworkspace/contents.xcworkspacedata
+--- a/ios/Runner.xcworkspace/contents.xcworkspacedata	(revision 11952d919a013a2afb8b605b96588490b6154ef3)
++++ b/ios/Runner.xcworkspace/contents.xcworkspacedata	(date 1655481294384)
+@@ -4,4 +4,7 @@
+    <FileRef
+       location = "group:Runner.xcodeproj">
+    </FileRef>
++   <FileRef
++      location = "group:Pods/Pods.xcodeproj">
++   </FileRef>
+ </Workspace>
+Index: lib/FavMovies.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'dart:convert';\n\nimport 'package:cloud_firestore/cloud_firestore.dart';\nimport 'package:firebase_auth/firebase_auth.dart';\nimport 'package:flutter/material.dart';\nimport 'package:fluttertoast/fluttertoast.dart';\nimport 'package:imdb_app/LoginPage.dart';\nimport 'package:http/http.dart' as http;\nimport 'GrandCategories.dart';\nimport 'SelectedFilm.dart';\nimport 'Profile.dart';\n\nclass FavMovies extends StatefulWidget {\n  const FavMovies({Key? key}) : super(key: key);\n\n  @override\n  State<FavMovies> createState() => _FavMovies();\n}\n\nclass _FavMovies extends State<FavMovies> {\n  List idMovies = [];\n  List favMovies = [];\n  var movieId = [];\n  final String apiKey = 'b14e6584347a3199c72afa43baddcdf8';\n  final readAccessToken =\n      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMTRlNjU4NDM0N2EzMTk5YzcyYWZhNDNiYWRkY2RmOCIsInN1YiI6IjYyOWY5NTJmYThiMmNhMDA2NjA5MGJhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IVYqNM7Euk2jX77eh4QiMVX-4q49RctBWLrV7gNDCy4';\n\n  @override\n  void initState() {\n    // TODO: implement initState\n    super.initState();\n    loadData();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    Size size = MediaQuery.of(context).size;\n    int sizeScreen() {\n      if (size.width < 667.0) {\n        return 2;\n      } else {\n        return 4;\n      }\n    }\n\n    return Scaffold(\n        appBar: AppBar(\n          backgroundColor: Colors.transparent,\n          elevation: 0,\n          leading: IconButton(\n            icon: Image.asset('arrow-left-line.png'),\n            onPressed: () {\n              Navigator.of(context).pop(MaterialPageRoute(\n                  builder: ((context) => const GrandCategories())));\n            },\n          ),\n          actions: [\n            Row(mainAxisAlignment: MainAxisAlignment.end, children: [\n              Padding(\n                padding: const EdgeInsetsDirectional.only(start: 40),\n                child: IconButton(\n                    icon: Image.asset('boxOfiice.jpg'),\n                    onPressed: () {\n                      Navigator.of(context).push(\n                          MaterialPageRoute(builder: ((context) => Profile())));\n                    }),\n                /*onPressed: () {\n                  logout(context);\n                },*/\n              )\n            ])\n          ],\n        ),\n        body: Column(\n          crossAxisAlignment: CrossAxisAlignment.start,\n          children: [\n            Padding(\n              padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),\n              child: Text(\n                'Favorites',\n                style: Theme.of(context).textTheme.headline5,\n              ),\n            ),\n            Expanded(\n                child: Padding(\n              padding: const EdgeInsets.only(\n                  top: 20, right: 20, left: 20, bottom: 20),\n              child: GridView.builder(\n                itemCount: favMovies.length,\n                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(\n                    crossAxisCount: sizeScreen(),\n                    childAspectRatio: 0.75,\n                    mainAxisSpacing: 20,\n                    crossAxisSpacing: 20),\n                itemBuilder: (context, index) => Column(\n                    crossAxisAlignment: CrossAxisAlignment.start,\n                    children: <Widget>[\n                      isLoading == false\n                          ? Expanded(\n                              child: GestureDetector(\n                                onTap: () {\n                                  Navigator.push(\n                                    context,\n                                    MaterialPageRoute(\n                                      builder: (context) => SelectedFilm(\n                                        images: favMovies[index]\n                                                    ['poster_path'] !=\n                                                ''\n                                            ? \"https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}\"\n                                            : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',\n                                        FilmTitle: favMovies[index]['title'] ??\n                                            favMovies[index]['name'],\n                                        overview: favMovies[index]\n                                                ['overview'] ??\n                                            'unavailable',\n                                        realeaseDate: favMovies[index]\n                                                ['release_date'] ??\n                                            'undefined',\n                                        filmId: favMovies[index]['id'],\n                                      ),\n                                    ),\n                                  );\n                                },\n                                child: Stack(\n                                  children: [\n                                    Padding(\n                                      padding: const EdgeInsets.all(0),\n                                      child: Container(\n                                        decoration: BoxDecoration(\n                                          image: DecorationImage(\n                                              image: NetworkImage(\n                                                favMovies[index]\n                                                            ['poster_path'] !=\n                                                        ''\n                                                    ? \"https://image.tmdb.org/t/p/w500/${favMovies[index]['poster_path']}\"\n                                                    : 'https://media.istockphoto.com/photos/vintage-film-projector-and-film-screening-picture-id1179771730?k=20&m=1179771730&s=612x612&w=0&h=aTdFgxUzICqvhvpMJuYlMzumqtDkyg4fmbzULIqQwzc=',\n                                              ),\n                                              fit: BoxFit.fill),\n                                          borderRadius: const BorderRadius.all(\n                                              Radius.circular(20)),\n                                        ),\n                                      ),\n                                    ),\n                                    Positioned(\n                                      top: 10,\n                                      right: 10,\n                                      child: IconButton(\n                                          onPressed: () {\n                                            deleteFav(favMovies[index]['id']);\n                                            refreshAfterdelete();\n\n                                            /*\n                                      Navigator.pushReplacement(\n                                          context,\n                                          MaterialPageRoute(\n                                              builder: (BuildContext context) =>\n                                                  const FavMovies()));*/\n                                          },\n                                          icon: const Icon(\n                                            Icons.delete,\n                                            color: Colors.deepOrangeAccent,\n                                          )),\n                                    )\n                                  ],\n                                ),\n                              ),\n                            )\n                          : Padding(\n                              padding: EdgeInsets.only(top: 40),\n                              child: Container(\n                                  alignment: Alignment.center,\n                                  child: CircularProgressIndicator(\n                                      color: Colors.pink)),\n                            ),\n                      SizedBox(\n                        height: 38,\n                        child: Padding(\n                          padding:\n                              const EdgeInsets.only(top: 8, left: 0, right: 10),\n                          child: Text(\n                            favMovies[index]['title'] ??\n                                favMovies[index]['name'],\n                            style: const TextStyle(fontFamily: 'Comfortaa'),\n                          ),\n                        ),\n                      ),\n                    ]),\n              ),\n            ))\n          ],\n        ));\n  }\n\n  var isLoading = true;\n  refreshAfterdelete() async {\n    setState(() {\n      favMovies.clear();\n      movieId.clear();\n    });\n    List arrayFavs = [];\n    //var movieIds = [];\n    var fireStore = FirebaseFirestore.instance;\n    var currentUser = FirebaseAuth.instance.currentUser;\n    final doc = await fireStore.collection(\"Users\").doc(currentUser?.uid).get();\n    movieId.insertAll(0, doc.data()!['favorites']);\n    arrayFavs = movieId;\n    print(arrayFavs.length);\n    for (var i = 0; i < arrayFavs.length; i++) {\n      var FilmInformationsJson = await http.get(Uri.parse(\n          'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));\n      var film = jsonDecode(FilmInformationsJson.body);\n      //print(film);\n      print(arrayFavs[i]);\n      setState(() {\n        favMovies.add(film);\n      });\n    }\n    if (favMovies != null) {\n      setState(() {\n        isLoading = false;\n      });\n    }\n    print(favMovies);\n  }\n\n  loadData() async {\n    //getMovies from firebase\n    setState(() {\n      favMovies.clear();\n      movieId.clear();\n    });\n\n    var fireStore = FirebaseFirestore.instance;\n    var currentUser = FirebaseAuth.instance.currentUser;\n    final doc = await fireStore.collection(\"Users\").doc(currentUser?.uid).get();\n    movieId.add(doc.data()!['favorites']);\n    List arrayFavs = movieId[0];\n\n    for (var i = 0; i < arrayFavs.length; i++) {\n      var FilmInformationsJson = await http.get(Uri.parse(\n          'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));\n      var film = jsonDecode(FilmInformationsJson.body);\n      //print(film);\n      print(arrayFavs[i]);\n      setState(() {\n        favMovies.add(film);\n      });\n    }\n    if (favMovies != null) {\n      setState(() {\n        isLoading = false;\n      });\n    }\n  }\n\n  Future<void> logout(BuildContext context) async {\n    await FirebaseAuth.instance.signOut();\n    Navigator.of(context)\n        .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));\n    Fluttertoast.showToast(msg: 'See You Soon');\n  }\n\n  void deleteFav(int filmId) async {\n    //var movieId = [];\n    User? user = FirebaseAuth.instance.currentUser;\n    var fireStore = FirebaseFirestore.instance;\n    await fireStore.collection(\"Users\").doc(user?.uid).update({\n      'favorites': FieldValue.arrayRemove([filmId])\n    });\n  }\n}\n\nclass FilmItem extends StatelessWidget {\n  const FilmItem(\n      {Key? key,\n      required this.favMovies,\n      required this.filmId,\n      required this.size,\n      required this.images,\n      required this.FilmTitle,\n      required this.overview,\n      required this.realeaseDate})\n      : super(key: key);\n  final int filmId;\n  final Size size;\n  final String images;\n  final String FilmTitle;\n  final String overview;\n  final String realeaseDate;\n  final List favMovies;\n\n  @override\n  Widget build(BuildContext context) {\n    return Column(\n        crossAxisAlignment: CrossAxisAlignment.start,\n        children: <Widget>[\n          Expanded(\n            child: GestureDetector(\n              onTap: () {\n                Navigator.push(\n                  context,\n                  MaterialPageRoute(\n                    builder: (context) => SelectedFilm(\n                      images: images,\n                      FilmTitle: FilmTitle,\n                      overview: overview,\n                      realeaseDate: realeaseDate,\n                      filmId: filmId,\n                    ),\n                  ),\n                );\n              },\n              child: Stack(\n                children: [\n                  Padding(\n                    padding: const EdgeInsets.all(20),\n                    child: Container(\n                      decoration: BoxDecoration(\n                        image: DecorationImage(\n                            image: NetworkImage(images), fit: BoxFit.fill),\n                        borderRadius:\n                            const BorderRadius.all(Radius.circular(20)),\n                      ),\n                    ),\n                  ),\n                  Positioned(\n                    top: 20,\n                    right: 15,\n                    child: IconButton(\n                        onPressed: () {\n                          deleteFav(filmId);\n\n                          Navigator.pushReplacement(\n                              context,\n                              MaterialPageRoute(\n                                  builder: (BuildContext context) =>\n                                      const FavMovies()));\n                        },\n                        icon: const Icon(\n                          Icons.delete,\n                          color: Colors.deepOrangeAccent,\n                        )),\n                  )\n                ],\n              ),\n            ),\n          ),\n          SizedBox(\n            height: 38,\n            child: Padding(\n              padding: const EdgeInsets.only(top: 8, left: 0, right: 10),\n              child: Text(\n                FilmTitle,\n                style: const TextStyle(fontFamily: 'Comfortaa'),\n              ),\n            ),\n          ),\n        ]);\n  }\n\n  void deleteFav(int filmId) async {\n    var movieId = [];\n    User? user = FirebaseAuth.instance.currentUser;\n    var fireStore = FirebaseFirestore.instance;\n    var currentUser = FirebaseAuth.instance.currentUser;\n    await fireStore.collection(\"Users\").doc(user?.uid).update({\n      'favorites': FieldValue.arrayRemove([filmId])\n    });\n    final doc = await fireStore.collection(\"Users\").doc(currentUser?.uid).get();\n    movieId.add(doc.data()!['favorites']);\n    List arrayFavs = movieId[0];\n\n    for (var i = 0; i < arrayFavs.length; i++) {\n      var FilmInformationsJson = await http.get(Uri.parse(\n          'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));\n      var film = jsonDecode(FilmInformationsJson.body);\n      //print(film);\n      print(arrayFavs[i]);\n\n      favMovies.add(film);\n    }\n  }\n\n  Future<void> logout(BuildContext context) async {\n    await FirebaseAuth.instance.signOut();\n    Navigator.of(context)\n        .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));\n    Fluttertoast.showToast(msg: 'See You Soon');\n  }\n}\n\nWidget _buildPopupDialog(BuildContext context) {\n  return new AlertDialog(\n    title: const Text('Popup example'),\n    content: new Column(\n      mainAxisSize: MainAxisSize.min,\n      crossAxisAlignment: CrossAxisAlignment.start,\n      children: <Widget>[\n        Text(\"Hello\"),\n      ],\n    ),\n    actions: <Widget>[\n      new FlatButton(\n        onPressed: () {\n          Navigator.of(context).pop();\n        },\n        textColor: Theme.of(context).primaryColor,\n        child: const Text('Close'),\n      ),\n    ],\n  );\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/lib/FavMovies.dart b/lib/FavMovies.dart
+--- a/lib/FavMovies.dart	(revision 11952d919a013a2afb8b605b96588490b6154ef3)
++++ b/lib/FavMovies.dart	(date 1655481294393)
+@@ -204,13 +204,11 @@
+     final doc = await fireStore.collection("Users").doc(currentUser?.uid).get();
+     movieId.insertAll(0, doc.data()!['favorites']);
+     arrayFavs = movieId;
+-    print(arrayFavs.length);
+     for (var i = 0; i < arrayFavs.length; i++) {
+       var FilmInformationsJson = await http.get(Uri.parse(
+           'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
+       var film = jsonDecode(FilmInformationsJson.body);
+       //print(film);
+-      print(arrayFavs[i]);
+       setState(() {
+         favMovies.add(film);
+       });
+@@ -220,7 +218,6 @@
+         isLoading = false;
+       });
+     }
+-    print(favMovies);
+   }
+ 
+   loadData() async {
+@@ -240,8 +237,6 @@
+       var FilmInformationsJson = await http.get(Uri.parse(
+           'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
+       var film = jsonDecode(FilmInformationsJson.body);
+-      //print(film);
+-      print(arrayFavs[i]);
+       setState(() {
+         favMovies.add(film);
+       });
+@@ -375,7 +370,6 @@
+           'https://api.themoviedb.org/3/movie/${arrayFavs[i]}?api_key=b14e6584347a3199c72afa43baddcdf8&language=en-US'));
+       var film = jsonDecode(FilmInformationsJson.body);
+       //print(film);
+-      print(arrayFavs[i]);
+ 
+       favMovies.add(film);
+     }
+Index: ios/Runner/Info.plist
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n\t<key>CFBundleDevelopmentRegion</key>\n\t<string>$(DEVELOPMENT_LANGUAGE)</string>\n\t<key>CFBundleDisplayName</key>\n\t<string>Imdb App</string>\n\t<key>CFBundleExecutable</key>\n\t<string>$(EXECUTABLE_NAME)</string>\n\t<key>CFBundleIdentifier</key>\n\t<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>\n\t<key>CFBundleInfoDictionaryVersion</key>\n\t<string>6.0</string>\n\t<key>CFBundleName</key>\n\t<string>imdb_app</string>\n\t<key>CFBundlePackageType</key>\n\t<string>APPL</string>\n\t<key>CFBundleShortVersionString</key>\n\t<string>$(FLUTTER_BUILD_NAME)</string>\n\t<key>CFBundleSignature</key>\n\t<string>????</string>\n\t<key>CFBundleVersion</key>\n\t<string>$(FLUTTER_BUILD_NUMBER)</string>\n\t<key>LSRequiresIPhoneOS</key>\n\t<true/>\n\t<key>UILaunchStoryboardName</key>\n\t<string>LaunchScreen</string>\n\t<key>UIMainStoryboardFile</key>\n\t<string>Main</string>\n\t<key>UISupportedInterfaceOrientations</key>\n\t<array>\n\t\t<string>UIInterfaceOrientationPortrait</string>\n\t\t<string>UIInterfaceOrientationLandscapeLeft</string>\n\t\t<string>UIInterfaceOrientationLandscapeRight</string>\n\t</array>\n\t<key>UISupportedInterfaceOrientations~ipad</key>\n\t<array>\n\t\t<string>UIInterfaceOrientationPortrait</string>\n\t\t<string>UIInterfaceOrientationPortraitUpsideDown</string>\n\t\t<string>UIInterfaceOrientationLandscapeLeft</string>\n\t\t<string>UIInterfaceOrientationLandscapeRight</string>\n\t</array>\n\t<key>UIViewControllerBasedStatusBarAppearance</key>\n\t<false/>\n\t<key>CADisableMinimumFrameDurationOnPhone</key>\n\t<true/>\n</dict>\n</plist>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ios/Runner/Info.plist b/ios/Runner/Info.plist
+--- a/ios/Runner/Info.plist	(revision 11952d919a013a2afb8b605b96588490b6154ef3)
++++ b/ios/Runner/Info.plist	(date 1655481294396)
+@@ -2,10 +2,12 @@
+ <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ <plist version="1.0">
+ <dict>
++	<key>CADisableMinimumFrameDurationOnPhone</key>
++	<true/>
+ 	<key>CFBundleDevelopmentRegion</key>
+ 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+ 	<key>CFBundleDisplayName</key>
+-	<string>Imdb App</string>
++	<string>Mov.Flix</string>
+ 	<key>CFBundleExecutable</key>
+ 	<string>$(EXECUTABLE_NAME)</string>
+ 	<key>CFBundleIdentifier</key>
+@@ -43,7 +45,5 @@
+ 	</array>
+ 	<key>UIViewControllerBasedStatusBarAppearance</key>
+ 	<false/>
+-	<key>CADisableMinimumFrameDurationOnPhone</key>
+-	<true/>
+ </dict>
+ </plist>
+Index: ios/Podfile
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Uncomment this line to define a global platform for your project\n# platform :ios, '9.0'\n\n# CocoaPods analytics sends network stats synchronously affecting flutter build latency.\nENV['COCOAPODS_DISABLE_STATS'] = 'true'\n\nproject 'Runner', {\n  'Debug' => :debug,\n  'Profile' => :release,\n  'Release' => :release,\n}\n\ndef flutter_root\n  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)\n  unless File.exist?(generated_xcode_build_settings_path)\n    raise \"#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first\"\n  end\n\n  File.foreach(generated_xcode_build_settings_path) do |line|\n    matches = line.match(/FLUTTER_ROOT\\=(.*)/)\n    return matches[1].strip if matches\n  end\n  raise \"FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get\"\nend\n\nrequire File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)\n\nflutter_ios_podfile_setup\n\ntarget 'Runner' do\n  use_frameworks!\n  use_modular_headers!\n\n  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))\nend\n\npost_install do |installer|\n  installer.pods_project.targets.each do |target|\n    flutter_additional_ios_build_settings(target)\n  end\nend\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ios/Podfile b/ios/Podfile
+--- a/ios/Podfile	(revision 11952d919a013a2afb8b605b96588490b6154ef3)
++++ b/ios/Podfile	(date 1655481294400)
+@@ -1,41 +1,39 @@
+-# Uncomment this line to define a global platform for your project
+-# platform :ios, '9.0'
+-
+-# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+ 
+-project 'Runner', {
+-  'Debug' => :debug,
+-  'Profile' => :release,
+-  'Release' => :release,
+-}
++ project 'Runner', {
++
++   'Debug' => :debug,
++   'Profile' => :release,
++   'Release' => :release,
++ }
+ 
+-def flutter_root
+-  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+-  unless File.exist?(generated_xcode_build_settings_path)
+-    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+-  end
++ def flutter_root
++   generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
++   unless File.exist?(generated_xcode_build_settings_path)
++     raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
++   end
+ 
+-  File.foreach(generated_xcode_build_settings_path) do |line|
+-    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+-    return matches[1].strip if matches
+-  end
+-  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+-end
++   File.foreach(generated_xcode_build_settings_path) do |line|
++     matches = line.match(/FLUTTER_ROOT\=(.*)/)
++     return matches[1].strip if matches
++   end
++   raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
++ end
+ 
+-require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
++ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+ 
+-flutter_ios_podfile_setup
++ flutter_ios_podfile_setup
+ 
+-target 'Runner' do
+-  use_frameworks!
+-  use_modular_headers!
++ target 'Runner' do
++   use_frameworks!
++   use_modular_headers!
+ 
+-  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+-end
++
++   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
++ end
+ 
+-post_install do |installer|
+-  installer.pods_project.targets.each do |target|
+-    flutter_additional_ios_build_settings(target)
+-  end
+-end
++ post_install do |installer|
++   installer.pods_project.targets.each do |target|
++     flutter_additional_ios_build_settings(target)
++   end
++ end
+\ No newline at end of file
+Index: ios/Podfile.lock
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ios/Podfile.lock b/ios/Podfile.lock
+new file mode 100644
+--- /dev/null	(date 1655481294376)
++++ b/ios/Podfile.lock	(date 1655481294376)
+@@ -0,0 +1,812 @@
++PODS:
++  - abseil/algorithm (1.20211102.0):
++    - abseil/algorithm/algorithm (= 1.20211102.0)
++    - abseil/algorithm/container (= 1.20211102.0)
++  - abseil/algorithm/algorithm (1.20211102.0):
++    - abseil/base/config
++  - abseil/algorithm/container (1.20211102.0):
++    - abseil/algorithm/algorithm
++    - abseil/base/core_headers
++    - abseil/meta/type_traits
++  - abseil/base (1.20211102.0):
++    - abseil/base/atomic_hook (= 1.20211102.0)
++    - abseil/base/base (= 1.20211102.0)
++    - abseil/base/base_internal (= 1.20211102.0)
++    - abseil/base/config (= 1.20211102.0)
++    - abseil/base/core_headers (= 1.20211102.0)
++    - abseil/base/dynamic_annotations (= 1.20211102.0)
++    - abseil/base/endian (= 1.20211102.0)
++    - abseil/base/errno_saver (= 1.20211102.0)
++    - abseil/base/fast_type_id (= 1.20211102.0)
++    - abseil/base/log_severity (= 1.20211102.0)
++    - abseil/base/malloc_internal (= 1.20211102.0)
++    - abseil/base/pretty_function (= 1.20211102.0)
++    - abseil/base/raw_logging_internal (= 1.20211102.0)
++    - abseil/base/spinlock_wait (= 1.20211102.0)
++    - abseil/base/strerror (= 1.20211102.0)
++    - abseil/base/throw_delegate (= 1.20211102.0)
++  - abseil/base/atomic_hook (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++  - abseil/base/base (1.20211102.0):
++    - abseil/base/atomic_hook
++    - abseil/base/base_internal
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/dynamic_annotations
++    - abseil/base/log_severity
++    - abseil/base/raw_logging_internal
++    - abseil/base/spinlock_wait
++    - abseil/meta/type_traits
++  - abseil/base/base_internal (1.20211102.0):
++    - abseil/base/config
++    - abseil/meta/type_traits
++  - abseil/base/config (1.20211102.0)
++  - abseil/base/core_headers (1.20211102.0):
++    - abseil/base/config
++  - abseil/base/dynamic_annotations (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++  - abseil/base/endian (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/config
++    - abseil/base/core_headers
++  - abseil/base/errno_saver (1.20211102.0):
++    - abseil/base/config
++  - abseil/base/fast_type_id (1.20211102.0):
++    - abseil/base/config
++  - abseil/base/log_severity (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++  - abseil/base/malloc_internal (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/base_internal
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/dynamic_annotations
++    - abseil/base/raw_logging_internal
++  - abseil/base/pretty_function (1.20211102.0)
++  - abseil/base/raw_logging_internal (1.20211102.0):
++    - abseil/base/atomic_hook
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/log_severity
++  - abseil/base/spinlock_wait (1.20211102.0):
++    - abseil/base/base_internal
++    - abseil/base/core_headers
++    - abseil/base/errno_saver
++  - abseil/base/strerror (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/errno_saver
++  - abseil/base/throw_delegate (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/raw_logging_internal
++  - abseil/container/common (1.20211102.0):
++    - abseil/meta/type_traits
++    - abseil/types/optional
++  - abseil/container/compressed_tuple (1.20211102.0):
++    - abseil/utility/utility
++  - abseil/container/container_memory (1.20211102.0):
++    - abseil/base/config
++    - abseil/memory/memory
++    - abseil/meta/type_traits
++    - abseil/utility/utility
++  - abseil/container/fixed_array (1.20211102.0):
++    - abseil/algorithm/algorithm
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/dynamic_annotations
++    - abseil/base/throw_delegate
++    - abseil/container/compressed_tuple
++    - abseil/memory/memory
++  - abseil/container/flat_hash_map (1.20211102.0):
++    - abseil/algorithm/container
++    - abseil/container/container_memory
++    - abseil/container/hash_function_defaults
++    - abseil/container/raw_hash_map
++    - abseil/memory/memory
++  - abseil/container/hash_function_defaults (1.20211102.0):
++    - abseil/base/config
++    - abseil/hash/hash
++    - abseil/strings/cord
++    - abseil/strings/strings
++  - abseil/container/hash_policy_traits (1.20211102.0):
++    - abseil/meta/type_traits
++  - abseil/container/hashtable_debug_hooks (1.20211102.0):
++    - abseil/base/config
++  - abseil/container/hashtablez_sampler (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/core_headers
++    - abseil/container/have_sse
++    - abseil/debugging/stacktrace
++    - abseil/memory/memory
++    - abseil/profiling/exponential_biased
++    - abseil/profiling/sample_recorder
++    - abseil/synchronization/synchronization
++    - abseil/utility/utility
++  - abseil/container/have_sse (1.20211102.0)
++  - abseil/container/inlined_vector (1.20211102.0):
++    - abseil/algorithm/algorithm
++    - abseil/base/core_headers
++    - abseil/base/throw_delegate
++    - abseil/container/inlined_vector_internal
++    - abseil/memory/memory
++  - abseil/container/inlined_vector_internal (1.20211102.0):
++    - abseil/base/core_headers
++    - abseil/container/compressed_tuple
++    - abseil/memory/memory
++    - abseil/meta/type_traits
++    - abseil/types/span
++  - abseil/container/layout (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/meta/type_traits
++    - abseil/strings/strings
++    - abseil/types/span
++    - abseil/utility/utility
++  - abseil/container/raw_hash_map (1.20211102.0):
++    - abseil/base/throw_delegate
++    - abseil/container/container_memory
++    - abseil/container/raw_hash_set
++  - abseil/container/raw_hash_set (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/endian
++    - abseil/container/common
++    - abseil/container/compressed_tuple
++    - abseil/container/container_memory
++    - abseil/container/hash_policy_traits
++    - abseil/container/hashtable_debug_hooks
++    - abseil/container/hashtablez_sampler
++    - abseil/container/have_sse
++    - abseil/memory/memory
++    - abseil/meta/type_traits
++    - abseil/numeric/bits
++    - abseil/utility/utility
++  - abseil/debugging/debugging_internal (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/dynamic_annotations
++    - abseil/base/errno_saver
++    - abseil/base/raw_logging_internal
++  - abseil/debugging/demangle_internal (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/config
++    - abseil/base/core_headers
++  - abseil/debugging/stacktrace (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/debugging/debugging_internal
++  - abseil/debugging/symbolize (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/dynamic_annotations
++    - abseil/base/malloc_internal
++    - abseil/base/raw_logging_internal
++    - abseil/debugging/debugging_internal
++    - abseil/debugging/demangle_internal
++    - abseil/strings/strings
++  - abseil/functional/bind_front (1.20211102.0):
++    - abseil/base/base_internal
++    - abseil/container/compressed_tuple
++    - abseil/meta/type_traits
++    - abseil/utility/utility
++  - abseil/functional/function_ref (1.20211102.0):
++    - abseil/base/base_internal
++    - abseil/base/core_headers
++    - abseil/meta/type_traits
++  - abseil/hash/city (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/endian
++  - abseil/hash/hash (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/endian
++    - abseil/container/fixed_array
++    - abseil/hash/city
++    - abseil/hash/low_level_hash
++    - abseil/meta/type_traits
++    - abseil/numeric/int128
++    - abseil/strings/strings
++    - abseil/types/optional
++    - abseil/types/variant
++    - abseil/utility/utility
++  - abseil/hash/low_level_hash (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/endian
++    - abseil/numeric/bits
++    - abseil/numeric/int128
++  - abseil/memory (1.20211102.0):
++    - abseil/memory/memory (= 1.20211102.0)
++  - abseil/memory/memory (1.20211102.0):
++    - abseil/base/core_headers
++    - abseil/meta/type_traits
++  - abseil/meta (1.20211102.0):
++    - abseil/meta/type_traits (= 1.20211102.0)
++  - abseil/meta/type_traits (1.20211102.0):
++    - abseil/base/config
++  - abseil/numeric/bits (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++  - abseil/numeric/int128 (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/numeric/bits
++  - abseil/numeric/representation (1.20211102.0):
++    - abseil/base/config
++  - abseil/profiling/exponential_biased (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++  - abseil/profiling/sample_recorder (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/synchronization/synchronization
++    - abseil/time/time
++  - abseil/random/distributions (1.20211102.0):
++    - abseil/base/base_internal
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/meta/type_traits
++    - abseil/numeric/bits
++    - abseil/random/internal/distribution_caller
++    - abseil/random/internal/fast_uniform_bits
++    - abseil/random/internal/fastmath
++    - abseil/random/internal/generate_real
++    - abseil/random/internal/iostream_state_saver
++    - abseil/random/internal/traits
++    - abseil/random/internal/uniform_helper
++    - abseil/random/internal/wide_multiply
++    - abseil/strings/strings
++  - abseil/random/internal/distribution_caller (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/fast_type_id
++    - abseil/utility/utility
++  - abseil/random/internal/fast_uniform_bits (1.20211102.0):
++    - abseil/base/config
++    - abseil/meta/type_traits
++  - abseil/random/internal/fastmath (1.20211102.0):
++    - abseil/numeric/bits
++  - abseil/random/internal/generate_real (1.20211102.0):
++    - abseil/meta/type_traits
++    - abseil/numeric/bits
++    - abseil/random/internal/fastmath
++    - abseil/random/internal/traits
++  - abseil/random/internal/iostream_state_saver (1.20211102.0):
++    - abseil/meta/type_traits
++    - abseil/numeric/int128
++  - abseil/random/internal/nonsecure_base (1.20211102.0):
++    - abseil/base/core_headers
++    - abseil/meta/type_traits
++    - abseil/random/internal/pool_urbg
++    - abseil/random/internal/salted_seed_seq
++    - abseil/random/internal/seed_material
++    - abseil/types/optional
++    - abseil/types/span
++  - abseil/random/internal/pcg_engine (1.20211102.0):
++    - abseil/base/config
++    - abseil/meta/type_traits
++    - abseil/numeric/bits
++    - abseil/numeric/int128
++    - abseil/random/internal/fastmath
++    - abseil/random/internal/iostream_state_saver
++  - abseil/random/internal/platform (1.20211102.0):
++    - abseil/base/config
++  - abseil/random/internal/pool_urbg (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/endian
++    - abseil/base/raw_logging_internal
++    - abseil/random/internal/randen
++    - abseil/random/internal/seed_material
++    - abseil/random/internal/traits
++    - abseil/random/seed_gen_exception
++    - abseil/types/span
++  - abseil/random/internal/randen (1.20211102.0):
++    - abseil/base/raw_logging_internal
++    - abseil/random/internal/platform
++    - abseil/random/internal/randen_hwaes
++    - abseil/random/internal/randen_slow
++  - abseil/random/internal/randen_engine (1.20211102.0):
++    - abseil/base/endian
++    - abseil/meta/type_traits
++    - abseil/random/internal/iostream_state_saver
++    - abseil/random/internal/randen
++  - abseil/random/internal/randen_hwaes (1.20211102.0):
++    - abseil/base/config
++    - abseil/random/internal/platform
++    - abseil/random/internal/randen_hwaes_impl
++  - abseil/random/internal/randen_hwaes_impl (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/numeric/int128
++    - abseil/random/internal/platform
++  - abseil/random/internal/randen_slow (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/endian
++    - abseil/numeric/int128
++    - abseil/random/internal/platform
++  - abseil/random/internal/salted_seed_seq (1.20211102.0):
++    - abseil/container/inlined_vector
++    - abseil/meta/type_traits
++    - abseil/random/internal/seed_material
++    - abseil/types/optional
++    - abseil/types/span
++  - abseil/random/internal/seed_material (1.20211102.0):
++    - abseil/base/core_headers
++    - abseil/base/dynamic_annotations
++    - abseil/base/raw_logging_internal
++    - abseil/random/internal/fast_uniform_bits
++    - abseil/strings/strings
++    - abseil/types/optional
++    - abseil/types/span
++  - abseil/random/internal/traits (1.20211102.0):
++    - abseil/base/config
++  - abseil/random/internal/uniform_helper (1.20211102.0):
++    - abseil/base/config
++    - abseil/meta/type_traits
++    - abseil/random/internal/traits
++  - abseil/random/internal/wide_multiply (1.20211102.0):
++    - abseil/base/config
++    - abseil/numeric/bits
++    - abseil/numeric/int128
++    - abseil/random/internal/traits
++  - abseil/random/random (1.20211102.0):
++    - abseil/random/distributions
++    - abseil/random/internal/nonsecure_base
++    - abseil/random/internal/pcg_engine
++    - abseil/random/internal/pool_urbg
++    - abseil/random/internal/randen_engine
++    - abseil/random/seed_sequences
++  - abseil/random/seed_gen_exception (1.20211102.0):
++    - abseil/base/config
++  - abseil/random/seed_sequences (1.20211102.0):
++    - abseil/container/inlined_vector
++    - abseil/random/internal/nonsecure_base
++    - abseil/random/internal/pool_urbg
++    - abseil/random/internal/salted_seed_seq
++    - abseil/random/internal/seed_material
++    - abseil/random/seed_gen_exception
++    - abseil/types/span
++  - abseil/status/status (1.20211102.0):
++    - abseil/base/atomic_hook
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/raw_logging_internal
++    - abseil/container/inlined_vector
++    - abseil/debugging/stacktrace
++    - abseil/debugging/symbolize
++    - abseil/functional/function_ref
++    - abseil/strings/cord
++    - abseil/strings/str_format
++    - abseil/strings/strings
++    - abseil/types/optional
++  - abseil/status/statusor (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/core_headers
++    - abseil/base/raw_logging_internal
++    - abseil/meta/type_traits
++    - abseil/status/status
++    - abseil/strings/strings
++    - abseil/types/variant
++    - abseil/utility/utility
++  - abseil/strings/cord (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/endian
++    - abseil/base/raw_logging_internal
++    - abseil/container/fixed_array
++    - abseil/container/inlined_vector
++    - abseil/functional/function_ref
++    - abseil/meta/type_traits
++    - abseil/strings/cord_internal
++    - abseil/strings/cordz_functions
++    - abseil/strings/cordz_info
++    - abseil/strings/cordz_statistics
++    - abseil/strings/cordz_update_scope
++    - abseil/strings/cordz_update_tracker
++    - abseil/strings/internal
++    - abseil/strings/str_format
++    - abseil/strings/strings
++    - abseil/types/optional
++  - abseil/strings/cord_internal (1.20211102.0):
++    - abseil/base/base_internal
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/endian
++    - abseil/base/raw_logging_internal
++    - abseil/base/throw_delegate
++    - abseil/container/compressed_tuple
++    - abseil/container/inlined_vector
++    - abseil/container/layout
++    - abseil/functional/function_ref
++    - abseil/meta/type_traits
++    - abseil/strings/strings
++    - abseil/types/span
++  - abseil/strings/cordz_functions (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/raw_logging_internal
++    - abseil/profiling/exponential_biased
++  - abseil/strings/cordz_handle (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/config
++    - abseil/base/raw_logging_internal
++    - abseil/synchronization/synchronization
++  - abseil/strings/cordz_info (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/raw_logging_internal
++    - abseil/container/inlined_vector
++    - abseil/debugging/stacktrace
++    - abseil/strings/cord_internal
++    - abseil/strings/cordz_functions
++    - abseil/strings/cordz_handle
++    - abseil/strings/cordz_statistics
++    - abseil/strings/cordz_update_tracker
++    - abseil/synchronization/synchronization
++    - abseil/types/span
++  - abseil/strings/cordz_statistics (1.20211102.0):
++    - abseil/base/config
++    - abseil/strings/cordz_update_tracker
++  - abseil/strings/cordz_update_scope (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/strings/cord_internal
++    - abseil/strings/cordz_info
++    - abseil/strings/cordz_update_tracker
++  - abseil/strings/cordz_update_tracker (1.20211102.0):
++    - abseil/base/config
++  - abseil/strings/internal (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/endian
++    - abseil/base/raw_logging_internal
++    - abseil/meta/type_traits
++  - abseil/strings/str_format (1.20211102.0):
++    - abseil/strings/str_format_internal
++  - abseil/strings/str_format_internal (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/functional/function_ref
++    - abseil/meta/type_traits
++    - abseil/numeric/bits
++    - abseil/numeric/int128
++    - abseil/numeric/representation
++    - abseil/strings/strings
++    - abseil/types/optional
++    - abseil/types/span
++  - abseil/strings/strings (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/endian
++    - abseil/base/raw_logging_internal
++    - abseil/base/throw_delegate
++    - abseil/memory/memory
++    - abseil/meta/type_traits
++    - abseil/numeric/bits
++    - abseil/numeric/int128
++    - abseil/strings/internal
++  - abseil/synchronization/graphcycles_internal (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/base_internal
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/malloc_internal
++    - abseil/base/raw_logging_internal
++  - abseil/synchronization/kernel_timeout_internal (1.20211102.0):
++    - abseil/base/core_headers
++    - abseil/base/raw_logging_internal
++    - abseil/time/time
++  - abseil/synchronization/synchronization (1.20211102.0):
++    - abseil/base/atomic_hook
++    - abseil/base/base
++    - abseil/base/base_internal
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/dynamic_annotations
++    - abseil/base/malloc_internal
++    - abseil/base/raw_logging_internal
++    - abseil/debugging/stacktrace
++    - abseil/debugging/symbolize
++    - abseil/synchronization/graphcycles_internal
++    - abseil/synchronization/kernel_timeout_internal
++    - abseil/time/time
++  - abseil/time (1.20211102.0):
++    - abseil/time/internal (= 1.20211102.0)
++    - abseil/time/time (= 1.20211102.0)
++  - abseil/time/internal (1.20211102.0):
++    - abseil/time/internal/cctz (= 1.20211102.0)
++  - abseil/time/internal/cctz (1.20211102.0):
++    - abseil/time/internal/cctz/civil_time (= 1.20211102.0)
++    - abseil/time/internal/cctz/time_zone (= 1.20211102.0)
++  - abseil/time/internal/cctz/civil_time (1.20211102.0):
++    - abseil/base/config
++  - abseil/time/internal/cctz/time_zone (1.20211102.0):
++    - abseil/base/config
++    - abseil/time/internal/cctz/civil_time
++  - abseil/time/time (1.20211102.0):
++    - abseil/base/base
++    - abseil/base/core_headers
++    - abseil/base/raw_logging_internal
++    - abseil/numeric/int128
++    - abseil/strings/strings
++    - abseil/time/internal/cctz/civil_time
++    - abseil/time/internal/cctz/time_zone
++  - abseil/types (1.20211102.0):
++    - abseil/types/any (= 1.20211102.0)
++    - abseil/types/bad_any_cast (= 1.20211102.0)
++    - abseil/types/bad_any_cast_impl (= 1.20211102.0)
++    - abseil/types/bad_optional_access (= 1.20211102.0)
++    - abseil/types/bad_variant_access (= 1.20211102.0)
++    - abseil/types/compare (= 1.20211102.0)
++    - abseil/types/optional (= 1.20211102.0)
++    - abseil/types/span (= 1.20211102.0)
++    - abseil/types/variant (= 1.20211102.0)
++  - abseil/types/any (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/base/fast_type_id
++    - abseil/meta/type_traits
++    - abseil/types/bad_any_cast
++    - abseil/utility/utility
++  - abseil/types/bad_any_cast (1.20211102.0):
++    - abseil/base/config
++    - abseil/types/bad_any_cast_impl
++  - abseil/types/bad_any_cast_impl (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/raw_logging_internal
++  - abseil/types/bad_optional_access (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/raw_logging_internal
++  - abseil/types/bad_variant_access (1.20211102.0):
++    - abseil/base/config
++    - abseil/base/raw_logging_internal
++  - abseil/types/compare (1.20211102.0):
++    - abseil/base/core_headers
++    - abseil/meta/type_traits
++  - abseil/types/optional (1.20211102.0):
++    - abseil/base/base_internal
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/memory/memory
++    - abseil/meta/type_traits
++    - abseil/types/bad_optional_access
++    - abseil/utility/utility
++  - abseil/types/span (1.20211102.0):
++    - abseil/algorithm/algorithm
++    - abseil/base/core_headers
++    - abseil/base/throw_delegate
++    - abseil/meta/type_traits
++  - abseil/types/variant (1.20211102.0):
++    - abseil/base/base_internal
++    - abseil/base/config
++    - abseil/base/core_headers
++    - abseil/meta/type_traits
++    - abseil/types/bad_variant_access
++    - abseil/utility/utility
++  - abseil/utility/utility (1.20211102.0):
++    - abseil/base/base_internal
++    - abseil/base/config
++    - abseil/meta/type_traits
++  - BoringSSL-GRPC (0.0.24):
++    - BoringSSL-GRPC/Implementation (= 0.0.24)
++    - BoringSSL-GRPC/Interface (= 0.0.24)
++  - BoringSSL-GRPC/Implementation (0.0.24):
++    - BoringSSL-GRPC/Interface (= 0.0.24)
++  - BoringSSL-GRPC/Interface (0.0.24)
++  - cloud_firestore (3.1.17):
++    - Firebase/Firestore (= 8.15.0)
++    - firebase_core
++    - Flutter
++  - Firebase/Auth (8.15.0):
++    - Firebase/CoreOnly
++    - FirebaseAuth (~> 8.15.0)
++  - Firebase/CoreOnly (8.15.0):
++    - FirebaseCore (= 8.15.0)
++  - Firebase/Firestore (8.15.0):
++    - Firebase/CoreOnly
++    - FirebaseFirestore (~> 8.15.0)
++  - firebase_auth (3.3.19):
++    - Firebase/Auth (= 8.15.0)
++    - firebase_core
++    - Flutter
++  - firebase_core (1.17.1):
++    - Firebase/CoreOnly (= 8.15.0)
++    - Flutter
++  - FirebaseAuth (8.15.0):
++    - FirebaseCore (~> 8.0)
++    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
++    - GoogleUtilities/Environment (~> 7.7)
++    - GTMSessionFetcher/Core (~> 1.5)
++  - FirebaseCore (8.15.0):
++    - FirebaseCoreDiagnostics (~> 8.0)
++    - GoogleUtilities/Environment (~> 7.7)
++    - GoogleUtilities/Logger (~> 7.7)
++  - FirebaseCoreDiagnostics (8.15.0):
++    - GoogleDataTransport (~> 9.1)
++    - GoogleUtilities/Environment (~> 7.7)
++    - GoogleUtilities/Logger (~> 7.7)
++    - nanopb (~> 2.30908.0)
++  - FirebaseFirestore (8.15.0):
++    - abseil/algorithm (~> 1.20211102.0)
++    - abseil/base (~> 1.20211102.0)
++    - abseil/container/flat_hash_map (~> 1.20211102.0)
++    - abseil/memory (~> 1.20211102.0)
++    - abseil/meta (~> 1.20211102.0)
++    - abseil/strings/strings (~> 1.20211102.0)
++    - abseil/time (~> 1.20211102.0)
++    - abseil/types (~> 1.20211102.0)
++    - FirebaseCore (~> 8.0)
++    - "gRPC-C++ (~> 1.44.0)"
++    - leveldb-library (~> 1.22)
++    - nanopb (~> 2.30908.0)
++  - flashy_tab_bar (0.0.1):
++    - Flutter
++  - Flutter (1.0.0)
++  - fluttertoast (0.0.2):
++    - Flutter
++    - Toast
++  - GoogleDataTransport (9.1.4):
++    - GoogleUtilities/Environment (~> 7.7)
++    - nanopb (< 2.30910.0, >= 2.30908.0)
++    - PromisesObjC (< 3.0, >= 1.2)
++  - GoogleUtilities/AppDelegateSwizzler (7.7.0):
++    - GoogleUtilities/Environment
++    - GoogleUtilities/Logger
++    - GoogleUtilities/Network
++  - GoogleUtilities/Environment (7.7.0):
++    - PromisesObjC (< 3.0, >= 1.2)
++  - GoogleUtilities/Logger (7.7.0):
++    - GoogleUtilities/Environment
++  - GoogleUtilities/Network (7.7.0):
++    - GoogleUtilities/Logger
++    - "GoogleUtilities/NSData+zlib"
++    - GoogleUtilities/Reachability
++  - "GoogleUtilities/NSData+zlib (7.7.0)"
++  - GoogleUtilities/Reachability (7.7.0):
++    - GoogleUtilities/Logger
++  - "gRPC-C++ (1.44.0)":
++    - "gRPC-C++/Implementation (= 1.44.0)"
++    - "gRPC-C++/Interface (= 1.44.0)"
++  - "gRPC-C++/Implementation (1.44.0)":
++    - abseil/base/base (= 1.20211102.0)
++    - abseil/base/core_headers (= 1.20211102.0)
++    - abseil/container/flat_hash_map (= 1.20211102.0)
++    - abseil/container/inlined_vector (= 1.20211102.0)
++    - abseil/functional/bind_front (= 1.20211102.0)
++    - abseil/hash/hash (= 1.20211102.0)
++    - abseil/memory/memory (= 1.20211102.0)
++    - abseil/random/random (= 1.20211102.0)
++    - abseil/status/status (= 1.20211102.0)
++    - abseil/status/statusor (= 1.20211102.0)
++    - abseil/strings/cord (= 1.20211102.0)
++    - abseil/strings/str_format (= 1.20211102.0)
++    - abseil/strings/strings (= 1.20211102.0)
++    - abseil/synchronization/synchronization (= 1.20211102.0)
++    - abseil/time/time (= 1.20211102.0)
++    - abseil/types/optional (= 1.20211102.0)
++    - abseil/types/variant (= 1.20211102.0)
++    - abseil/utility/utility (= 1.20211102.0)
++    - "gRPC-C++/Interface (= 1.44.0)"
++    - gRPC-Core (= 1.44.0)
++  - "gRPC-C++/Interface (1.44.0)"
++  - gRPC-Core (1.44.0):
++    - gRPC-Core/Implementation (= 1.44.0)
++    - gRPC-Core/Interface (= 1.44.0)
++  - gRPC-Core/Implementation (1.44.0):
++    - abseil/base/base (= 1.20211102.0)
++    - abseil/base/core_headers (= 1.20211102.0)
++    - abseil/container/flat_hash_map (= 1.20211102.0)
++    - abseil/container/inlined_vector (= 1.20211102.0)
++    - abseil/functional/bind_front (= 1.20211102.0)
++    - abseil/hash/hash (= 1.20211102.0)
++    - abseil/memory/memory (= 1.20211102.0)
++    - abseil/random/random (= 1.20211102.0)
++    - abseil/status/status (= 1.20211102.0)
++    - abseil/status/statusor (= 1.20211102.0)
++    - abseil/strings/cord (= 1.20211102.0)
++    - abseil/strings/str_format (= 1.20211102.0)
++    - abseil/strings/strings (= 1.20211102.0)
++    - abseil/synchronization/synchronization (= 1.20211102.0)
++    - abseil/time/time (= 1.20211102.0)
++    - abseil/types/optional (= 1.20211102.0)
++    - abseil/types/variant (= 1.20211102.0)
++    - abseil/utility/utility (= 1.20211102.0)
++    - BoringSSL-GRPC (= 0.0.24)
++    - gRPC-Core/Interface (= 1.44.0)
++    - Libuv-gRPC (= 0.0.10)
++  - gRPC-Core/Interface (1.44.0)
++  - GTMSessionFetcher/Core (1.7.2)
++  - leveldb-library (1.22.1)
++  - Libuv-gRPC (0.0.10):
++    - Libuv-gRPC/Implementation (= 0.0.10)
++    - Libuv-gRPC/Interface (= 0.0.10)
++  - Libuv-gRPC/Implementation (0.0.10):
++    - Libuv-gRPC/Interface (= 0.0.10)
++  - Libuv-gRPC/Interface (0.0.10)
++  - nanopb (2.30908.0):
++    - nanopb/decode (= 2.30908.0)
++    - nanopb/encode (= 2.30908.0)
++  - nanopb/decode (2.30908.0)
++  - nanopb/encode (2.30908.0)
++  - PromisesObjC (2.1.0)
++  - Toast (4.0.0)
++
++DEPENDENCIES:
++  - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
++  - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
++  - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
++  - flashy_tab_bar (from `.symlinks/plugins/flashy_tab_bar/ios`)
++  - Flutter (from `Flutter`)
++  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
++
++SPEC REPOS:
++  trunk:
++    - abseil
++    - BoringSSL-GRPC
++    - Firebase
++    - FirebaseAuth
++    - FirebaseCore
++    - FirebaseCoreDiagnostics
++    - FirebaseFirestore
++    - GoogleDataTransport
++    - GoogleUtilities
++    - "gRPC-C++"
++    - gRPC-Core
++    - GTMSessionFetcher
++    - leveldb-library
++    - Libuv-gRPC
++    - nanopb
++    - PromisesObjC
++    - Toast
++
++EXTERNAL SOURCES:
++  cloud_firestore:
++    :path: ".symlinks/plugins/cloud_firestore/ios"
++  firebase_auth:
++    :path: ".symlinks/plugins/firebase_auth/ios"
++  firebase_core:
++    :path: ".symlinks/plugins/firebase_core/ios"
++  flashy_tab_bar:
++    :path: ".symlinks/plugins/flashy_tab_bar/ios"
++  Flutter:
++    :path: Flutter
++  fluttertoast:
++    :path: ".symlinks/plugins/fluttertoast/ios"
++
++SPEC CHECKSUMS:
++  abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
++  BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
++  cloud_firestore: 936969669b510f2affd43583582d7b117c5f08d1
++  Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
++  firebase_auth: a6470a6974d42f83117932c913aecb926182f907
++  firebase_core: 318de541b0e61d3f24262982a3f0b54afe72439b
++  FirebaseAuth: 3e73bf8abf4fbb40f8b421f361f4cc48ee57388c
++  FirebaseCore: 5743c5785c074a794d35f2fff7ecc254a91e08b1
++  FirebaseCoreDiagnostics: 92e07a649aeb66352b319d43bdd2ee3942af84cb
++  FirebaseFirestore: d7023faff8e1b4fd69d0adbcf18e65129bc03842
++  flashy_tab_bar: 4ce02dcf78db98c6a4a4bbf2ea1f4f4f592a5c45
++  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
++  fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
++  GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
++  GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
++  "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
++  gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
++  GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
++  leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
++  Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
++  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
++  PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
++  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
++
++PODFILE CHECKSUM: 9319d169b66afe9f1f3640be6fc75ab00888ae62
++
++COCOAPODS: 1.11.3
+Index: ios/Runner.xcodeproj/project.pbxproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// !$*UTF8*$!\n{\n\tarchiveVersion = 1;\n\tclasses = {\n\t};\n\tobjectVersion = 50;\n\tobjects = {\n\n/* Begin PBXBuildFile section */\n\t\t1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };\n\t\t3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };\n\t\t74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };\n\t\t97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };\n\t\t97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };\n\t\t97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };\n/* End PBXBuildFile section */\n\n/* Begin PBXCopyFilesBuildPhase section */\n\t\t9705A1C41CF9048500538489 /* Embed Frameworks */ = {\n\t\t\tisa = PBXCopyFilesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tdstPath = \"\";\n\t\t\tdstSubfolderSpec = 10;\n\t\t\tfiles = (\n\t\t\t);\n\t\t\tname = \"Embed Frameworks\";\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n/* End PBXCopyFilesBuildPhase section */\n\n/* Begin PBXFileReference section */\n\t\t1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = \"<group>\"; };\n\t\t1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = \"<group>\"; };\n\t\t3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = \"<group>\"; };\n\t\t74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = \"Runner-Bridging-Header.h\"; sourceTree = \"<group>\"; };\n\t\t74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = \"<group>\"; };\n\t\t7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = \"<group>\"; };\n\t\t9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = \"<group>\"; };\n\t\t9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = \"<group>\"; };\n\t\t97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };\n\t\t97C146FB1CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = \"<group>\"; };\n\t\t97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = \"<group>\"; };\n\t\t97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = \"<group>\"; };\n\t\t97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };\n/* End PBXFileReference section */\n\n/* Begin PBXFrameworksBuildPhase section */\n\t\t97C146EB1CF9000F007C117D /* Frameworks */ = {\n\t\t\tisa = PBXFrameworksBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n/* End PBXFrameworksBuildPhase section */\n\n/* Begin PBXGroup section */\n\t\t9740EEB11CF90186004384FC /* Flutter */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */,\n\t\t\t\t9740EEB21CF90195004384FC /* Debug.xcconfig */,\n\t\t\t\t7AFA3C8E1D35360C0083082E /* Release.xcconfig */,\n\t\t\t\t9740EEB31CF90195004384FC /* Generated.xcconfig */,\n\t\t\t);\n\t\t\tname = Flutter;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\t97C146E51CF9000F007C117D = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t9740EEB11CF90186004384FC /* Flutter */,\n\t\t\t\t97C146F01CF9000F007C117D /* Runner */,\n\t\t\t\t97C146EF1CF9000F007C117D /* Products */,\n\t\t\t);\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\t97C146EF1CF9000F007C117D /* Products */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t97C146EE1CF9000F007C117D /* Runner.app */,\n\t\t\t);\n\t\t\tname = Products;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\t97C146F01CF9000F007C117D /* Runner */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t97C146FA1CF9000F007C117D /* Main.storyboard */,\n\t\t\t\t97C146FD1CF9000F007C117D /* Assets.xcassets */,\n\t\t\t\t97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,\n\t\t\t\t97C147021CF9000F007C117D /* Info.plist */,\n\t\t\t\t1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,\n\t\t\t\t1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,\n\t\t\t\t74858FAE1ED2DC5600515810 /* AppDelegate.swift */,\n\t\t\t\t74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,\n\t\t\t);\n\t\t\tpath = Runner;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n/* End PBXGroup section */\n\n/* Begin PBXNativeTarget section */\n\t\t97C146ED1CF9000F007C117D /* Runner */ = {\n\t\t\tisa = PBXNativeTarget;\n\t\t\tbuildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget \"Runner\" */;\n\t\t\tbuildPhases = (\n\t\t\t\t9740EEB61CF901F6004384FC /* Run Script */,\n\t\t\t\t97C146EA1CF9000F007C117D /* Sources */,\n\t\t\t\t97C146EB1CF9000F007C117D /* Frameworks */,\n\t\t\t\t97C146EC1CF9000F007C117D /* Resources */,\n\t\t\t\t9705A1C41CF9048500538489 /* Embed Frameworks */,\n\t\t\t\t3B06AD1E1E4923F5004D2608 /* Thin Binary */,\n\t\t\t);\n\t\t\tbuildRules = (\n\t\t\t);\n\t\t\tdependencies = (\n\t\t\t);\n\t\t\tname = Runner;\n\t\t\tproductName = Runner;\n\t\t\tproductReference = 97C146EE1CF9000F007C117D /* Runner.app */;\n\t\t\tproductType = \"com.apple.product-type.application\";\n\t\t};\n/* End PBXNativeTarget section */\n\n/* Begin PBXProject section */\n\t\t97C146E61CF9000F007C117D /* Project object */ = {\n\t\t\tisa = PBXProject;\n\t\t\tattributes = {\n\t\t\t\tLastUpgradeCheck = 1300;\n\t\t\t\tORGANIZATIONNAME = \"\";\n\t\t\t\tTargetAttributes = {\n\t\t\t\t\t97C146ED1CF9000F007C117D = {\n\t\t\t\t\t\tCreatedOnToolsVersion = 7.3.1;\n\t\t\t\t\t\tLastSwiftMigration = 1100;\n\t\t\t\t\t};\n\t\t\t\t};\n\t\t\t};\n\t\t\tbuildConfigurationList = 97C146E91CF9000F007C117D /* Build configuration list for PBXProject \"Runner\" */;\n\t\t\tcompatibilityVersion = \"Xcode 9.3\";\n\t\t\tdevelopmentRegion = en;\n\t\t\thasScannedForEncodings = 0;\n\t\t\tknownRegions = (\n\t\t\t\ten,\n\t\t\t\tBase,\n\t\t\t);\n\t\t\tmainGroup = 97C146E51CF9000F007C117D;\n\t\t\tproductRefGroup = 97C146EF1CF9000F007C117D /* Products */;\n\t\t\tprojectDirPath = \"\";\n\t\t\tprojectRoot = \"\";\n\t\t\ttargets = (\n\t\t\t\t97C146ED1CF9000F007C117D /* Runner */,\n\t\t\t);\n\t\t};\n/* End PBXProject section */\n\n/* Begin PBXResourcesBuildPhase section */\n\t\t97C146EC1CF9000F007C117D /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,\n\t\t\t\t3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,\n\t\t\t\t97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,\n\t\t\t\t97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n/* End PBXResourcesBuildPhase section */\n\n/* Begin PBXShellScriptBuildPhase section */\n\t\t3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {\n\t\t\tisa = PBXShellScriptBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t);\n\t\t\tinputPaths = (\n\t\t\t);\n\t\t\tname = \"Thin Binary\";\n\t\t\toutputPaths = (\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t\tshellPath = /bin/sh;\n\t\t\tshellScript = \"/bin/sh \\\"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\\\" embed_and_thin\";\n\t\t};\n\t\t9740EEB61CF901F6004384FC /* Run Script */ = {\n\t\t\tisa = PBXShellScriptBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t);\n\t\t\tinputPaths = (\n\t\t\t);\n\t\t\tname = \"Run Script\";\n\t\t\toutputPaths = (\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t\tshellPath = /bin/sh;\n\t\t\tshellScript = \"/bin/sh \\\"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\\\" build\";\n\t\t};\n/* End PBXShellScriptBuildPhase section */\n\n/* Begin PBXSourcesBuildPhase section */\n\t\t97C146EA1CF9000F007C117D /* Sources */ = {\n\t\t\tisa = PBXSourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,\n\t\t\t\t1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,\n\t\t\t);\n\t\t\trunOnlyForDeploymentPostprocessing = 0;\n\t\t};\n/* End PBXSourcesBuildPhase section */\n\n/* Begin PBXVariantGroup section */\n\t\t97C146FA1CF9000F007C117D /* Main.storyboard */ = {\n\t\t\tisa = PBXVariantGroup;\n\t\t\tchildren = (\n\t\t\t\t97C146FB1CF9000F007C117D /* Base */,\n\t\t\t);\n\t\t\tname = Main.storyboard;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n\t\t97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */ = {\n\t\t\tisa = PBXVariantGroup;\n\t\t\tchildren = (\n\t\t\t\t97C147001CF9000F007C117D /* Base */,\n\t\t\t);\n\t\t\tname = LaunchScreen.storyboard;\n\t\t\tsourceTree = \"<group>\";\n\t\t};\n/* End PBXVariantGroup section */\n\n/* Begin XCBuildConfiguration section */\n\t\t249021D3217E4FDB00AE95B9 /* Profile */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n\t\t\t\tALWAYS_SEARCH_USER_PATHS = NO;\n\t\t\t\tCLANG_ANALYZER_NONNULL = YES;\n\t\t\t\tCLANG_CXX_LANGUAGE_STANDARD = \"gnu++0x\";\n\t\t\t\tCLANG_CXX_LIBRARY = \"libc++\";\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCLANG_ENABLE_OBJC_ARC = YES;\n\t\t\t\tCLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;\n\t\t\t\tCLANG_WARN_BOOL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_COMMA = YES;\n\t\t\t\tCLANG_WARN_CONSTANT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;\n\t\t\t\tCLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;\n\t\t\t\tCLANG_WARN_EMPTY_BODY = YES;\n\t\t\t\tCLANG_WARN_ENUM_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_INFINITE_RECURSION = YES;\n\t\t\t\tCLANG_WARN_INT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;\n\t\t\t\tCLANG_WARN_OBJC_LITERAL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;\n\t\t\t\tCLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;\n\t\t\t\tCLANG_WARN_RANGE_LOOP_ANALYSIS = YES;\n\t\t\t\tCLANG_WARN_STRICT_PROTOTYPES = YES;\n\t\t\t\tCLANG_WARN_SUSPICIOUS_MOVE = YES;\n\t\t\t\tCLANG_WARN_UNREACHABLE_CODE = YES;\n\t\t\t\tCLANG_WARN__DUPLICATE_METHOD_MATCH = YES;\n\t\t\t\t\"CODE_SIGN_IDENTITY[sdk=iphoneos*]\" = \"iPhone Developer\";\n\t\t\t\tCOPY_PHASE_STRIP = NO;\n\t\t\t\tDEBUG_INFORMATION_FORMAT = \"dwarf-with-dsym\";\n\t\t\t\tENABLE_NS_ASSERTIONS = NO;\n\t\t\t\tENABLE_STRICT_OBJC_MSGSEND = YES;\n\t\t\t\tGCC_C_LANGUAGE_STANDARD = gnu99;\n\t\t\t\tGCC_NO_COMMON_BLOCKS = YES;\n\t\t\t\tGCC_WARN_64_TO_32_BIT_CONVERSION = YES;\n\t\t\t\tGCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;\n\t\t\t\tGCC_WARN_UNDECLARED_SELECTOR = YES;\n\t\t\t\tGCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;\n\t\t\t\tGCC_WARN_UNUSED_FUNCTION = YES;\n\t\t\t\tGCC_WARN_UNUSED_VARIABLE = YES;\n\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 12.0;\n\t\t\t\tMTL_ENABLE_DEBUG_INFO = NO;\n\t\t\t\tSDKROOT = iphoneos;\n\t\t\t\tSUPPORTED_PLATFORMS = iphoneos;\n\t\t\t\tTARGETED_DEVICE_FAMILY = \"1,2\";\n\t\t\t\tVALIDATE_PRODUCT = YES;\n\t\t\t};\n\t\t\tname = Profile;\n\t\t};\n\t\t249021D4217E4FDB00AE95B9 /* Profile */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbaseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;\n\t\t\tbuildSettings = {\n\t\t\t\tASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCURRENT_PROJECT_VERSION = \"$(FLUTTER_BUILD_NUMBER)\";\n\t\t\t\tDEVELOPMENT_TEAM = LPV7BUBSCB;\n\t\t\t\tENABLE_BITCODE = NO;\n\t\t\t\tINFOPLIST_FILE = Runner/Info.plist;\n\t\t\t\tLD_RUNPATH_SEARCH_PATHS = (\n\t\t\t\t\t\"$(inherited)\",\n\t\t\t\t\t\"@executable_path/Frameworks\",\n\t\t\t\t);\n\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = com.example.imdbApp;\n\t\t\t\tPRODUCT_NAME = \"$(TARGET_NAME)\";\n\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER = \"Runner/Runner-Bridging-Header.h\";\n\t\t\t\tSWIFT_VERSION = 5.0;\n\t\t\t\tVERSIONING_SYSTEM = \"apple-generic\";\n\t\t\t};\n\t\t\tname = Profile;\n\t\t};\n\t\t97C147031CF9000F007C117D /* Debug */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n\t\t\t\tALWAYS_SEARCH_USER_PATHS = NO;\n\t\t\t\tCLANG_ANALYZER_NONNULL = YES;\n\t\t\t\tCLANG_CXX_LANGUAGE_STANDARD = \"gnu++0x\";\n\t\t\t\tCLANG_CXX_LIBRARY = \"libc++\";\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCLANG_ENABLE_OBJC_ARC = YES;\n\t\t\t\tCLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;\n\t\t\t\tCLANG_WARN_BOOL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_COMMA = YES;\n\t\t\t\tCLANG_WARN_CONSTANT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;\n\t\t\t\tCLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;\n\t\t\t\tCLANG_WARN_EMPTY_BODY = YES;\n\t\t\t\tCLANG_WARN_ENUM_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_INFINITE_RECURSION = YES;\n\t\t\t\tCLANG_WARN_INT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;\n\t\t\t\tCLANG_WARN_OBJC_LITERAL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;\n\t\t\t\tCLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;\n\t\t\t\tCLANG_WARN_RANGE_LOOP_ANALYSIS = YES;\n\t\t\t\tCLANG_WARN_STRICT_PROTOTYPES = YES;\n\t\t\t\tCLANG_WARN_SUSPICIOUS_MOVE = YES;\n\t\t\t\tCLANG_WARN_UNREACHABLE_CODE = YES;\n\t\t\t\tCLANG_WARN__DUPLICATE_METHOD_MATCH = YES;\n\t\t\t\t\"CODE_SIGN_IDENTITY[sdk=iphoneos*]\" = \"iPhone Developer\";\n\t\t\t\tCOPY_PHASE_STRIP = NO;\n\t\t\t\tDEBUG_INFORMATION_FORMAT = dwarf;\n\t\t\t\tENABLE_STRICT_OBJC_MSGSEND = YES;\n\t\t\t\tENABLE_TESTABILITY = YES;\n\t\t\t\tGCC_C_LANGUAGE_STANDARD = gnu99;\n\t\t\t\tGCC_DYNAMIC_NO_PIC = NO;\n\t\t\t\tGCC_NO_COMMON_BLOCKS = YES;\n\t\t\t\tGCC_OPTIMIZATION_LEVEL = 0;\n\t\t\t\tGCC_PREPROCESSOR_DEFINITIONS = (\n\t\t\t\t\t\"DEBUG=1\",\n\t\t\t\t\t\"$(inherited)\",\n\t\t\t\t);\n\t\t\t\tGCC_WARN_64_TO_32_BIT_CONVERSION = YES;\n\t\t\t\tGCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;\n\t\t\t\tGCC_WARN_UNDECLARED_SELECTOR = YES;\n\t\t\t\tGCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;\n\t\t\t\tGCC_WARN_UNUSED_FUNCTION = YES;\n\t\t\t\tGCC_WARN_UNUSED_VARIABLE = YES;\n\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 12.0;\n\t\t\t\tMTL_ENABLE_DEBUG_INFO = YES;\n\t\t\t\tONLY_ACTIVE_ARCH = YES;\n\t\t\t\tSDKROOT = iphoneos;\n\t\t\t\tTARGETED_DEVICE_FAMILY = \"1,2\";\n\t\t\t};\n\t\t\tname = Debug;\n\t\t};\n\t\t97C147041CF9000F007C117D /* Release */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbuildSettings = {\n\t\t\t\tALWAYS_SEARCH_USER_PATHS = NO;\n\t\t\t\tCLANG_ANALYZER_NONNULL = YES;\n\t\t\t\tCLANG_CXX_LANGUAGE_STANDARD = \"gnu++0x\";\n\t\t\t\tCLANG_CXX_LIBRARY = \"libc++\";\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCLANG_ENABLE_OBJC_ARC = YES;\n\t\t\t\tCLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;\n\t\t\t\tCLANG_WARN_BOOL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_COMMA = YES;\n\t\t\t\tCLANG_WARN_CONSTANT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;\n\t\t\t\tCLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;\n\t\t\t\tCLANG_WARN_EMPTY_BODY = YES;\n\t\t\t\tCLANG_WARN_ENUM_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_INFINITE_RECURSION = YES;\n\t\t\t\tCLANG_WARN_INT_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;\n\t\t\t\tCLANG_WARN_OBJC_LITERAL_CONVERSION = YES;\n\t\t\t\tCLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;\n\t\t\t\tCLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;\n\t\t\t\tCLANG_WARN_RANGE_LOOP_ANALYSIS = YES;\n\t\t\t\tCLANG_WARN_STRICT_PROTOTYPES = YES;\n\t\t\t\tCLANG_WARN_SUSPICIOUS_MOVE = YES;\n\t\t\t\tCLANG_WARN_UNREACHABLE_CODE = YES;\n\t\t\t\tCLANG_WARN__DUPLICATE_METHOD_MATCH = YES;\n\t\t\t\t\"CODE_SIGN_IDENTITY[sdk=iphoneos*]\" = \"iPhone Developer\";\n\t\t\t\tCOPY_PHASE_STRIP = NO;\n\t\t\t\tDEBUG_INFORMATION_FORMAT = \"dwarf-with-dsym\";\n\t\t\t\tENABLE_NS_ASSERTIONS = NO;\n\t\t\t\tENABLE_STRICT_OBJC_MSGSEND = YES;\n\t\t\t\tGCC_C_LANGUAGE_STANDARD = gnu99;\n\t\t\t\tGCC_NO_COMMON_BLOCKS = YES;\n\t\t\t\tGCC_WARN_64_TO_32_BIT_CONVERSION = YES;\n\t\t\t\tGCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;\n\t\t\t\tGCC_WARN_UNDECLARED_SELECTOR = YES;\n\t\t\t\tGCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;\n\t\t\t\tGCC_WARN_UNUSED_FUNCTION = YES;\n\t\t\t\tGCC_WARN_UNUSED_VARIABLE = YES;\n\t\t\t\tIPHONEOS_DEPLOYMENT_TARGET = 12.0;\n\t\t\t\tMTL_ENABLE_DEBUG_INFO = NO;\n\t\t\t\tSDKROOT = iphoneos;\n\t\t\t\tSUPPORTED_PLATFORMS = iphoneos;\n\t\t\t\tSWIFT_COMPILATION_MODE = wholemodule;\n\t\t\t\tSWIFT_OPTIMIZATION_LEVEL = \"-O\";\n\t\t\t\tTARGETED_DEVICE_FAMILY = \"1,2\";\n\t\t\t\tVALIDATE_PRODUCT = YES;\n\t\t\t};\n\t\t\tname = Release;\n\t\t};\n\t\t97C147061CF9000F007C117D /* Debug */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbaseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;\n\t\t\tbuildSettings = {\n\t\t\t\tASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCURRENT_PROJECT_VERSION = \"$(FLUTTER_BUILD_NUMBER)\";\n\t\t\t\tDEVELOPMENT_TEAM = LPV7BUBSCB;\n\t\t\t\tENABLE_BITCODE = NO;\n\t\t\t\tINFOPLIST_FILE = Runner/Info.plist;\n\t\t\t\tLD_RUNPATH_SEARCH_PATHS = (\n\t\t\t\t\t\"$(inherited)\",\n\t\t\t\t\t\"@executable_path/Frameworks\",\n\t\t\t\t);\n\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = com.example.imdbApp;\n\t\t\t\tPRODUCT_NAME = \"$(TARGET_NAME)\";\n\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER = \"Runner/Runner-Bridging-Header.h\";\n\t\t\t\tSWIFT_OPTIMIZATION_LEVEL = \"-Onone\";\n\t\t\t\tSWIFT_VERSION = 5.0;\n\t\t\t\tVERSIONING_SYSTEM = \"apple-generic\";\n\t\t\t};\n\t\t\tname = Debug;\n\t\t};\n\t\t97C147071CF9000F007C117D /* Release */ = {\n\t\t\tisa = XCBuildConfiguration;\n\t\t\tbaseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;\n\t\t\tbuildSettings = {\n\t\t\t\tASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;\n\t\t\t\tCLANG_ENABLE_MODULES = YES;\n\t\t\t\tCURRENT_PROJECT_VERSION = \"$(FLUTTER_BUILD_NUMBER)\";\n\t\t\t\tDEVELOPMENT_TEAM = LPV7BUBSCB;\n\t\t\t\tENABLE_BITCODE = NO;\n\t\t\t\tINFOPLIST_FILE = Runner/Info.plist;\n\t\t\t\tLD_RUNPATH_SEARCH_PATHS = (\n\t\t\t\t\t\"$(inherited)\",\n\t\t\t\t\t\"@executable_path/Frameworks\",\n\t\t\t\t);\n\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = com.example.imdbApp;\n\t\t\t\tPRODUCT_NAME = \"$(TARGET_NAME)\";\n\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER = \"Runner/Runner-Bridging-Header.h\";\n\t\t\t\tSWIFT_VERSION = 5.0;\n\t\t\t\tVERSIONING_SYSTEM = \"apple-generic\";\n\t\t\t};\n\t\t\tname = Release;\n\t\t};\n/* End XCBuildConfiguration section */\n\n/* Begin XCConfigurationList section */\n\t\t97C146E91CF9000F007C117D /* Build configuration list for PBXProject \"Runner\" */ = {\n\t\t\tisa = XCConfigurationList;\n\t\t\tbuildConfigurations = (\n\t\t\t\t97C147031CF9000F007C117D /* Debug */,\n\t\t\t\t97C147041CF9000F007C117D /* Release */,\n\t\t\t\t249021D3217E4FDB00AE95B9 /* Profile */,\n\t\t\t);\n\t\t\tdefaultConfigurationIsVisible = 0;\n\t\t\tdefaultConfigurationName = Release;\n\t\t};\n\t\t97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget \"Runner\" */ = {\n\t\t\tisa = XCConfigurationList;\n\t\t\tbuildConfigurations = (\n\t\t\t\t97C147061CF9000F007C117D /* Debug */,\n\t\t\t\t97C147071CF9000F007C117D /* Release */,\n\t\t\t\t249021D4217E4FDB00AE95B9 /* Profile */,\n\t\t\t);\n\t\t\tdefaultConfigurationIsVisible = 0;\n\t\t\tdefaultConfigurationName = Release;\n\t\t};\n/* End XCConfigurationList section */\n\t};\n\trootObject = 97C146E61CF9000F007C117D /* Project object */;\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ios/Runner.xcodeproj/project.pbxproj b/ios/Runner.xcodeproj/project.pbxproj
+--- a/ios/Runner.xcodeproj/project.pbxproj	(revision 11952d919a013a2afb8b605b96588490b6154ef3)
++++ b/ios/Runner.xcodeproj/project.pbxproj	(date 1655481294406)
+@@ -3,7 +3,7 @@
+ 	archiveVersion = 1;
+ 	classes = {
+ 	};
+-	objectVersion = 50;
++	objectVersion = 51;
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
+@@ -13,6 +13,7 @@
+ 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
+ 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
+ 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
++		EB93C834F394F5D39039740C /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E749691AF2A2051951849E98 /* Pods_Runner.framework */; };
+ /* End PBXBuildFile section */
+ 
+ /* Begin PBXCopyFilesBuildPhase section */
+@@ -32,6 +33,8 @@
+ 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
+ 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+ 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
++		4DDFAD977D00BC8349CD8754 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
++		718DCC637B0BF199F5E372D6 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+ 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
+ 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+ 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+@@ -42,6 +45,8 @@
+ 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+ 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+ 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
++		E749691AF2A2051951849E98 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
++		F5E41B3620C3424BFEF6EBDB /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+ /* End PBXFileReference section */
+ 
+ /* Begin PBXFrameworksBuildPhase section */
+@@ -49,12 +54,31 @@
+ 			isa = PBXFrameworksBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
++				EB93C834F394F5D39039740C /* Pods_Runner.framework in Frameworks */,
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 		};
+ /* End PBXFrameworksBuildPhase section */
+ 
+ /* Begin PBXGroup section */
++		73C6CF8B575ECE25171F703F /* Frameworks */ = {
++			isa = PBXGroup;
++			children = (
++				E749691AF2A2051951849E98 /* Pods_Runner.framework */,
++			);
++			name = Frameworks;
++			sourceTree = "<group>";
++		};
++		93FBC64B7AA992204DFB7D5C /* Pods */ = {
++			isa = PBXGroup;
++			children = (
++				718DCC637B0BF199F5E372D6 /* Pods-Runner.debug.xcconfig */,
++				4DDFAD977D00BC8349CD8754 /* Pods-Runner.release.xcconfig */,
++				F5E41B3620C3424BFEF6EBDB /* Pods-Runner.profile.xcconfig */,
++			);
++			path = Pods;
++			sourceTree = "<group>";
++		};
+ 		9740EEB11CF90186004384FC /* Flutter */ = {
+ 			isa = PBXGroup;
+ 			children = (
+@@ -72,6 +96,8 @@
+ 				9740EEB11CF90186004384FC /* Flutter */,
+ 				97C146F01CF9000F007C117D /* Runner */,
+ 				97C146EF1CF9000F007C117D /* Products */,
++				93FBC64B7AA992204DFB7D5C /* Pods */,
++				73C6CF8B575ECE25171F703F /* Frameworks */,
+ 			);
+ 			sourceTree = "<group>";
+ 		};
+@@ -105,12 +131,14 @@
+ 			isa = PBXNativeTarget;
+ 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
+ 			buildPhases = (
++				A4ED5054E04B3809000ACEF2 /* [CP] Check Pods Manifest.lock */,
+ 				9740EEB61CF901F6004384FC /* Run Script */,
+ 				97C146EA1CF9000F007C117D /* Sources */,
+ 				97C146EB1CF9000F007C117D /* Frameworks */,
+ 				97C146EC1CF9000F007C117D /* Resources */,
+ 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+ 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
++				2D7E488DE9564E3BB20BA749 /* [CP] Embed Pods Frameworks */,
+ 			);
+ 			buildRules = (
+ 			);
+@@ -169,6 +197,23 @@
+ /* End PBXResourcesBuildPhase section */
+ 
+ /* Begin PBXShellScriptBuildPhase section */
++		2D7E488DE9564E3BB20BA749 /* [CP] Embed Pods Frameworks */ = {
++			isa = PBXShellScriptBuildPhase;
++			buildActionMask = 2147483647;
++			files = (
++			);
++			inputFileListPaths = (
++				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
++			);
++			name = "[CP] Embed Pods Frameworks";
++			outputFileListPaths = (
++				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
++			);
++			runOnlyForDeploymentPostprocessing = 0;
++			shellPath = /bin/sh;
++			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
++			showEnvVarsInLog = 0;
++		};
+ 		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
+ 			isa = PBXShellScriptBuildPhase;
+ 			buildActionMask = 2147483647;
+@@ -185,17 +230,39 @@
+ 		};
+ 		9740EEB61CF901F6004384FC /* Run Script */ = {
+ 			isa = PBXShellScriptBuildPhase;
+-			buildActionMask = 2147483647;
++			buildActionMask = 8;
+ 			files = (
+ 			);
+ 			inputPaths = (
+ 			);
+ 			name = "Run Script";
+ 			outputPaths = (
++			);
++			runOnlyForDeploymentPostprocessing = 1;
++			shellPath = /bin/sh;
++			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
++		};
++		A4ED5054E04B3809000ACEF2 /* [CP] Check Pods Manifest.lock */ = {
++			isa = PBXShellScriptBuildPhase;
++			buildActionMask = 2147483647;
++			files = (
++			);
++			inputFileListPaths = (
++			);
++			inputPaths = (
++				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
++				"${PODS_ROOT}/Manifest.lock",
++			);
++			name = "[CP] Check Pods Manifest.lock";
++			outputFileListPaths = (
++			);
++			outputPaths = (
++				"$(DERIVED_FILE_DIR)/Pods-Runner-checkManifestLockResult.txt",
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
++			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
++			showEnvVarsInLog = 0;
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+@@ -300,6 +367,7 @@
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+ 				SWIFT_VERSION = 5.0;
++				TARGETED_DEVICE_FAMILY = "1,2";
+ 				VERSIONING_SYSTEM = "apple-generic";
+ 			};
+ 			name = Profile;
+@@ -432,6 +500,7 @@
+ 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+ 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+ 				SWIFT_VERSION = 5.0;
++				TARGETED_DEVICE_FAMILY = "1,2";
+ 				VERSIONING_SYSTEM = "apple-generic";
+ 			};
+ 			name = Debug;
+@@ -454,6 +523,7 @@
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+ 				SWIFT_VERSION = 5.0;
++				TARGETED_DEVICE_FAMILY = "1,2";
+ 				VERSIONING_SYSTEM = "apple-generic";
+ 			};
+ 			name = Release;
+Index: imdb_app.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<module type=\"JAVA_MODULE\" version=\"4\">\n  <component name=\"NewModuleRootManager\" inherit-compiler-output=\"true\">\n    <exclude-output />\n    <content url=\"file://$MODULE_DIR$\">\n      <sourceFolder url=\"file://$MODULE_DIR$/lib\" isTestSource=\"false\" />\n      <sourceFolder url=\"file://$MODULE_DIR$/test\" isTestSource=\"true\" />\n      <excludeFolder url=\"file://$MODULE_DIR$/.dart_tool\" />\n      <excludeFolder url=\"file://$MODULE_DIR$/.idea\" />\n      <excludeFolder url=\"file://$MODULE_DIR$/.pub\" />\n      <excludeFolder url=\"file://$MODULE_DIR$/build\" />\n    </content>\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\n    <orderEntry type=\"library\" name=\"Dart SDK\" level=\"project\" />\n    <orderEntry type=\"library\" name=\"Flutter Plugins\" level=\"project\" />\n    <orderEntry type=\"library\" name=\"Dart Packages\" level=\"project\" />\n  </component>\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/imdb_app.iml b/imdb_app.iml
+--- a/imdb_app.iml	(revision 11952d919a013a2afb8b605b96588490b6154ef3)
++++ b/imdb_app.iml	(date 1655481294409)
+@@ -1,15 +1,52 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <module type="JAVA_MODULE" version="4">
++  <component name="FacetManager">
++    <facet type="android" name="Android">
++      <configuration />
++    </facet>
++  </component>
+   <component name="NewModuleRootManager" inherit-compiler-output="true">
+     <exclude-output />
+     <content url="file://$MODULE_DIR$">
+       <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" />
+       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
++      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
+       <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
+       <excludeFolder url="file://$MODULE_DIR$/.idea" />
+       <excludeFolder url="file://$MODULE_DIR$/.pub" />
+       <excludeFolder url="file://$MODULE_DIR$/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_core/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_core/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_core/.dart_tool" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_auth/example/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_auth/example/.dart_tool" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_auth/example/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/cloud_firestore/example/.dart_tool" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/cloud_firestore/example/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/cloud_firestore/example/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flashy_tab_bar/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flashy_tab_bar/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flashy_tab_bar/.dart_tool" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flashy_tab_bar/example/.dart_tool" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flashy_tab_bar/example/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flashy_tab_bar/example/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_core/example/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_core/example/.dart_tool" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_core/example/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/cloud_firestore/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/cloud_firestore/.dart_tool" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/cloud_firestore/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/fluttertoast/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/fluttertoast/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/fluttertoast/.dart_tool" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_auth/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_auth/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/firebase_auth/.dart_tool" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/fluttertoast/example/.pub" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/fluttertoast/example/build" />
++      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/fluttertoast/example/.dart_tool" />
+     </content>
++    <orderEntry type="jdk" jdkName="Android API 32 Platform" jdkType="Android SDK" />
+     <orderEntry type="sourceFolder" forTests="false" />
+     <orderEntry type="library" name="Dart SDK" level="project" />
+     <orderEntry type="library" name="Flutter Plugins" level="project" />
