@@ -46,7 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Image.asset('arrow-left-line.png'),
+          icon: Image.asset('assets/background/arrow-left-line.png'),
           onPressed: () {
             Navigator.of(context).pop(
                 MaterialPageRoute(builder: ((context) => GrandCategories())));

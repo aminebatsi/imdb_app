@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: size.height * 0.03),
                   Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: size.height / 10, vertical: 5),
+                          horizontal: size.width / 10, vertical: 5),
                       child: Container(
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(50, 228, 228, 228),
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                               )))),
                   Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: size.height / 10, vertical: 5),
+                          horizontal: size.width / 10, vertical: 5),
                       child: Container(
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(50, 228, 228, 228),
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                               )))),
                   SizedBox(height: size.width * 0.02),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: size.height / 10),
+                    padding: EdgeInsets.symmetric(horizontal: size.width / 10),
                     child: ElevatedButton(
                       onPressed: () {
                         signIn(emailController.text.trim(),

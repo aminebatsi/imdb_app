@@ -81,7 +81,7 @@ class _RegisterPage extends State<RegisterPage> {
                     SizedBox(height: size.height * 0.03),
                     Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: size.height / 10, vertical: 5),
+                            horizontal: size.width / 10, vertical: 5),
                         child: Container(
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(50, 228, 228, 228),
@@ -115,7 +115,7 @@ class _RegisterPage extends State<RegisterPage> {
                                 )))),
                     Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: size.height / 10, vertical: 5),
+                            horizontal: size.width / 10, vertical: 5),
                         child: Container(
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(50, 228, 228, 228),
@@ -149,7 +149,7 @@ class _RegisterPage extends State<RegisterPage> {
                                 )))),
                     Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: size.height / 10, vertical: 5),
+                            horizontal: size.width / 10, vertical: 5),
                         child: Container(
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(50, 228, 228, 228),
@@ -186,7 +186,7 @@ class _RegisterPage extends State<RegisterPage> {
                                 )))),
                     Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: size.height / 10, vertical: 5),
+                            horizontal: size.width / 10, vertical: 5),
                         child: Container(
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(50, 228, 228, 228),
@@ -211,9 +211,8 @@ class _RegisterPage extends State<RegisterPage> {
                                       return "Please enter your password";
                                     }
                                     if (!passValidator.hasMatch(value)) {
-                                      return 'Your Password must contain at least one upper case,'
-                                          'one lower case,one digit,one Special character and'
-                                          '8 characters in length  ';
+                                      return 'one upper and lower case,one digit,one Special character and'
+                                          '8 characters in length';
                                     }
                                     return null;
                                   },
@@ -224,7 +223,7 @@ class _RegisterPage extends State<RegisterPage> {
                                 )))),
                     Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: size.height / 10, vertical: 5),
+                            horizontal: size.width / 10, vertical: 5),
                         child: Container(
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(50, 228, 228, 228),
@@ -265,7 +264,7 @@ class _RegisterPage extends State<RegisterPage> {
                                 )))),
                     SizedBox(height: size.width * 0.02),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: size.height / 10),
+                      padding: EdgeInsets.symmetric(horizontal: size.width / 10),
                       child: ElevatedButton(
                         onPressed: () {
                           signUp(emailController.text.trim(),
