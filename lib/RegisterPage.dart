@@ -197,6 +197,7 @@ class _RegisterPage extends State<RegisterPage> {
                                     left: 15, right: 15, top: 5),
                                 child: TextFormField(
                                   controller: passController,
+                                  obscureText: true,
                                   decoration: const InputDecoration(
                                       prefixIcon: Icon(
                                         Icons.password,
@@ -234,6 +235,7 @@ class _RegisterPage extends State<RegisterPage> {
                                     left: 15, right: 15, top: 5),
                                 child: TextFormField(
                                   controller: cPassController,
+                                  obscureText: true,
                                   decoration: const InputDecoration(
                                       prefixIcon: Icon(
                                         Icons.password,

@@ -128,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                                   left: 15, right: 15, top: 5),
                               child: TextFormField(
                                 controller: passController,
+                                obscureText: true,
                                 decoration: const InputDecoration(
                                     prefixIcon: Icon(
                                       Icons.password,
